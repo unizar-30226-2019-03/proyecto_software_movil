@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import DownMenu from './components/DownMenu';
+import DownMenu from './src/components/DownMenu/DownMenu';
 
 export default class App extends React.Component {  
   getUserLocationHandler = () => {
