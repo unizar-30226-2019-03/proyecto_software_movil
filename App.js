@@ -1,13 +1,8 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { createAppContainer } from "react-navigation";
 
-import DownMenu from './src/components/DownMenu/DownMenu';
+import DownMenu from "./app/components/DownMenu";
 
-export default class App extends React.Component {  
-  render() {
-    return (
-      <DownMenu/>
-    );
-  }
-}
+const App = createAppContainer(DownMenu);
 
+export default App;
