@@ -1,35 +1,55 @@
-import React, { Component } from 'react';
-import { Button, View, StyleSheet } from 'react-native';
+import React from 'react';
 
-export default class downMenu extends Component {
-	render() {
-		return (
-            <View style={styles.container}>
-            	<View style={styles.buttonContainer}>
-            		<Button title="Home"/>
-            	</View>
-              	<View style={styles.buttonContainer}>
-                	<Button title="Button 2"/>
-              	</View>
-                <View style={styles.buttonContainer}>
-                	<Button title="Button 3"/>
-              	</View>
-              	<View style={styles.buttonContainer}>
-                	<Button title="Button 4"/>
-              	</View>
-            </View>
-		);
-	}
-}
+import {
+  View, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Text
+} from 'react-native';
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    buttonContainer: {
-        flex: 1,
-    }
-});
+import styles from './styles';
+
+import EntypoIcon from 'react-native-vector-icons/Entypo';
+import MCIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import SLIcons from 'react-native-vector-icons/SimpleLineIcons';
+
+// TODO: TODO EL ICONO PULSABLE
+// TODO: ALINEAR AL CENTRO
+// TODO: BAJAR MAS HACIA ABAJO
+
+const DownMenu = props => {
+	return (
+    <View style={styles.container}>
+      <View style={styles.DownMenu}>
+
+        <TouchableOpacity style={styles.DownMenuItems}>
+          <MCIcons name='home' size={25} color='#444'/>
+          <Text style={styles.DownMenuTitle}>Inicio</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.DownMenuItems}>
+          <MCIcons name='trophy' size={25} color='#444'/>
+          <Text style={styles.DownMenuTitle}>Ranking</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.DownMenuItems}>
+          <EntypoIcon name='graduation-cap' size={25} color='#444'/>
+          <Text style={styles.DownMenuTitle}>Asignaturas</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.DownMenuItems}>
+          <SLIcons name='envelope-letter' size={25} color='#444'/>
+          <Text style={styles.DownMenuTitle}>Mensajes</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.DownMenuItems}>
+          <MCIcons name='folder' size={25} color='#444'/>
+          <Text style={styles.DownMenuTitle}>Biblioteca</Text>
+        </TouchableOpacity>
+
+      </View>
+    </View>
+	)
+};
+
+export default DownMenu;

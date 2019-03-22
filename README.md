@@ -42,3 +42,11 @@ Clone this repo to your local machine using `git@github.com:unizar-30226-2019-03
 ## Where to place files
 
 https://medium.com/the-react-native-log/organizing-a-react-native-project-9514dfadaa0
+
+## react-grid-system
+
+1. Install react peer dependency: `npm install react@16`
+
+2. Install react grid system: `npm install react-grid-system --save`
+
+
