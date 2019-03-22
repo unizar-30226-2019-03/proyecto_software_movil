@@ -34,18 +34,12 @@ Windows:
 
 1. `cd proyecto_software_movil`
 2. Iniciar el emulador Android a través de un proyecto de Android Studio pulsando sobre el botón **Run app (Shift+F10)**
-3. `npm start`
-   - Si hay error **_ENOSPC_** o **_events.js:X throw_**:
-     `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p`
+3. Ejecutar `./start_developing.sh`
 4. En la pestaña del buscador que se abre seleccionar la opción: local.
 
 ## Clone
 
 Clone this repo to your local machine using `git@github.com:unizar-30226-2019-03/proyecto_software_movil.git`
-
-## Where to place files
-
-https://medium.com/the-react-native-log/organizing-a-react-native-project-9514dfadaa0
 
 ## Navigator tutorial
 
