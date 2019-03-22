@@ -2,7 +2,7 @@
 
 # CUIDADO
 
-Si hay que editar package-lock.json o gitignore avisar antes.
+Si hay que editar package-lock.json, package.json o gitignore avisar antes.
 
 ## Installation
 
