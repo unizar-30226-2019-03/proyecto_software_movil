@@ -30,7 +30,7 @@ npm install -g expo-cli
 
 Windows:
 
-## Starting developing
+## Start developing
 
 1. `cd proyecto_software_movil`
 2. Iniciar el emulador Android a través de un proyecto de Android Studio pulsando sobre el botón **Run app (Shift+F10)**
