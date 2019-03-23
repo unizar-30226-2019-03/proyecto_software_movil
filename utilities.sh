@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Si los fin de linea se cambian por los de windows: sed -i.bak 's/\r$//' utilities.sh
+
 help() {
 	echo -e "Usage: ./utilities.sh \e[3margument\e[0m"
 	echo -e "Utilidades del proyecto."
