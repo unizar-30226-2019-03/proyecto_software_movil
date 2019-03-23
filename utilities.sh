@@ -38,10 +38,10 @@ case "$1" in
 		exit 0
 		;;
 	-i|--install)
-		sudo apt install curl
-		curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-		sudo apt install nodejs
-		npm install -g expo-cli
+		apt install curl
+		curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+		apt install nodejs
+		npm install -g expo-cli --unsafe-perm=true --allow-root
 		exit 0
 		;;
 	-t|--track)
