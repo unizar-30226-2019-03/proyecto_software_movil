@@ -12,6 +12,8 @@ import Asignaturas from "../../screens/Asignaturas";
 import Mensajes from "../../screens/Mensajes";
 import Biblioteca from "../../screens/Biblioteca";
 
+import styles from "./styles";
+
 export default createBottomTabNavigator(
   {
     Inicio: {

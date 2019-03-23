@@ -7,7 +7,7 @@ export default class Biblioteca extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>ODO BIBLIOTECA</Text>
+				<Text>TODO BIBLIOTECA</Text>
 			</View>
 		);
 	}
