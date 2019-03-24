@@ -21,7 +21,3 @@
 ## Clone
 
 Clone this repo to your local machine using `git@github.com:unizar-30226-2019-03/proyecto_software_movil.git`
-
-## Navigator tutorial
-
-https://facebook.github.io/react-native/docs/navigation
