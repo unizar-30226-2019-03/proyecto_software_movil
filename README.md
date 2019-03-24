@@ -14,7 +14,7 @@
 ## Start developing
 
 1. `cd proyecto_software_movil`
-2. Ejecutar `./start_developing.sh -s`
+2. Ejecutar `./utilities.sh -s`
 3. Iniciar el emulador Android a través de un proyecto de Android Studio pulsando sobre el botón **Run app (Shift+F10)**
 4. En la pestaña del buscador que se abre seleccionar la opción: local.
 
