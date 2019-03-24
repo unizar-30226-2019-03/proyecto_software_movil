@@ -4,25 +4,25 @@ export default StyleSheet.create({
   container: {
     flexDirection: "row"
   },
-  SearchBarTitle: {
+  searchBarTitle: {
     color: "#000",
     fontSize: 20,
     marginLeft: 10
   },
-  AppIcon: {
+  appIcon: {
     color: "#000",
     fontSize: 30,
     marginLeft: 15
   },
-  UserIcon: {
+  userIcon: {
     color: "#000",
     fontSize: 35,
     marginRight: 15
   },
-  SearchButton: {
+  searchButton: {
     marginRight: 20
   },
-  SearchIcon: {
+  searchIcon: {
     color: "#000",
     fontSize: 27
   }

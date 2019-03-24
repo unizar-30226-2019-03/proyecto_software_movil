@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-	icon: {
-		fontSize: 25
+	container: {
+		flex: 1
 	}
 });

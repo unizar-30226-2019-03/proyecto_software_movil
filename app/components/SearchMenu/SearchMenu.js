@@ -10,19 +10,19 @@ const SearchMenuBar = ({ navigation }) => {
   return {
     headerTitle: (
       <View style={styles.container}>
-        <Ionicons name="ios-apps" style={styles.AppIcon} />
-        <Text style={styles.SearchBarTitle}>Nombre</Text>
+        <Ionicons name="ios-apps" style={styles.appIcon} />
+        <Text style={styles.searchBarTitle}>UniCast</Text>
       </View>
     ),
     headerRight: (
       <View style={styles.container}>
         <TouchableHighlight
-          style={styles.SearchButton}
+          style={styles.searchButton}
           onPress={() => navigation.navigate("SearchScreen")}
         >
-          <Ionicons name="ios-search" style={styles.SearchIcon} />
+          <Ionicons name="ios-search" style={styles.searchIcon} />
         </TouchableHighlight>
-        <EvilIcons name="user" style={styles.UserIcon} />
+        <EvilIcons name="user" style={styles.userIcon} />
       </View>
     )
   };

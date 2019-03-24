@@ -1,7 +1,9 @@
 import React from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View } from "react-native";
 
 import { SearchBar } from "react-native-elements";
+
+import { HeaderBackButton } from "react-navigation";
 
 import styles from "./styles";
 
@@ -16,12 +18,15 @@ export default class Searching extends React.Component {
 
 	static navigationOptions = ({ navigation }) => {
 		return {
-			headerRight: (
-				<SearchBar
-					placeholder="Type Here..."
-					onChangeText={this.updateSearch}
-					value={this.state}
-				/>
+			headerTitle: (
+				<View style={styles.headerContainer}>
+					<SearchBar
+						placeholder="Buscar..."
+						inputContainerStyle={styles.searchBarIn}
+						searchIcon={false}
+						containerStyle={styles.searchBarOut}
+					/>
+				</View>
 			)
 		};
 	};

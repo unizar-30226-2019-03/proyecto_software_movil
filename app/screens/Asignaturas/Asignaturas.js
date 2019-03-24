@@ -1,14 +1,50 @@
 import React from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View } from "react-native";
 
-import styles from "./styles";
+import {
+	createAppContainer,
+	createMaterialTopTabNavigator,
+	createStackNavigator
+} from "react-navigation";
 
-export default class Asignaturas extends React.Component {
-	render() {
-		return (
-			<View style={styles.container}>
-				<Text>TODO ASIGNATURAS</Text>
-			</View>
-		);
-	}
-}
+import SearchMenu from "../../components/SearchMenu";
+import { TopTabBarOptions } from "../../components/TopTabBarOptions";
+import SearchScreen from "../Searching";
+
+import AsignaturasTab from "./AsignaturasTab";
+import VideosTab from "./VideosTab";
+
+const AsignaturasTopNav = createMaterialTopTabNavigator(
+	{
+		AsignaturasTab: {
+			screen: AsignaturasTab,
+			navigationOptions: {
+				tabBarLabel: "ASIGNATURAS"
+			}
+		},
+		VideosTab: {
+			screen: VideosTab,
+			navigationOptions: {
+				tabBarLabel: "VIDEOS"
+			}
+		}
+	},
+	TopTabBarOptions
+);
+
+AsignaturasTopNav.navigationOptions = SearchMenu;
+
+// TODO: ANYADIR ESTO A NAVIGATIONOPTIONS PARA QUITAR EL BORDE INFERIOR DEL HEADER
+// 	headerStyle: {
+// 		elevation: ,
+// 		shadowOpacity: 0
+// 	}
+
+const AsignaturasStackNav = createStackNavigator({
+	Asignaturas: AsignaturasTopNav,
+	SearchScreen: SearchScreen
+});
+
+const Mensajes = createAppContainer(AsignaturasStackNav);
+
+export default Mensajes;

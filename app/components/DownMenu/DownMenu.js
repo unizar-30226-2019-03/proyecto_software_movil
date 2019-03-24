@@ -2,9 +2,9 @@ import React from "react";
 
 import { createBottomTabNavigator } from "react-navigation";
 
-import EntypoIcon from "react-native-vector-icons/Entypo";
-import MCIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import SLIcons from "react-native-vector-icons/SimpleLineIcons";
+import EntypoIcons from "react-native-vector-icons/Entypo";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
 import Inicio from "../../screens/Inicio";
 import Ranking from "../../screens/Ranking";
@@ -16,55 +16,46 @@ import styles from "./styles";
 
 export default createBottomTabNavigator(
   {
-    Inicio: {
-      screen: Inicio,
-      navegationOptions: {
-        tabBarLabel: "Inicio",
-        tabBarIcon: ({ tintColor }) => (
-          <MCIcons name="home" style={styles.Icon} />
-        )
-      }
-    },
-    Ranking: {
-      screen: Ranking,
-      navegationOptions: {
-        tabBarLabel: "Ranking",
-        tabBarIcon: ({ tintColor }) => (
-          <MCIcons name="trophy" style={styles.Icon} />
-        )
-      }
-    },
-    Asignaturas: {
-      screen: Asignaturas,
-      navegationOptions: {
-        tabBarLabel: "Asignaturas",
-        tabBarIcon: ({ tintColor }) => (
-          <EntypoIcon name="graduation-cap" style={styles.Icon} />
-        )
-      }
-    },
-    Mensajes: {
-      screen: Mensajes,
-      navegationOptions: {
-        tabBarLabel: "Mensajes",
-        tabBarIcon: ({ tintColor }) => (
-          <SLIcons name="envelope-letter" style={styles.Icon} />
-        )
-      }
-    },
-    Biblioteca: {
-      screen: Biblioteca,
-      navegationOptions: {
-        tabBarLabel: "Biblioteca",
-        tabBarIcon: ({ tintColor }) => (
-          <MCIcons name="folder" style={styles.Icon} />
-        )
-      }
-    }
+    Inicio: Inicio,
+    Ranking: Ranking,
+    Asignaturas: Asignaturas,
+    Mensajes: Mensajes,
+    Biblioteca: Biblioteca
   },
   {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        let IconComponent;
+        let iconName;
+        if (routeName === "Inicio") {
+          IconComponent = MaterialCommunityIcons;
+          iconName = "home";
+        } else if (routeName === "Ranking") {
+          IconComponent = MaterialCommunityIcons;
+          iconName = "trophy";
+        } else if (routeName === "Asignaturas") {
+          IconComponent = EntypoIcons;
+          iconName = "graduation-cap";
+        } else if (routeName === "Mensajes") {
+          IconComponent = SimpleLineIcons;
+          iconName = "envelope-letter";
+        } else if (routeName === "Biblioteca") {
+          IconComponent = MaterialCommunityIcons;
+          iconName = "folder";
+        }
+        return (
+          <IconComponent
+            name={iconName}
+            style={styles.icon}
+            color={tintColor}
+          />
+        );
+      }
+    }),
     tabBarOptions: {
-      showIcon: true
+      activeTintColor: "tomato",
+      inactiveTintColor: "gray"
     }
   }
 );

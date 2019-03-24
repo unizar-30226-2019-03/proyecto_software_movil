@@ -1,9 +1,16 @@
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View } from "react-native";
+
+import { createStackNavigator, createAppContainer } from "react-navigation";
+
+import SearchMenu from "../../components/SearchMenu";
+import SearchScreen from "../Searching";
 
 import styles from "./styles";
 
-export default class Ranking extends React.Component {
+class Ranking extends React.Component {
+	static navigationOptions = SearchMenu;
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -12,3 +19,10 @@ export default class Ranking extends React.Component {
 		);
 	}
 }
+
+const RankingStackNav = createStackNavigator({
+	Ranking: Ranking,
+	SearchScreen: SearchScreen
+});
+
+export default createAppContainer(RankingStackNav);
