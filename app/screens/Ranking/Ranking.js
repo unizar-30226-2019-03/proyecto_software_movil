@@ -1,28 +1,28 @@
 import React from "react";
-import { Text, View } from "react-native";
-
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { Text, View, Button } from "react-native";
 
 import SearchMenu from "../../components/SearchMenu";
-import SearchScreen from "../Searching";
 
 import styles from "./styles";
 
-class Ranking extends React.Component {
+export default class Ranking extends React.Component {
 	static navigationOptions = SearchMenu;
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO RANKING</Text>
+				<Text>
+					TODO RANKING (PONER EL FILTRO DEBAJO DE LA BARRA DE BUSQUEDA)
+				</Text>
+				<Button
+					onPress={() =>
+						this.props.navigation.navigate("Asignatura", {
+							title: "UPM - Proyecto software"
+						})
+					}
+					title="IR A ASIGNATURA CONCRETA"
+				/>
 			</View>
 		);
 	}
 }
-
-const RankingStackNav = createStackNavigator({
-	Ranking: Ranking,
-	SearchScreen: SearchScreen
-});
-
-export default createAppContainer(RankingStackNav);

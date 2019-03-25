@@ -1,9 +1,11 @@
 import React from "react";
 import { Text, View, Button } from "react-native";
 
+import { createAppContainer, createStackNavigator } from "react-navigation";
+
 import styles from "./styles";
 
-export default class ListaVideos extends React.Component {
+export default class Asignatura extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: navigation.getParam("title")
 	});
@@ -11,10 +13,18 @@ export default class ListaVideos extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO VIDEOS TAB</Text>
+				<Text>TODO ASIGNATURA CONCRETA</Text>
+				<Button
+					onPress={() =>
+						this.props.navigation.navigate("Chat", {
+							title: "Juancho Provisional"
+						})
+					}
+					title="IR A CHAT"
+				/>
 				<Button
 					onPress={() => this.props.navigation.navigate("ViendoVideo")}
-					title="IR VIDEO"
+					title="IR A VIDEO"
 				/>
 			</View>
 		);

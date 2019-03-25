@@ -18,11 +18,16 @@ const SearchMenuBar = ({ navigation }) => {
       <View style={styles.container}>
         <TouchableHighlight
           style={styles.searchButton}
-          onPress={() => navigation.navigate("SearchScreen")}
+          onPress={() => navigation.navigate("Searching")}
         >
           <Ionicons name="ios-search" style={styles.searchIcon} />
         </TouchableHighlight>
-        <EvilIcons name="user" style={styles.userIcon} />
+        <TouchableHighlight
+          style={styles.userButton}
+          onPress={() => navigation.navigate("Cuenta")}
+        >
+          <EvilIcons name="user" style={styles.userIcon} />
+        </TouchableHighlight>
       </View>
     )
   };

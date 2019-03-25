@@ -1,10 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
-
-import { createStackNavigator, createAppContainer } from "react-navigation";
-
-import SearchMenu from "../../../components/SearchMenu";
-import SearchScreen from "../../Searching";
+import { Text, View, Button } from "react-native";
 
 import styles from "./styles";
 
@@ -13,8 +8,15 @@ export default class ProfesorTab extends React.Component {
 		return (
 			<View style={styles.container}>
 				<Text>TODO PROFESORES TAB</Text>
+				<Button
+					onPress={() =>
+						this.props.navigation.navigate("Chat", {
+							title: "Juancho Provisional"
+						})
+					}
+					title="IR A CHAT"
+				/>
 			</View>
 		);
 	}
 }
-

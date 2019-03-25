@@ -3,8 +3,6 @@ import { Text, View } from "react-native";
 
 import { SearchBar } from "react-native-elements";
 
-import { HeaderBackButton } from "react-navigation";
-
 import styles from "./styles";
 
 export default class Searching extends React.Component {

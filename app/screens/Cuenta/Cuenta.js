@@ -3,22 +3,20 @@ import { Text, View, Button } from "react-native";
 
 import styles from "./styles";
 
-export default class MisListas extends React.Component {
+export default class Cuenta extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
-		title: "Mis listas"
+		title: "Cuenta"
 	});
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO MIS LISTAS</Text>
+				<Text>TODO VIENDO VIDEO</Text>
 				<Button
 					onPress={() =>
-						this.props.navigation.navigate("ListaVideos", {
-							title: "Mis listas - Lista de cosas"
-						})
+						this.props.navigation.navigate("VerPerfil", { title: "Mi perfil" })
 					}
-					title="IR A LISTA CONCRETA"
+					title="IR MI PERFIL"
 				/>
 			</View>
 		);

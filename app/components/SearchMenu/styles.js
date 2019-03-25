@@ -14,10 +14,12 @@ export default StyleSheet.create({
     fontSize: 30,
     marginLeft: 15
   },
+  userButton: {
+    marginRight: 15
+  },
   userIcon: {
     color: "#000",
-    fontSize: 35,
-    marginRight: 15
+    fontSize: 35
   },
   searchButton: {
     marginRight: 20
