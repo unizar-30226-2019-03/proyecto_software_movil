@@ -9,14 +9,13 @@ export default class Chat extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
 		headerTitle: (
 			<TouchableHighlight
-				style={styles.searchButton}
 				onPress={() =>
 					navigation.navigate("VerPerfil", { title: "Perfil de Pedro" })
 				}
 			>
 				<View style={styles.headerContainer}>
 					<EvilIcons name="user" style={styles.userIcon} />
-					<Text>{navigation.getParam("title")}</Text>
+					<Text style={styles.userName}>{navigation.getParam("title")}</Text>
 				</View>
 			</TouchableHighlight>
 		)
