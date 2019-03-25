@@ -31,6 +31,10 @@ import ViendoVideoScreen from "../../screens/ViendoVideo";
 import ModificarCampoScreen from "../../screens/VerPerfil/ModificarCampo";
 import CuentaScreen from "../../screens/Cuenta";
 
+import SignInScreen from "../../screens/Login/SignIn";
+import SignUpOneScreen from "../../screens/Login/SignUp/SignUpOne";
+import SignUpTwoScreen from "../../screens/Login/SignUp/SignUpTwo";
+
 import SearchMenu from "../../components/SearchMenu";
 import { TopTabBarOptions } from "../../components/TopTabBarOptions";
 
@@ -43,7 +47,10 @@ import styles from "./styles";
 // Inicio
 
 const Inicio = createStackNavigator({
-	Inicio: InicioScreen,
+	Inicio: {
+		screen: InicioScreen,
+		navigationOptions: SearchMenu
+	},
 	Searching: SearchingScreen,
 	Asignatura: AsignaturaScreen
 });
@@ -69,12 +76,6 @@ const AsignaturasTopNav = createMaterialTopTabNavigator(
 
 AsignaturasTopNav.navigationOptions = SearchMenu;
 
-// TODO: ANYADIR ESTO A NAVIGATIONOPTIONS PARA QUITAR EL BORDE INFERIOR DEL HEADER
-// 	headerStyle: {
-// 		elevation: ,
-// 		shadowOpacity: 0
-// 	}
-
 const Asignaturas = createStackNavigator({
 	Asignaturas: AsignaturasTopNav,
 	Searching: SearchingScreen,
@@ -84,7 +85,10 @@ const Asignaturas = createStackNavigator({
 // Biblioteca
 
 const Biblioteca = createStackNavigator({
-	Biblioteca: BibliotecaScreen,
+	Biblioteca: {
+		screen: BibliotecaScreen,
+		navigationOptions: SearchMenu
+	},
 	ListaVideos: ListaVideosScreen,
 	MisListas: MisListasScreen,
 	Searching: SearchingScreen,
@@ -94,7 +98,10 @@ const Biblioteca = createStackNavigator({
 // Ranking
 
 const Ranking = createStackNavigator({
-	Ranking: RankingScreen,
+	Ranking: {
+		screen: RankingScreen,
+		navigationOptions: SearchMenu
+	},
 	Searching: SearchingScreen,
 	Asignatura: AsignaturaScreen
 });
@@ -120,12 +127,6 @@ const MensajesTopNav = createMaterialTopTabNavigator(
 );
 
 MensajesTopNav.navigationOptions = SearchMenu;
-
-// TODO: ANYADIR ESTO A NAVIGATIONOPTIONS PARA QUITAR EL BORDE INFERIOR DEL HEADER
-// 	headerStyle: {
-// 		elevation: ,
-// 		shadowOpacity: 0
-// 	}
 
 const Mensajes = createStackNavigator({
 	Mensajes: MensajesTopNav,
@@ -185,7 +186,7 @@ const DownMenu = createBottomTabNavigator(
 
 // App
 
-const App = createStackNavigator({
+const Logged = createStackNavigator({
 	TopBarScreens: {
 		screen: DownMenu,
 		headerMode: "none"
@@ -201,6 +202,32 @@ const App = createStackNavigator({
 	},
 	ModificarCampo: ModificarCampoScreen,
 	Cuenta: CuentaScreen
+});
+
+const NotLogged = createStackNavigator({
+	SignIn: {
+		screen: SignInScreen,
+		navigationOptions: {
+			header: null
+		}
+	},
+	SignUpOne: SignUpOneScreen,
+	SignUpTwo: SignUpTwoScreen
+});
+
+const App = createStackNavigator({
+	NotLogged: {
+		screen: NotLogged,
+		navigationOptions: {
+			header: null
+		}
+	},
+	Logged: {
+		screen: Logged,
+		navigationOptions: {
+			header: null
+		}
+	}
 });
 
 export default createAppContainer(App);

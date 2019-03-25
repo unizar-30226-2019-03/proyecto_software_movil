@@ -4,10 +4,6 @@ import { Text, View, Button } from "react-native";
 import styles from "./styles";
 
 export default class ViendoVideo extends React.Component {
-	static navigationOptions = ({ navigation }) => ({
-		title: navigation.getParam("title")
-	});
-
 	render() {
 		return (
 			<View style={styles.container}>
