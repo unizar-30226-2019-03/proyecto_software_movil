@@ -7,6 +7,12 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 import styles from "./styles";
 
 const SearchMenuBar = ({ navigation }) => {
+  const { routeName } = navigation.state;
+  let elevation = 5;
+  if (routeName === "Mensajes" || routeName === "Asignaturas") {
+    elevation = 0;
+  }
+
   return {
     headerTitle: (
       <View style={styles.container}>
@@ -29,7 +35,10 @@ const SearchMenuBar = ({ navigation }) => {
           <EvilIcons name="user" style={styles.userIcon} />
         </TouchableHighlight>
       </View>
-    )
+    ),
+    headerStyle: {
+      elevation: elevation
+    }
   };
 };
 
