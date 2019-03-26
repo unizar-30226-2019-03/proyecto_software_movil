@@ -3,7 +3,7 @@ import { View,
 		Button,
 		TextInput,
 	} from "react-native";
-import MyImagePicker from '../../../components/MyImagePicker';
+import MyImagePicker from '../../../../components/MyImagePicker';
 
 import styles from "./styles";
 
