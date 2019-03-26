@@ -1,3 +1,4 @@
-import MyImagePicker from "./MyImagePicker";
+/*import MyImagePicker from "./MyImagePicker";
 
 export default MyImagePicker;
+*/

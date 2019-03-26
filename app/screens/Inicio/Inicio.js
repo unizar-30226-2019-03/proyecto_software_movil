@@ -10,19 +10,13 @@ export default class Inicio extends React.Component {
 		return (
 			<View style={styles.container}>
 				<ScrollView>
-					<Button
-						onPress={() => this.props.navigation.navigate("ViendoVideo")}
-						title="IR A VIDEO"
-					/>
-					<Button
-						onPress={() =>
-							this.props.navigation.navigate("Asignatura", {
-								title: "UPM - Proyecto software"
-							})
-						}
-						title="IR A ASIGNATURA CONCRETA"
-					/>
-					<Thumbnail />
+					<Thumbnail navigation={this.props.navigation} />
+					<Thumbnail navigation={this.props.navigation} />
+					<Thumbnail navigation={this.props.navigation} />
+					<Thumbnail navigation={this.props.navigation} />
+					<Thumbnail navigation={this.props.navigation} />
+					<Thumbnail navigation={this.props.navigation} />
+					<Thumbnail navigation={this.props.navigation} />
 				</ScrollView>
 			</View>
 		);

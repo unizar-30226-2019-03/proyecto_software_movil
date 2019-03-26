@@ -18,6 +18,15 @@
 3. Iniciar el emulador Android a través de un proyecto de Android Studio pulsando sobre el botón **Run app (Shift+F10)**
 4. En la pestaña del buscador que se abre seleccionar la opción: local.
 
+## Instalar librerías
+
+1. `cd proyecto_software_movil`
+2. Ejecutar `./utilities.sh -t` para permitir que git trackee package.json (Solo hacer esto cuando la instalacíon va a ser permanente, nunca para probar)
+3. Checkear en `https://native.directory/` que la librería es compatible con expo y android.
+4. Instalar la librería `npm install {librería}`
+
+Una vez se ha pusheado el cambio de package.json, ejecutar `./utilities.sh -u` para dejar de trackearlo.
+
 ## Clone
 
 Clone this repo to your local machine using `git@github.com:unizar-30226-2019-03/proyecto_software_movil.git`
