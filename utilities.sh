@@ -11,8 +11,8 @@ help() {
 	echo -e "  -h, --help \t\t\t Display this help and exit"
 	echo -e "  -s, --sdeveloping \t\t Install dependencies to start developing after clone"
 	echo -e "  -i, --install \t\t Install Nodejs + Expo"
-	echo -e "  -t, --track \t\t\t Git starts tracking package.json and package-lock.json files"
-	echo -e "  -u, --untrack \t\t Git starts untracking package.json and package-lock.json files"
+	echo -e "  -t, --track \t\t\t Git starts tracking package.json"
+	echo -e "  -u, --untrack \t\t Git starts untracking package.json"
 
 	echo ""
 	echo "Exit status:"
