@@ -34,7 +34,6 @@ case "$1" in
 		;;
 	-s|--sdeveloping)
 		git update-index --skip-worktree package.json
-		git update-index --skip-worktree package-lock.json
 		echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 		npm install
 		exit 0
@@ -48,12 +47,10 @@ case "$1" in
 		;;
 	-t|--track)
 		git update-index --no-skip-worktree package.json
-		git update-index --no-skip-worktree package-lock.json
 		exit 0
 		;;
 	-u|--untrack)
 		git update-index --skip-worktree package.json
-		git update-index --skip-worktree package-lock.json
 		exit 0
 		;;
 	*)
