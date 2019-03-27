@@ -1,17 +1,21 @@
 import React from "react";
 import { View, ActivityIndicator, KeyboardAvoidingView } from "react-native";
 import { Input, Image, Button } from "react-native-elements";
-import { ImagePicker } from "expo";
+
+import { pickImage } from "../../../../components/MyImagePicker";
 
 import styles from "./styles";
 
 export default class SignUpOne extends React.Component {
   state = {
-    image: "../../../../assets/splash.png"
+    image: "../../../../assets/icon.png"
   };
   static navigationOptions = ({ navigation }) => ({
     title: "Registrarse"
   });
+  handleSelectPhoto = () => {
+    this.state.image = pickImage;
+  }
   render() {
     let { image } = this.state;
     return (
@@ -63,7 +67,7 @@ export default class SignUpOne extends React.Component {
                 style={{ width: 70, height: 70 }}
               />
             )}
-            <Button title="Seleccionar foto" onPress={this._pickImage} />
+            <Button title="Seleccionar foto" onPress={this.handleSelectPhoto} />
           </View>
 
           <View style={styles.description}>

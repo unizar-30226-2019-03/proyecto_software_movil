@@ -1,4 +1,2 @@
-/*import MyImagePicker from "./MyImagePicker";
-
-export default MyImagePicker;
-*/
+import { pickImage } from "./MyImagePicker";
+export { pickImage };
