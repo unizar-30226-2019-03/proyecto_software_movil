@@ -2,7 +2,14 @@ import {
 	ScreenWidth,
 	ScreenhHeight,
 	FullScreen16_9_Height,
-	GrisClaro
+	GrisClaro,
+	VerdeClaro
 } from "./constants";
 
-export { ScreenWidth, ScreenhHeight, FullScreen16_9_Height, GrisClaro };
+export {
+	ScreenWidth,
+	ScreenhHeight,
+	FullScreen16_9_Height,
+	GrisClaro,
+	VerdeClaro
+};

@@ -1,6 +1,11 @@
 import { StyleSheet } from "react-native";
 
-import { ScreenWidth, FullScreen16_9_Height, GrisClaro } from "../../constants";
+import {
+  ScreenWidth,
+  FullScreen16_9_Height,
+  GrisClaro,
+  VerdeClaro
+} from "../../constants";
 
 export default StyleSheet.create({
   videoThumbnailContainer: {
@@ -10,7 +15,8 @@ export default StyleSheet.create({
   universidadInfoContainer: {
     flexDirection: "row",
     marginTop: 7,
-    marginBottom: 10
+    marginBottom: 10,
+    alignItems: "center"
   },
   infoContainer: {
     marginLeft: 10
@@ -22,7 +28,9 @@ export default StyleSheet.create({
   },
   asignaturaContainer: {
     alignSelf: "center",
-    marginLeft: 10
+    marginLeft: 10,
+    width: 80,
+    marginTop: 3
   },
   title: {
     fontSize: 18
@@ -33,9 +41,7 @@ export default StyleSheet.create({
     color: GrisClaro
   },
   asignaturaIcon: {
-    width: 70,
-    height: 30,
-    backgroundColor: "#000"
+    fontSize: 20
   },
   duracion: {
     fontSize: 18,
@@ -47,7 +53,7 @@ export default StyleSheet.create({
   },
   likes: {
     fontSize: 18,
-    color: "green",
+    color: VerdeClaro,
     backgroundColor: "black",
     borderRadius: 5,
     marginLeft: 5

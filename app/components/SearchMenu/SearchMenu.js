@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, TouchableHighlight } from "react-native";
+import { Text, View, TouchableHighlight, Image } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -32,7 +32,10 @@ const SearchMenuBar = ({ navigation }) => {
           style={styles.userButton}
           onPress={() => navigation.navigate("Cuenta")}
         >
-          <EvilIcons name="user" style={styles.userIcon} />
+          <Image
+            source={require("../../../test/imagenes/perfil.jpg")}
+            style={styles.userIcon}
+          />
         </TouchableHighlight>
       </View>
     ),

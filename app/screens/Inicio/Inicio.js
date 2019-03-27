@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Button, ScrollView } from "react-native";
 
-import Thumbnail from "../../components/Thumbnail";
+import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 
 import styles from "./styles";
 
@@ -10,13 +10,13 @@ export default class Inicio extends React.Component {
 		return (
 			<View style={styles.container}>
 				<ScrollView>
-					<Thumbnail navigation={this.props.navigation} />
-					<Thumbnail navigation={this.props.navigation} />
-					<Thumbnail navigation={this.props.navigation} />
-					<Thumbnail navigation={this.props.navigation} />
-					<Thumbnail navigation={this.props.navigation} />
-					<Thumbnail navigation={this.props.navigation} />
-					<Thumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
 				</ScrollView>
 			</View>
 		);

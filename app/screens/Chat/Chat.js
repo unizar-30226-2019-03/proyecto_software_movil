@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, TouchableHighlight } from "react-native";
+import { Text, View, TouchableHighlight, Image } from "react-native";
 
 import styles from "./styles";
 
@@ -14,7 +14,10 @@ export default class Chat extends React.Component {
 				}
 			>
 				<View style={styles.headerContainer}>
-					<EvilIcons name="user" style={styles.userIcon} />
+					<Image
+						source={require("../../../test/imagenes/perfil.jpg")}
+						style={styles.userIcon}
+					/>
 					<Text style={styles.userName}>{navigation.getParam("title")}</Text>
 				</View>
 			</TouchableHighlight>

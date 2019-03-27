@@ -7,6 +7,8 @@ import {
 	TouchableHighlight
 } from "react-native";
 
+import IconoAsignaturaUniversidad from "../IconoAsignaturaUniversidad";
+
 import EntypoIcon from "react-native-vector-icons/Entypo";
 
 import styles from "./styles";
@@ -39,7 +41,7 @@ export default class Thumbnail extends React.Component {
 						title="IR A ASIGNATURA CONCRETA"
 						style={styles.asignaturaContainer}
 					>
-						<View style={styles.asignaturaIcon} />
+						<IconoAsignaturaUniversidad style={styles.asignaturaIcon} />
 					</TouchableHighlight>
 					<View style={styles.infoContainer}>
 						<Text style={styles.title}>Nombre de video de prueba</Text>

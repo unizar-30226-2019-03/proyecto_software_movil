@@ -18,11 +18,14 @@ export default StyleSheet.create({
     marginRight: 15
   },
   userIcon: {
-    color: "#000",
-    fontSize: 35
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    alignSelf: "center"
   },
   searchButton: {
-    marginRight: 20
+    marginRight: 30,
+    alignSelf: "center"
   },
   searchIcon: {
     color: "#000",
