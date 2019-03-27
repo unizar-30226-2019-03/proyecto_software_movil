@@ -7,7 +7,7 @@ export default class AsignaturasTab extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO ASIGNATURAS TAB</Text>
+				<Text>Hola</Text>
 				<Button
 					onPress={() =>
 						this.props.navigation.navigate("Asignatura", {
