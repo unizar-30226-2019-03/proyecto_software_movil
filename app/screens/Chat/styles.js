@@ -7,12 +7,15 @@ export default StyleSheet.create({
 		alignItems: "center"
 	},
 	userIcon: {
-		fontSize: 35
+		width: 35,
+		height: 35,
+		alignSelf: "center",
+		borderRadius: 50
 	},
 	userName: {
 		fontSize: 20,
 		fontWeight: "bold",
-		marginLeft: 5
+		marginLeft: 15
 	},
 	container: {
 		flex: 1

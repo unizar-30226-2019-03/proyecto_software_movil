@@ -11,8 +11,8 @@ help() {
 	echo -e "  -h, --help \t\t\t Display this help and exit"
 	echo -e "  -s, --sdeveloping \t\t Install dependencies to start developing after clone"
 	echo -e "  -i, --install \t\t Install Nodejs + Expo"
-	echo -e "  -t, --track \t\t\t Git starts tracking package.json and package-lock.json files"
-	echo -e "  -u, --untrack \t\t Git starts untracking package.json and package-lock.json files"
+	echo -e "  -t, --track \t\t\t Git starts tracking package.json"
+	echo -e "  -u, --untrack \t\t Git starts untracking package.json"
 
 	echo ""
 	echo "Exit status:"
@@ -34,7 +34,6 @@ case "$1" in
 		;;
 	-s|--sdeveloping)
 		git update-index --skip-worktree package.json
-		git update-index --skip-worktree package-lock.json
 		echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 		npm install
 		exit 0
@@ -48,12 +47,10 @@ case "$1" in
 		;;
 	-t|--track)
 		git update-index --no-skip-worktree package.json
-		git update-index --no-skip-worktree package-lock.json
 		exit 0
 		;;
 	-u|--untrack)
 		git update-index --skip-worktree package.json
-		git update-index --skip-worktree package-lock.json
 		exit 0
 		;;
 	*)

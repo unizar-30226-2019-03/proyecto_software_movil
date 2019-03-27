@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Button, ScrollView } from "react-native";
 
-import Thumbnail from "../../components/Thumbnail";
+import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 
 import styles from "./styles";
 
@@ -10,19 +10,13 @@ export default class Inicio extends React.Component {
 		return (
 			<View style={styles.container}>
 				<ScrollView>
-					<Button
-						onPress={() => this.props.navigation.navigate("ViendoVideo")}
-						title="IR A VIDEO"
-					/>
-					<Button
-						onPress={() =>
-							this.props.navigation.navigate("Asignatura", {
-								title: "UPM - Proyecto software"
-							})
-						}
-						title="IR A ASIGNATURA CONCRETA"
-					/>
-					<Thumbnail />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
 				</ScrollView>
 			</View>
 		);

@@ -1,0 +1,23 @@
+import React from "react";
+import { Text, View, Image } from "react-native";
+
+import Ionicons from "react-native-vector-icons/Ionicons";
+import EvilIcons from "react-native-vector-icons/EvilIcons";
+
+import styles from "./styles";
+
+const IconoAsignaturaUniversidad = () => {
+	return (
+		<View style={styles.container}>
+			<Image
+				source={require("../../../test/imagenes/perfil_uni.jpg")}
+				style={styles.universidadIcon}
+			/>
+			<View style={styles.nombreContainer}>
+				<Text style={styles.asignaturaNombre}>Apren</Text>
+			</View>
+		</View>
+	);
+};
+
+export default IconoAsignaturaUniversidad;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-import { SearchBar } from "react-native-elements";
+import { SearchBar, Button } from "react-native-elements";
 
 import styles from "./styles";
 
@@ -33,6 +33,18 @@ export default class Searching extends React.Component {
 		return (
 			<View style={styles.container}>
 				<Text>TODO SEARCHING SCREEN</Text>
+				<Button
+					onPress={() => this.props.navigation.navigate("ViendoVideo")}
+					title="IR A VIDEO"
+				/>
+				<Button
+					onPress={() =>
+						this.props.navigation.navigate("Asignatura", {
+							title: "UPM - Proyecto software"
+						})
+					}
+					title="IR A ASIGNATURA CONCRETA"
+				/>
 			</View>
 		);
 	}

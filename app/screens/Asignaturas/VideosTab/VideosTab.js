@@ -1,5 +1,6 @@
 import React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, ScrollView } from "react-native";
+import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 
 import styles from "./styles";
 
@@ -7,11 +8,18 @@ export default class VideosTab extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO VIDEOS TAB</Text>
-				<Button
-					onPress={() => this.props.navigation.navigate("ViendoVideo")}
-					title="IR VIDEO"
-				/>
+				<ScrollView>
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+					<FullScreenThumbnail navigation={this.props.navigation} />
+				</ScrollView>
 			</View>
 		);
 	}
