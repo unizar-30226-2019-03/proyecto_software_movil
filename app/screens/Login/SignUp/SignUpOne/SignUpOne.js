@@ -2,7 +2,7 @@ import React from "react";
 import { View, ActivityIndicator, KeyboardAvoidingView } from "react-native";
 import { Input, Image, Button } from "react-native-elements";
 
-import { pickImage } from "../../../../components/MyImagePicker";
+import { ImagePicker } from "expo";
 
 import styles from "./styles";
 
@@ -10,14 +10,27 @@ export default class SignUpOne extends React.Component {
   state = {
     image: "../../../../assets/icon.png"
   };
+
   static navigationOptions = ({ navigation }) => ({
     title: "Registrarse"
   });
-  handleSelectPhoto = () => {
-    this.state.image = pickImage;
-  }
+
+  pickProfileImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
   render() {
     let { image } = this.state;
+
     return (
       <View style={styles.container}>
         <View style={styles.logoView}>
@@ -67,7 +80,7 @@ export default class SignUpOne extends React.Component {
                 style={{ width: 70, height: 70 }}
               />
             )}
-            <Button title="Seleccionar foto" onPress={this.handleSelectPhoto} />
+            <Button title="Seleccionar foto" onPress={this.pickProfileImage} />
           </View>
 
           <View style={styles.description}>
@@ -87,16 +100,4 @@ export default class SignUpOne extends React.Component {
       </View>
     );
   }
-  _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3]
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
-  };
 }
