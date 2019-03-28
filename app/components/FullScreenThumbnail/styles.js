@@ -13,12 +13,13 @@ export default StyleSheet.create({
     height: FullScreen16_9_Height
   },
   universidadInfoContainer: {
+    flex: 1,
     flexDirection: "row",
     marginTop: 7,
-    marginBottom: 10,
-    alignItems: "center"
+    marginBottom: 10
   },
   infoContainer: {
+    flex: 1,
     marginLeft: 10
   },
   duracionYLikesContainer: {
@@ -27,10 +28,9 @@ export default StyleSheet.create({
     marginBottom: 7
   },
   asignaturaContainer: {
-    alignSelf: "center",
     marginLeft: 10,
     width: 80,
-    marginTop: 3
+    marginTop: 7
   },
   title: {
     fontSize: 18
@@ -39,9 +39,6 @@ export default StyleSheet.create({
     fontSize: 14,
     marginTop: 3,
     color: GrisClaro
-  },
-  asignaturaIcon: {
-    fontSize: 20
   },
   duracion: {
     fontSize: 18,
