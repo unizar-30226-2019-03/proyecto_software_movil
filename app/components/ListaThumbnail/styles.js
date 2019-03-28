@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native";
 import {
   HalfScreenWidth,
   HalfScreen16_9_Height,
-  GrisClaro,
-  VerdeClaro
+  GrisClaro
 } from "../../constants";
 
 export default StyleSheet.create({
@@ -21,24 +20,19 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: "row"
   },
-  videoThumbnailContainer: {
+  listaThumbnailContainer: {
     width: HalfScreenWidth,
     height: HalfScreen16_9_Height
-  },
-  infoContainer: {
-    alignItems: "flex-start",
-    marginLeft: 10,
-    flex: 1
-  },
-  duracionYLikesContainer: {
-    flexDirection: "row",
-    marginTop: "auto",
-    marginBottom: 4
   },
   optionsIconContainer: {
     marginRight: 10,
     marginLeft: 10,
     marginTop: 10
+  },
+  infoContainer: {
+    alignItems: "flex-start",
+    marginLeft: 10,
+    flex: 1
   },
   optionsIcon: {
     fontSize: 14
@@ -46,24 +40,9 @@ export default StyleSheet.create({
   title: {
     fontSize: 16
   },
-  fecha: {
+  numVideos: {
     fontSize: 13,
     marginTop: 3,
     color: GrisClaro
-  },
-  duracion: {
-    fontSize: 15,
-    color: "white",
-    backgroundColor: "black",
-    borderRadius: 5,
-    marginLeft: "auto",
-    marginRight: 5
-  },
-  likes: {
-    fontSize: 15,
-    color: VerdeClaro,
-    backgroundColor: "black",
-    borderRadius: 5,
-    marginLeft: 5
   }
 });

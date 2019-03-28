@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, ScrollView } from "react-native";
+
+import ListaThumbnail from "../../../components/ListaThumbnail";
 
 import styles from "./styles";
 
@@ -11,15 +13,21 @@ export default class MisListas extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO MIS LISTAS</Text>
-				<Button
-					onPress={() =>
-						this.props.navigation.navigate("ListaVideos", {
-							title: "Mis listas - Lista de cosas"
-						})
-					}
-					title="IR A LISTA CONCRETA"
-				/>
+				<ScrollView>
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+					<ListaThumbnail navigation={this.props.navigation} />
+				</ScrollView>
 			</View>
 		);
 	}

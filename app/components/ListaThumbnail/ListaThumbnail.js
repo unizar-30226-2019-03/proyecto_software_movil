@@ -1,11 +1,5 @@
 import React from "react";
-import {
-	View,
-	Image,
-	ImageBackground,
-	Text,
-	TouchableOpacity
-} from "react-native";
+import { View, Image, Text, TouchableOpacity } from "react-native";
 
 import IconoAsignaturaUniversidad from "../IconoAsignaturaUniversidad";
 
@@ -14,30 +8,29 @@ import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
 import styles from "./styles";
 
-export default class HalfScreenThumbnail extends React.Component {
+export default class ListaThumbnail extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
 				<TouchableOpacity
-					onPress={() => this.props.navigation.navigate("ViendoVideo")}
+					onPress={() =>
+						this.props.navigation.navigate("ListaVideos", {
+							title: "Mis listas - Lista de cosas"
+						})
+					}
 					style={styles.flexContainer}
 					activeOpacity={1}
 				>
 					<View style={styles.rowContainer}>
-						<ImageBackground
+						<Image
 							source={require("../../../test/imagenes/imagen.jpg")}
-							style={styles.videoThumbnailContainer}
-						>
-							<View style={styles.duracionYLikesContainer}>
-								<Text style={styles.likes}> 70% </Text>
-								<Text style={styles.duracion}> 12:50 </Text>
-							</View>
-						</ImageBackground>
+							style={styles.listaThumbnailContainer}
+						/>
 						<View style={styles.infoContainer}>
 							<Text style={styles.title} numberOfLines={3}>
-								Nombre de video de prueba con un nombre especialmente largo
+								Un nombre bastante largo para una lista para ver que tal queda
 							</Text>
-							<Text style={styles.fecha}>Hace 3 meses</Text>
+							<Text style={styles.numVideos}>195 vídeos</Text>
 						</View>
 					</View>
 				</TouchableOpacity>

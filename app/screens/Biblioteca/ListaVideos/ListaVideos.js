@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, ScrollView } from "react-native";
+
+import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 
 import styles from "./styles";
 
@@ -11,11 +13,19 @@ export default class ListaVideos extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO VIDEOS TAB</Text>
-				<Button
-					onPress={() => this.props.navigation.navigate("ViendoVideo")}
-					title="IR VIDEO"
-				/>
+				<ScrollView>
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+					<HalfScreenThumbnail navigation={this.props.navigation} />
+				</ScrollView>
 			</View>
 		);
 	}
