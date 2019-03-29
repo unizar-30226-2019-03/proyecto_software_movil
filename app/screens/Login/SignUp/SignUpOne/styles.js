@@ -14,6 +14,10 @@ export default StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
+	appLogo: { 
+		width: 50, 
+		height: 50 
+	},
 	container07: {
 		flex: 0.7,
 		justifyContent: "space-around",
@@ -28,6 +32,17 @@ export default StyleSheet.create({
 	},
 	inputSeparation: {
 		paddingRight: 10,
+	},
+	viewImageContainer: {
+		paddingTop: 15,
+		flexDirection: "row",
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "space-between"
+	},
+	profPic: {
+		width: 70, 
+		height: 70 
 	},
 	nextButton: {
 		position: "absolute",

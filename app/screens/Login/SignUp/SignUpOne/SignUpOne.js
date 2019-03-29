@@ -36,7 +36,7 @@ export default class SignUpOne extends React.Component {
         <View style={styles.logoView}>
           <Image
             source={require("../../../../assets/icon.png")}
-            style={{ width: 50, height: 50 }}
+            style={styles.appLogo}
             PlaceholderContent={<ActivityIndicator />}
           />
         </View>
@@ -66,18 +66,12 @@ export default class SignUpOne extends React.Component {
           </View>
 
           <View
-            style={{
-              paddingTop: 15,
-              flexDirection: "row",
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "space-between"
-            }}
+            style={styles.viewImageContainer}
           >
             {image && (
               <Image
                 source={{ uri: image }}
-                style={{ width: 70, height: 70 }}
+                style={styles.profPic}
               />
             )}
             <Button title="Seleccionar foto" onPress={this.pickProfileImage} />
