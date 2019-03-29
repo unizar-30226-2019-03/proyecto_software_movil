@@ -1,15 +1,13 @@
 import { StyleSheet } from "react-native";
 
-import { Dimensions } from "react-native";
-
-const { width } = Dimensions.get("window");
+import { ScreenWidth, FullScreen16_9_Height, GrisClaro } from "../../constants";
 
 export default StyleSheet.create({
 	container: {
 		flex: 1
 	},
 	headerContainer: {
-		width: width - 56
+		width: ScreenWidth - 56
 	},
 	searchBarIn: {
 		backgroundColor: 0x00f

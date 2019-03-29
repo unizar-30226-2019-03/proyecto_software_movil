@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native";
 import {
   HalfScreenWidth,
   HalfScreen16_9_Height,
-  GrisClaro,
-  VerdeClaro
+  GrisClaro
 } from "../../constants";
 
 export default StyleSheet.create({
@@ -25,7 +24,7 @@ export default StyleSheet.create({
     width: HalfScreenWidth,
     height: HalfScreen16_9_Height
   },
-  infoContainer: {
+  titleYInfoContainer: {
     alignItems: "flex-start",
     marginLeft: 10,
     flex: 1
@@ -46,7 +45,7 @@ export default StyleSheet.create({
   title: {
     fontSize: 16
   },
-  fecha: {
+  info: {
     fontSize: 13,
     marginTop: 3,
     color: GrisClaro
@@ -61,7 +60,6 @@ export default StyleSheet.create({
   },
   likes: {
     fontSize: 15,
-    color: VerdeClaro,
     backgroundColor: "black",
     borderRadius: 5,
     marginLeft: 5
