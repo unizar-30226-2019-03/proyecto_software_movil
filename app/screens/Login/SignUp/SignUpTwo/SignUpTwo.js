@@ -1,6 +1,6 @@
 import React from "react";
-import { View, ActivityIndicator, KeyboardAvoidingView } from "react-native";
-import { Input, Image, SearchBar, Button } from "react-native-elements";
+import { View, ActivityIndicator } from "react-native";
+import { Image, SearchBar, Button } from "react-native-elements";
 
 import styles from "./styles";
 
