@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, KeyboardAvoidingView } from "react-native";
 import { Image, SearchBar, Button } from "react-native-elements";
 
 import styles from "./styles";
@@ -33,7 +33,7 @@ export default class SignUpOne extends React.Component {
     const searchAsign = this.state.searchAsign;
 
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.logoView}>
           <Image
             source={require("../../../../assets/icon.png")}
@@ -74,7 +74,7 @@ export default class SignUpOne extends React.Component {
             title="Registrarse"
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }

@@ -32,7 +32,7 @@ export default class SignUpOne extends React.Component {
     let { image } = this.state;
 
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.logoView}>
           <Image
             source={require("../../../../assets/icon.png")}
@@ -65,15 +65,8 @@ export default class SignUpOne extends React.Component {
             />
           </View>
 
-          <View
-            style={styles.viewImageContainer}
-          >
-            {image && (
-              <Image
-                source={{ uri: image }}
-                style={styles.profPic}
-              />
-            )}
+          <View style={styles.viewImageContainer}>
+            {image && <Image source={{ uri: image }} style={styles.profPic} />}
             <Button title="Seleccionar foto" onPress={this.pickProfileImage} />
           </View>
 
@@ -91,7 +84,7 @@ export default class SignUpOne extends React.Component {
             title="Siguiente"
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
