@@ -27,8 +27,14 @@ export default StyleSheet.create({
 		paddingBottom: 25,
 	},
 	description: {
-		paddingTop: 10,
-		maxHeight: 20,
+		position: "absolute",
+		bottom: 90,
+		left: 30,
+		maxHeight: 10,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+
 	},
 	inputSeparation: {
 		paddingRight: 10,

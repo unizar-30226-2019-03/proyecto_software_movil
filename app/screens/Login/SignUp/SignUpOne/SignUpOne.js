@@ -65,26 +65,16 @@ export default class SignUpOne extends React.Component {
             />
           </View>
 
-          <View
-            style={styles.viewImageContainer}
-          >
-            {image && (
-              <Image
-                source={{ uri: image }}
-                style={styles.profPic}
-              />
-            )}
+          <View style={styles.viewImageContainer}>
+            {image && <Image source={{ uri: image }} style={styles.profPic} />}
             <Button title="Seleccionar foto" onPress={this.pickProfileImage} />
-          </View>
-
-          <View style={styles.description}>
-            <Input
-              placeholder="Escriba una descripción suya"
-              multiline={true}
-            />
           </View>
         </View>
 
+        <View style={styles.description}>
+          <Input placeholder="Escriba una descripción suya" multiline={true} />
+        </View>
+        
         <View style={styles.nextButton}>
           <Button
             onPress={() => this.props.navigation.navigate("SignUpTwo")}
