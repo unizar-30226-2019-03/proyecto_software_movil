@@ -1,11 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import {
-  ScreenWidth,
-  FullScreen16_9_Height,
-  GrisClaro,
-  VerdeClaro
-} from "../../constants";
+import { ScreenWidth, FullScreen16_9_Height, GrisClaro } from "../../constants";
 
 export default StyleSheet.create({
   videoThumbnailContainer: {
@@ -18,9 +13,10 @@ export default StyleSheet.create({
     marginTop: 7,
     marginBottom: 10
   },
-  infoContainer: {
+  titleYInfoContainer: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
+    marginRight: 15
   },
   duracionYLikesContainer: {
     flexDirection: "row",
@@ -35,7 +31,7 @@ export default StyleSheet.create({
   title: {
     fontSize: 18
   },
-  fecha: {
+  info: {
     fontSize: 14,
     marginTop: 3,
     color: GrisClaro
@@ -50,7 +46,6 @@ export default StyleSheet.create({
   },
   likes: {
     fontSize: 18,
-    color: VerdeClaro,
     backgroundColor: "black",
     borderRadius: 5,
     marginLeft: 5

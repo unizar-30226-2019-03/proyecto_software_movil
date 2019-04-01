@@ -10,3 +10,4 @@ export const HalfScreen16_9_Height = (HalfScreenWidth / 16) * 9;
 
 export const GrisClaro = "#6F6F70";
 export const VerdeClaro = "#12FF00";
+export const RojoClaro = "#F90501";

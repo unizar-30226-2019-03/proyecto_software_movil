@@ -8,20 +8,15 @@ import styles from "./styles";
 
 let MAX_CHAR_NAME = 5;
 
-const IconoAsignaturaUniversidad = () => {
-	let nombre = "Aprendizaje automatico";
-
+const IconoAsignaturaUniversidad = ({ image, name }) => {
 	return (
 		<View style={styles.container}>
-			<Image
-				source={require("../../../test/imagenes/perfil_uni.jpg")}
-				style={styles.universidadIcon}
-			/>
+			<Image source={image} style={styles.universidadIcon} />
 			<View style={styles.nombreContainer}>
 				<Text style={styles.asignaturaNombre}>
-					{nombre.length > MAX_CHAR_NAME
-						? nombre.substring(0, MAX_CHAR_NAME)
-						: nombre}
+					{name.length > MAX_CHAR_NAME
+						? name.substring(0, MAX_CHAR_NAME)
+						: name}
 				</Text>
 			</View>
 		</View>
