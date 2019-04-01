@@ -23,7 +23,7 @@ export default class SignUpOne extends React.Component {
     this.setState({ searchCarrera });
   };
 
-  updateSearchUni = searchAsign => {
+  updateSearchAsign = searchAsign => {
     this.setState({ searchAsign });
   };
 
