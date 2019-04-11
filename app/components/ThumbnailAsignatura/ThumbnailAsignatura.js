@@ -18,7 +18,10 @@ export default class ThumbnailAsignatura extends React.Component{
                     <View style={styles.container}>
                     
                         <View style={styles.asignaturaIcon}>
-                            <IconoAsignaturaUniversidad />
+                            <IconoAsignaturaUniversidad 
+                            image={require("../../../test/imagenes/perfil_uni.jpg")}
+                            name={this.props.asignatura}
+                            />
                             
 
                         </View> 
