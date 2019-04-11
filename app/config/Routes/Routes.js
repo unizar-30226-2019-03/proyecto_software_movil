@@ -36,12 +36,12 @@ import SignUpOneScreen from "../../screens/Login/SignUp/SignUpOne";
 import SignUpTwoScreen from "../../screens/Login/SignUp/SignUpTwo";
 
 import SearchMenu from "../../components/SearchMenu";
-import { TopTabBarOptions } from "../../components/TopTabBarOptions";
 
 import EntypoIcons from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
+import { TopTabBarOptions } from "./styles";
 import styles from "./styles";
 
 // Inicio

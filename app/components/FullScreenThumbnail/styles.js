@@ -1,11 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import {
-  ScreenWidth,
-  FullScreen16_9_Height,
-  GrisClaro,
-  VerdeClaro
-} from "../../constants";
+import { ScreenWidth, FullScreen16_9_Height, GrisClaro } from "../../constants";
 
 export default StyleSheet.create({
   videoThumbnailContainer: {
@@ -13,13 +8,15 @@ export default StyleSheet.create({
     height: FullScreen16_9_Height
   },
   universidadInfoContainer: {
+    flex: 1,
     flexDirection: "row",
     marginTop: 7,
-    marginBottom: 10,
-    alignItems: "center"
+    marginBottom: 10
   },
-  infoContainer: {
-    marginLeft: 10
+  titleYInfoContainer: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight: 15
   },
   duracionYLikesContainer: {
     flexDirection: "row",
@@ -27,21 +24,17 @@ export default StyleSheet.create({
     marginBottom: 7
   },
   asignaturaContainer: {
-    alignSelf: "center",
     marginLeft: 10,
     width: 80,
-    marginTop: 3
+    marginTop: 7
   },
   title: {
     fontSize: 18
   },
-  fecha: {
+  info: {
     fontSize: 14,
     marginTop: 3,
     color: GrisClaro
-  },
-  asignaturaIcon: {
-    fontSize: 20
   },
   duracion: {
     fontSize: 18,
@@ -53,7 +46,6 @@ export default StyleSheet.create({
   },
   likes: {
     fontSize: 18,
-    color: VerdeClaro,
     backgroundColor: "black",
     borderRadius: 5,
     marginLeft: 5

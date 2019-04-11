@@ -1,45 +1,87 @@
 import React from "react";
-import { View, Button, TextInput } from "react-native";
-// import MyImagePicker from "../../../../components/MyImagePicker";
+import { View, ActivityIndicator, KeyboardAvoidingView } from "react-native";
+import { Input, Image, Button } from "react-native-elements";
+
+import { ImagePicker } from "expo";
 
 import styles from "./styles";
 
-export default class SingUpOne extends React.Component {
-	static navigationOptions = ({ navigation }) => ({
-		title: "Registrarse"
-	});
-	render() {
-		return (
-			<View style={styles.container}>
-				{/*				<View style={styles.container07}>
-					<TextInput
-						style={{ borderWidth: 1, paddingHorizontal: 7 }} // TODO: Meterlo en styles
-						onChangeText={text => this.setState({ text })}
-						placeholder={"Usuario*"}
-					/>
-					<TextInput
-						style={{ borderWidth: 1, paddingHorizontal: 7 }} // TODO: Meterlo en styles
-						secureTextEntry={true}
-						onChangeText={text => this.setState({ text })}
-						placeholder={"Contraseña*"}
-					/>
-					<TextInput
-						style={{ borderWidth: 1, paddingHorizontal: 7 }} // TODO: Meterlo en styles
-						secureTextEntry={true}
-						onChangeText={text => this.setState({ text })}
-						placeholder={"Vuelva a introducir la contraseña*"}
-					/>
-					<MyImagePicker />
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "flex-end"
-						}}
-						>
-						<Button title="Siguiente" />
-					</View>
-				</View>*/}
-			</View>
-		);
-	}
+export default class SignUpOne extends React.Component {
+  state = {
+    image: "../../../../assets/icon.png"
+  };
+
+  static navigationOptions = ({ navigation }) => ({
+    title: "Registrarse"
+  });
+
+  pickProfileImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 4]
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+  render() {
+    let { image } = this.state;
+
+    return (
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <View style={styles.logoView}>
+          <Image
+            source={require("../../../../assets/icon.png")}
+            style={styles.appLogo}
+            PlaceholderContent={<ActivityIndicator />}
+          />
+        </View>
+        <View style={styles.container07}>
+          <View style={styles.inputBoxSeparation}>
+            <Input
+              placeholder="Nombre de usuario*"
+              leftIcon={{ type: "font-awesome", name: "user" }}
+              leftIconContainerStyle={styles.inputSeparation}
+            />
+          </View>
+          <View style={styles.inputBoxSeparation}>
+            <Input
+              placeholder="Contraseña*"
+              secureTextEntry={true}
+              leftIcon={{ type: "font-awesome", name: "lock" }}
+              leftIconContainerStyle={styles.inputSeparation}
+            />
+          </View>
+          <View style={styles.inputBoxSeparation}>
+            <Input
+              placeholder="Vuelva a introducir la contraseña*"
+              secureTextEntry={true}
+              leftIcon={{ type: "font-awesome", name: "lock" }}
+              leftIconContainerStyle={styles.inputSeparation}
+            />
+          </View>
+
+          <View style={styles.viewImageContainer}>
+            {image && <Image source={{ uri: image }} style={styles.profPic} />}
+            <Button title="Seleccionar foto" onPress={this.pickProfileImage} />
+          </View>
+        </View>
+
+        <View style={styles.description}>
+          <Input placeholder="Escriba una descripción suya" multiline={true} />
+        </View>
+        
+        <View style={styles.nextButton}>
+          <Button
+            onPress={() => this.props.navigation.navigate("SignUpTwo")}
+            title="Siguiente"
+          />
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
 }
