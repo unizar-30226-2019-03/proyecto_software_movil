@@ -27,7 +27,8 @@ export default StyleSheet.create({
     borderWidth: width * 0.005,
     borderRadius: width * 0.15,
     marginHorizontal: width * 0.02,
-    borderColor: GrisClaro
+    borderColor: GrisClaro,
+    padding: width * 0.02
   },
   vista: {
     flex: 1

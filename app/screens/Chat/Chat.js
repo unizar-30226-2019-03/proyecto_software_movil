@@ -67,12 +67,17 @@ export default class Chat extends React.Component {
           keyboardVerticalOffset={height * 0.13}
         >
           <ListView
+            ref="lista"
             dataSource={this.state.dataSource}
             renderRow={rowData => (
               <Mensaje tipo={rowData.tipo} mensaje={rowData.texto} />
             )}
           />
-          <TextInput style={styles.entradaTexto} />
+
+          <TextInput
+            style={styles.entradaTexto}
+            placeholder="Escribe un mensaje"
+          />
         </KeyboardAvoidingView>
       </View>
     );
