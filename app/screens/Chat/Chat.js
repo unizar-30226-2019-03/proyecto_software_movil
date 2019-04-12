@@ -4,6 +4,7 @@ import { Text, View, TouchableOpacity, Image } from "react-native";
 import styles from "./styles";
 
 import EvilIcons from "react-native-vector-icons/EvilIcons";
+import Mensaje from "../../components/Mensaje"
 
 export default class Chat extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
@@ -28,7 +29,10 @@ export default class Chat extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO CHAT</Text>
+				<Mensaje mensaje='PEZ' tipo='entrante'/>
+				<Mensaje mensaje='PEEEEEZ' tipo='saliente'/>
+				<Mensaje mensaje='PEEEEEEEEEEEEEEEEEEEEEEEEZ' tipo='entrante'/>
+				<Mensaje mensaje='PEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEZ' tipo='saliente'/>
 			</View>
 		);
 	}

@@ -6,7 +6,8 @@ import {
 	VerdeClaro,
 	RojoClaro,
 	HalfScreenWidth,
-	HalfScreen16_9_Height
+	HalfScreen16_9_Height,
+	GrisChat
 } from "./constants";
 
 export {
@@ -17,5 +18,6 @@ export {
 	VerdeClaro,
 	RojoClaro,
 	HalfScreenWidth,
-	HalfScreen16_9_Height
+	HalfScreen16_9_Height,
+	GrisChat
 };
