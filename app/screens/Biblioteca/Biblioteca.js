@@ -19,7 +19,6 @@ export default class Biblioteca extends React.Component {
 						title="IR A HISTORIAL"
 						titleStyle={styles.titulo}
 						type="clear"
-						
 					
 					/>
 				</View>

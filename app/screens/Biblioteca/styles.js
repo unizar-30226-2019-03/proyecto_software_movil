@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+
 export default StyleSheet.create({
 	container: {
 		flex: 1,
@@ -7,8 +8,8 @@ export default StyleSheet.create({
 	},
 	boton: {
 		backgroundColor: 'white',
-		width: '50%',
-		height: 50,
+		height: 60,
+		width: '100%',
 		borderBottomWidth: 1,
 		borderColor: 'grey',
 		alignItems: "flex-start",
@@ -16,7 +17,7 @@ export default StyleSheet.create({
 	},
 	titulo:{
 		color: 'black'
-	}
+	},
 	
 	
 });
