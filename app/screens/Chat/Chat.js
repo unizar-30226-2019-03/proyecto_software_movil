@@ -108,9 +108,7 @@ export default class Chat extends React.Component {
           <View style={styles.entradaTexto}>
             <TextInput
               placeholder="Escribe un mensaje"
-              style={styles.entradaTexto}
               onChangeText={text => this.setState({ text })}
-              onF
               value={this.state.text}
               multiline={true}
               style={{ flex: 4 }}

@@ -29,7 +29,9 @@ export default StyleSheet.create({
     marginHorizontal: width * 0.02,
     borderColor: GrisClaro,
     padding: width * 0.03,
-    flexDirection: "row"
+    marginBottom: 7,
+    flexDirection: "row",
+    justifyContent: 'center'
   },
   vista: {
     flex: 1
@@ -48,6 +50,7 @@ export default StyleSheet.create({
     color: "white"
   },
   lista: {
-    height: height * 0.93
+    height: height * 0.93,
+    marginBottom: 7
   }
 });
