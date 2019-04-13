@@ -16,7 +16,10 @@ export default StyleSheet.create({
 		justifyContent: "center"
 	},
 	titulo:{
-		color: 'black'
+		color: 'black',
+		fontSize: 15,
+		fontWeight: "bold",
+		marginLeft: 20
 	},
 	
 	

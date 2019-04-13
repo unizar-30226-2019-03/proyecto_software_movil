@@ -1,6 +1,6 @@
 import React from "react";
-import { View } from "react-native";
-import { Text, Button } from "react-native-elements";
+import { View, TouchableOpacity } from "react-native";
+import { Text} from "react-native-elements";
 
 
 import styles from "./styles";
@@ -9,48 +9,51 @@ export default class Biblioteca extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.boton}>
-					<Button
-						onPress={() =>
-							this.props.navigation.navigate("ListaVideos", {
-								title: "Historial"
-							})
-						}
-						title="IR A HISTORIAL"
-						titleStyle={styles.titulo}
-						type="clear"
+				<TouchableOpacity
+					style={styles.boton}
+					onPress={() =>
+						this.props.navigation.navigate("ListaVideos", {
+							title: "Historial"
+						})
+					}
+					>
+
+					<Text style={styles.titulo}>IR A HISTORIAL</Text>
 					
-					/>
-				</View>
-				<View style={styles.boton}>
-				<Button
+				</TouchableOpacity>
+				
+				<TouchableOpacity
+					style={styles.boton}
 					onPress={() =>
 						this.props.navigation.navigate("ListaVideos", {
 							title: "Mis vídeos"
 						})
 					}
-					title="IR A MIS VIDEOS"
-					titleStyle={styles.titulo}
-					type="clear"
-				/>
-				</View>
-				<View style={styles.boton}>
-				<Button
-					onPress={() => this.props.navigation.navigate("MisListas")}
-					title="IR A MIS LISTAS"
-					titleStyle={styles.titulo}
-					type="clear"
-				/>
-				</View>
-				<View style={styles.boton}>
-				<Button
-					onPress={() => this.props.navigation.navigate("SubirVideo")}
-					title="IR A SUBIR VIDEO"
-					titleStyle={styles.titulo}
-					type="clear"
+					>
+
+					<Text style={styles.titulo}>IR A MIS VIDEOS</Text>
 					
-				/>
-				</View>
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					style={styles.boton}
+					onPress={() => 
+						this.props.navigation.navigate("MisListas")}
+					>
+
+					<Text style={styles.titulo}>IR A MIS LISTAS</Text>
+
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					style={styles.boton}
+					onPress={() => 
+						this.props.navigation.navigate("SubirVideo")}
+					>
+
+					<Text style={styles.titulo}>IR A SUBIR VIDEO</Text>
+					
+				</TouchableOpacity>
 			</View>
 		);
 	}
