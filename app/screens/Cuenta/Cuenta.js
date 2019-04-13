@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Image } from "react-native";
+import { View, Image, TouchableOpacity} from "react-native";
 import { Text, Button } from "react-native-elements";
+
 
 import styles from "./styles";
 
@@ -20,27 +21,30 @@ export default class Cuenta extends React.Component {
 					<Text style={styles.userName}>PEPITO</Text>
 				</View>
 				
-				<View style={styles.boton}>
-				<Button
+			
+				<TouchableOpacity
+					style={styles.boton}
 					onPress={() =>
 						this.props.navigation.navigate("VerPerfil", { title: "Mi perfil" })
 					}
-					title="IR MI PERFIL"
-					titleStyle={styles.titulo}
-					type="clear"
-				/>
-				</View>
-				<View style={styles.boton}>
-				<Button
+					>
+					<Text style={styles.titulo}>IR MI PERFIL</Text>
+				
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					style={styles.boton}
 					onPress={() =>
 						this.props.navigation.navigate("SignIn", { title: "Cerrar sesion" })
 					}
-					title="CERRAR SESION"
-					titleStyle={styles.titulo}
-					type="clear"
-				/>
-				</View>
+					>
+					
+					<Text style={styles.titulo}>CERRAR SESION</Text>
+
+				</TouchableOpacity>
+
 			</View>
+			
 		);
 	}
 }
