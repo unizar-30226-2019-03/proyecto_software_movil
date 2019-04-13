@@ -25,14 +25,15 @@ export default StyleSheet.create({
 		width: '100%',
 		borderBottomWidth: 1,
 		borderColor: 'grey',
-		alignItems: "flex-start",
-		justifyContent: "center"
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "flex-start"
 	},
 	titulo:{
 		color: 'black',
 		fontSize: 15,
 		fontWeight: "bold",
-		marginLeft: 20
+		marginLeft: 10
 	},
 	userName: {
 		color: 'black',

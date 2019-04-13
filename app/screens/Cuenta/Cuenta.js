@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, TouchableOpacity} from "react-native";
-import { Text, Button } from "react-native-elements";
+import { Text, Icon } from "react-native-elements";
 
 
 import styles from "./styles";
@@ -28,7 +28,14 @@ export default class Cuenta extends React.Component {
 						this.props.navigation.navigate("VerPerfil", { title: "Mi perfil" })
 					}
 					>
-					<Text style={styles.titulo}>IR MI PERFIL</Text>
+
+					<Icon
+						name="account-box"
+						size= {30}
+						marginLeft={20}
+					></Icon>
+
+					<Text style={styles.titulo}>IR A MI PERFIL</Text>
 				
 				</TouchableOpacity>
 
@@ -39,6 +46,12 @@ export default class Cuenta extends React.Component {
 					}
 					>
 					
+					<Icon
+						name="arrow-forward"
+						size= {30}
+						marginLeft={20}
+					></Icon>
+
 					<Text style={styles.titulo}>CERRAR SESION</Text>
 
 				</TouchableOpacity>
