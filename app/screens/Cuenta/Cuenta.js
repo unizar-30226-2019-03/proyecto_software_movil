@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, View, Button } from "react-native";
+import { View, Image, TouchableOpacity} from "react-native";
+import { Text, Button } from "react-native-elements";
+
 
 import styles from "./styles";
 
@@ -11,14 +13,38 @@ export default class Cuenta extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Text>TODO VIENDO VIDEO</Text>
-				<Button
+				<View style={styles.userView}>
+					<Image
+						source={require("../../../test/imagenes/perfil.jpg")}
+						style={styles.userIcon}
+					/>
+					<Text style={styles.userName}>PEPITO</Text>
+				</View>
+				
+			
+				<TouchableOpacity
+					style={styles.boton}
 					onPress={() =>
 						this.props.navigation.navigate("VerPerfil", { title: "Mi perfil" })
 					}
-					title="IR MI PERFIL"
-				/>
+					>
+					<Text style={styles.titulo}>IR MI PERFIL</Text>
+				
+				</TouchableOpacity>
+
+				<TouchableOpacity
+					style={styles.boton}
+					onPress={() =>
+						this.props.navigation.navigate("SignIn", { title: "Cerrar sesion" })
+					}
+					>
+					
+					<Text style={styles.titulo}>CERRAR SESION</Text>
+
+				</TouchableOpacity>
+
 			</View>
+			
 		);
 	}
 }
