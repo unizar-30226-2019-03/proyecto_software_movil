@@ -23,14 +23,31 @@ export default StyleSheet.create({
     flex: 1
   },
   entradaTexto: {
-    height: height * 0.1,
+    height: height * 0.07,
     borderWidth: width * 0.005,
-    borderRadius: width * 0.15,
+    borderRadius: width * 0.18,
     marginHorizontal: width * 0.02,
     borderColor: GrisClaro,
-    padding: width * 0.02
+    padding: width * 0.03,
+    flexDirection: "row"
   },
   vista: {
     flex: 1
+  },
+  enviar: {
+    fontSize: width * 0.05,
+    alignSelf: "center",
+    marginHorizontal: width * 0.02,
+    color: GrisClaro
+  },
+  enviarButton: {
+    borderWidth: 2,
+    alignSelf: "center",
+    fontSize: width * 0.05,
+    alignItems: "center",
+    color: "white"
+  },
+  lista: {
+    height: height * 0.93
   }
 });

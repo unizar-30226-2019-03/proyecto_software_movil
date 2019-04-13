@@ -7,7 +7,8 @@ import {
   ListView,
   TextInput,
   KeyboardAvoidingView,
-  Dimensions
+  Dimensions,
+  Button
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 import styles from "./styles";
@@ -18,7 +19,6 @@ import Mensaje from "../../components/Mensaje";
 export default class Chat extends React.Component {
   constructor() {
     super();
-
     var datos = [
       { texto: "PEEEEEEZ", tipo: "entrante" },
       { texto: "PEEEEEEEEEEEEZ", tipo: "saliente" },
@@ -34,7 +34,9 @@ export default class Chat extends React.Component {
       rowHasChanged: (r1, r2) => r1 !== r2
     });
     this.state = {
-      dataSource: ds.cloneWithRows(datos)
+      datos: datos,
+      dataSource: ds.cloneWithRows(datos),
+      text: ""
     };
   }
 
@@ -57,6 +59,29 @@ export default class Chat extends React.Component {
     )
   });
 
+  boton = () => {
+    if (this.state.text.length > 0) {
+      return (
+        <Text style={styles.enviar} onPress={() => this.enviarMensaje()}>
+          Enviar
+        </Text>
+      );
+    }
+  };
+
+  enviarMensaje = () => {
+    if (this.state.text.length % 2 == 0) {
+      tipo = "entrante";
+    } else {
+      tipo = "saliente";
+    }
+
+    nuevoDatos = [...this.state.datos, { texto: this.state.text, tipo: tipo }];
+    this.setState({ datos: nuevoDatos });
+    nuevoDs = this.state.dataSource.cloneWithRows(nuevoDatos);
+    this.setState({ dataSource: nuevoDs });
+    this.setState({ text: "" });
+  };
   render() {
     return (
       <View style={styles.vista}>
@@ -67,17 +92,32 @@ export default class Chat extends React.Component {
           keyboardVerticalOffset={height * 0.13}
         >
           <ListView
-            ref="lista"
+            style={styles.lista}
+            keyboardShouldPersistTaps="never"
+            ref={ref => {
+              this.ListView_Ref = ref;
+            }}
             dataSource={this.state.dataSource}
             renderRow={rowData => (
               <Mensaje tipo={rowData.tipo} mensaje={rowData.texto} />
             )}
+            onContentSizeChange={() =>
+              this.ListView_Ref.scrollToEnd({ animated: true })
+            }
           />
+          <View style={styles.entradaTexto}>
+            <TextInput
+              placeholder="Escribe un mensaje"
+              style={styles.entradaTexto}
+              onChangeText={text => this.setState({ text })}
+              onF
+              value={this.state.text}
+              multiline={true}
+              style={{ flex: 4 }}
+            />
 
-          <TextInput
-            style={styles.entradaTexto}
-            placeholder="Escribe un mensaje"
-          />
+            {this.boton()}
+          </View>
         </KeyboardAvoidingView>
       </View>
     );
