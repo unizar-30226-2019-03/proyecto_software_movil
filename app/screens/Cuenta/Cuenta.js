@@ -17,8 +17,9 @@ export default class Cuenta extends React.Component {
 					<Image
 						source={require("../../../test/imagenes/perfil.jpg")}
 						style={styles.userIcon}
+						margin= {20}
 					/>
-					<Text style={styles.userName}>PEPITO</Text>
+					<Text style={styles.userName}>NOMBRE</Text>
 				</View>
 				
 			

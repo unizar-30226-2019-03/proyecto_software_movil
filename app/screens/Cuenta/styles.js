@@ -6,11 +6,11 @@ export default StyleSheet.create({
 		
 	},
 	userView: {
-		paddingTop: 20,
-		paddingLeft: 20,
-		paddingBottom: 20,
 		borderBottomWidth: 1,
 		borderColor: 'grey',
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "flex-start"
 		
 	},
 	userIcon: {
@@ -37,7 +37,8 @@ export default StyleSheet.create({
 	},
 	userName: {
 		color: 'black',
-		
+		fontWeight: "bold",
+		fontSize: 15,
 		
 	}
 });
