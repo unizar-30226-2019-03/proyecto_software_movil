@@ -7,14 +7,14 @@ import {
   ListView,
   TextInput,
   KeyboardAvoidingView,
-  Dimensions,
-  Button
 } from "react-native";
-const { width, height } = Dimensions.get("window");
+
 import styles from "./styles";
 
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Mensaje from "../../components/Mensaje";
+
+import { headerHeight } from "../../constants";
 
 export default class Chat extends React.Component {
   constructor() {
@@ -30,9 +30,11 @@ export default class Chat extends React.Component {
         tipo: "saliente"
       }
     ];
+
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
+
     this.state = {
       datos: datos,
       dataSource: ds.cloneWithRows(datos),
@@ -89,7 +91,7 @@ export default class Chat extends React.Component {
           style={styles.vista}
           behavior="padding"
           enabled
-          keyboardVerticalOffset={height * 0.13}
+          keyboardVerticalOffset={headerHeight + 22}
         >
           <ListView
             style={styles.lista}
@@ -111,9 +113,8 @@ export default class Chat extends React.Component {
               onChangeText={text => this.setState({ text })}
               value={this.state.text}
               multiline={true}
-              style={{ flex: 4 }}
+              style={[styles.textInput, { maxHeight: 80 }]}
             />
-
             {this.boton()}
           </View>
         </KeyboardAvoidingView>

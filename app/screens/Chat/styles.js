@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
-const { width, height } = Dimensions.get("window");
 
 import { GrisChat, GrisClaro } from "../../constants";
+
 export default StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
@@ -19,16 +19,12 @@ export default StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 15
   },
-  container: {
-    flex: 1
-  },
   entradaTexto: {
-    height: height * 0.07,
-    borderWidth: width * 0.005,
-    borderRadius: width * 0.18,
-    marginHorizontal: width * 0.02,
+    borderWidth: 1,
+    borderRadius: 25,
+    marginHorizontal: 7,
     borderColor: GrisClaro,
-    padding: width * 0.03,
+    padding: 5,
     marginBottom: 7,
     flexDirection: "row",
     justifyContent: 'center'
@@ -36,21 +32,18 @@ export default StyleSheet.create({
   vista: {
     flex: 1
   },
+  textInput: {
+    flex: 4,
+    marginLeft: 20,
+    marginRight: 5
+  },
   enviar: {
-    fontSize: width * 0.05,
+    fontSize: 16,
     alignSelf: "center",
-    marginHorizontal: width * 0.02,
+    marginHorizontal: 4,
     color: GrisClaro
   },
-  enviarButton: {
-    borderWidth: 2,
-    alignSelf: "center",
-    fontSize: width * 0.05,
-    alignItems: "center",
-    color: "white"
-  },
   lista: {
-    height: height * 0.93,
     marginBottom: 7
   }
 });

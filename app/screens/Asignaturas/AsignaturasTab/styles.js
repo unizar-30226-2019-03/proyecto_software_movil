@@ -13,6 +13,9 @@ export default StyleSheet.create({
   	flex: 1,
   	marginRight: 15
   },
+  title: {
+    fontSize: 18,
+  },
   separator: {
     flex: 1,
     height: StyleSheet.hairlineWidth,

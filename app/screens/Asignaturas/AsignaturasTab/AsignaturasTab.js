@@ -52,7 +52,7 @@ export default class AsignaturasTab extends React.Component {
                 margin={20}
               />
               <View style={styles.titleContainer}>
-                <Text>{rowData}</Text>
+                <Text style={styles.title}>{rowData}</Text>
               </View>
             </TouchableOpacity>
           )}
