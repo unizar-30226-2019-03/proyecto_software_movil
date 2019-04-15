@@ -1,14 +1,18 @@
 import React from "react";
 import { View, ActivityIndicator, KeyboardAvoidingView } from "react-native";
 import { Input, Image, Button } from "react-native-elements";
+import Dialog from "react-native-dialog";
 
 import { ImagePicker } from "expo";
 
 import styles from "./styles";
+import { TextInput } from "react-native-gesture-handler";
 
 export default class SignUpOne extends React.Component {
   state = {
-    image: "../../../../assets/icon.png"
+    image: "../../../../assets/icon.png",
+    _isDialogVisible: false,
+    _description: "jelouda"
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -28,8 +32,25 @@ export default class SignUpOne extends React.Component {
     }
   };
 
+  openDialogBox = () => {
+    this.setState({ _isDialogVisible: true });
+  };
+
+  closeDialogBox = () => {
+    this.setState({ _isDialogVisible: false });
+  };
+
+  updateDescription = textToUpdate => {
+    this.setState({ _description: textToUpdate });
+  };
+
+  updateDescriptionAndClose = textToUpdate => {
+    this.setState({ _description: textToUpdate, _isDialogVisible: false });
+  };
+
   render() {
     let { image } = this.state;
+    var auxDescription = "ph";
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -71,10 +92,34 @@ export default class SignUpOne extends React.Component {
           </View>
         </View>
 
-        <View style={styles.description}>
-          <Input placeholder="Escriba una descripción suya" multiline={true} />
+        <Dialog.Container visible={this.state._isDialogVisible}>
+          <Dialog.Title>Descripción</Dialog.Title>
+          <Dialog.Input 
+            defaultValue={this.state._description}
+            onChangeText={(textInput) => auxDescription = textInput}
+            multiline={true}
+            />
+          <Dialog.Button
+            label="Cancelar"
+            onPress={() => this.setState({ _isDialogVisible: false })}
+          />
+          <Dialog.Button
+            label="Aceptar"
+            onPress={() => this.setState({ _isDialogVisible: false, _description:auxDescription })}
+          />
+        </Dialog.Container>
+
+        <View style={styles.containerDescr}>
+          <View style={styles.description}>
+            <Input
+              placeholder="Escriba una descripción suya"
+              value={this.state._description}
+              multiline={true}
+              onFocus={() => this.setState({ _isDialogVisible: true })}
+            />
+          </View>
         </View>
-        
+
         <View style={styles.nextButton}>
           <Button
             onPress={() => this.props.navigation.navigate("SignUpTwo")}
