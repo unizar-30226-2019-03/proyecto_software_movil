@@ -26,11 +26,17 @@ export default StyleSheet.create({
 	inputBoxSeparation: {
 		paddingBottom: 25,
 	},
+	containerDescr: {
+		marginTop: 15,
+		maxHeight: 50,
+		justifyContent: "space-around",
+		backgroundColor: "#F5FCFF"
+	},
 	description: {
-		position: "absolute",
-		bottom: 90,
-		left: 30,
-		maxHeight: 10,
+		//position: "absolute",
+		//bottom: 90,
+		//left: 30,
+		//maxHeight: 10,
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
