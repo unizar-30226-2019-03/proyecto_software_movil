@@ -7,7 +7,12 @@ import {
 	RojoClaro,
 	HalfScreenWidth,
 	HalfScreen16_9_Height,
-	GrisChat
+	GrisChat,
+	VerdeChat,
+	isIOS,
+	statusBarHeight,
+	navBarHeight,
+	headerHeight
 } from "./constants";
 
 export {
@@ -19,5 +24,10 @@ export {
 	RojoClaro,
 	HalfScreenWidth,
 	HalfScreen16_9_Height,
-	GrisChat
+	GrisChat,
+	VerdeChat,
+	isIOS,
+	statusBarHeight,
+	navBarHeight,
+	headerHeight
 };

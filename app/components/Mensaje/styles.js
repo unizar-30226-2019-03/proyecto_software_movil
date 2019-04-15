@@ -3,7 +3,7 @@ var { width, height } = Dimensions.get("window");
 const anchuraMensaje = width * 0.45;
 height = height * 0.9;
 
-import { GrisChat } from "../../constants";
+import { GrisChat, VerdeChat } from "../../constants";
 
 export default StyleSheet.create({
   entrante: {
@@ -16,7 +16,7 @@ export default StyleSheet.create({
     marginTop: height * 0.01
   },
   saliente: {
-    backgroundColor: GrisChat,
+    backgroundColor: VerdeChat,
     alignSelf: "flex-end",
 
     borderRadius: height * 0.02,
