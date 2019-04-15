@@ -1,9 +1,16 @@
 import React from "react";
-import { Text, View, Button, ScrollView, ListView } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  ScrollView,
+  ListView,
+  Image,
+  TouchableOpacity
+} from "react-native";
 
 import styles from "./styles";
-import ThumbnailAsignatura from "../../../components/ThumbnailAsignatura";
-import IconoAsignaturaUniversidad from "../../../components/IconoAsignaturaUniversidad";
+
 export default class AsignaturasTab extends React.Component {
   constructor() {
     super();
@@ -11,7 +18,16 @@ export default class AsignaturasTab extends React.Component {
       rowHasChanged: (r1, r2) => r1 !== r2
     });
     this.state = {
-      dataSource: ds.cloneWithRows(["1", "2", "3", "4", "5", "6", "7", "8"])
+      dataSource: ds.cloneWithRows([
+        "Asignatura numero 1",
+        "Asignatura mas larga numero 2",
+        "Asignatura mucho mas daawwwwwwwwwwwwwwwmas mas mas larga",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ])
     };
   }
   render() {
@@ -19,11 +35,26 @@ export default class AsignaturasTab extends React.Component {
       <View style={styles.container}>
         <ListView
           dataSource={this.state.dataSource}
+          renderSeparator={(sectionId, rowId) => (
+            <View key={rowId} style={styles.separator} />
+          )}
           renderRow={rowData => (
-            <ThumbnailAsignatura
-              navigation={this.props.navigation}
-              asignatura={rowData}
-            />
+            <TouchableOpacity
+              style={styles.asignaturaContainer}
+              onPress={() => this.props.navigation.navigate("Asignatura", {
+                title: rowData
+              })}
+              activeOpacity={1}
+            >
+              <Image
+                source={require("../../../../test/imagenes/perfil.jpg")}
+                style={styles.asignaturaIcon}
+                margin={20}
+              />
+              <View style={styles.titleContainer}>
+                <Text>{rowData}</Text>
+              </View>
+            </TouchableOpacity>
           )}
         />
       </View>
