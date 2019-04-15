@@ -13,6 +13,7 @@ export default class Biblioteca extends React.Component {
 			<View style={styles.container}>
 				<TouchableOpacity
 					style={styles.boton}
+					activeOpacity={1}
 					onPress={() =>
 						this.props.navigation.navigate("ListaVideos", {
 							title: "Historial"
@@ -31,6 +32,7 @@ export default class Biblioteca extends React.Component {
 				
 				<TouchableOpacity
 					style={styles.boton}
+					activeOpacity={1}
 					onPress={() =>
 						this.props.navigation.navigate("ListaVideos", {
 							title: "Mis vídeos"
@@ -49,6 +51,7 @@ export default class Biblioteca extends React.Component {
 
 				<TouchableOpacity
 					style={styles.boton}
+					activeOpacity={1}
 					onPress={() => 
 						this.props.navigation.navigate("MisListas")}
 					>
@@ -64,6 +67,7 @@ export default class Biblioteca extends React.Component {
 
 				<TouchableOpacity
 					style={styles.boton}
+					activeOpacity={1}
 					onPress={() => 
 						this.props.navigation.navigate("SubirVideo")}
 					>
