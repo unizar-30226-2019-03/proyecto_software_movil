@@ -69,7 +69,7 @@ const FullScreenThumbnail = ({
 
 				<View style={styles.titleYInfoContainer}>
 					<TouchableOpacity
-						onPress={() => this.props.navigation.navigate("ViendoVideo")}
+						onPress={() => navigation.navigate("ViendoVideo")}
 						activeOpacity={1}
 					>
 						<View>

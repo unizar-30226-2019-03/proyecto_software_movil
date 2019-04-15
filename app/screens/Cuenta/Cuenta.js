@@ -25,6 +25,7 @@ export default class Cuenta extends React.Component {
 			
 				<TouchableOpacity
 					style={styles.boton}
+					activeOpacity={1}
 					onPress={() =>
 						this.props.navigation.navigate("VerPerfil", { title: "Mi perfil" })
 					}
@@ -42,6 +43,7 @@ export default class Cuenta extends React.Component {
 
 				<TouchableOpacity
 					style={styles.boton}
+					activeOpacity={1}
 					onPress={() =>
 						this.props.navigation.navigate("SignIn", { title: "Cerrar sesion" })
 					}
