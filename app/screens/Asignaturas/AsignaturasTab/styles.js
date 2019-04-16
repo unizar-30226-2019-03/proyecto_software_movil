@@ -16,14 +16,9 @@ export default StyleSheet.create({
   title: {
     fontSize: 18,
   },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#8E8E8E',
-  },
   asignaturaIcon: {
-		width: 50,
-		height: 50,
+		width: 70,
+		height: 70,
 		alignSelf: "flex-start",
 		borderRadius: 50,
   }

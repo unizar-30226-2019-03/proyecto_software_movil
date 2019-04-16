@@ -4,6 +4,7 @@ import { Text, View, ScrollView } from "react-native";
 import { SearchBar, Button } from "react-native-elements";
 
 import FullScreenThumbnail from "../../components/FullScreenThumbnail";
+import ThumbnailAsignatura from "../../components/ThumbnailAsignatura";
 
 import styles from "./styles";
 
@@ -35,7 +36,21 @@ export default class Searching extends React.Component {
 		return (
 			<View style={styles.container}>
 				<ScrollView>
-					<Text>TODO: THUMBNAILS DE ASIGNATURAS AQUI</Text>
+					<ThumbnailAsignatura
+					  navigation={this.props.navigation}
+					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
+					  name="Una asignatura con nombre largo"
+					/>
+					<ThumbnailAsignatura
+					  navigation={this.props.navigation}
+					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
+					  name="Proyecto software"
+					/>
+					<ThumbnailAsignatura
+					  navigation={this.props.navigation}
+					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
+					  name="Multiprocesadores"
+					/>
 					<FullScreenThumbnail
 						navigation={this.props.navigation}
 						image={require("../../../test/imagenes/imagen.jpg")}
@@ -45,6 +60,21 @@ export default class Searching extends React.Component {
 						info="Hece 3 meses"
 						asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
 						asignaturaName="Multiprocesadores"
+					/>
+					<ThumbnailAsignatura
+					  navigation={this.props.navigation}
+					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
+					  name="Multiprocesadores"
+					/>
+					<ThumbnailAsignatura
+					  navigation={this.props.navigation}
+					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
+					  name="Multiprocesadores"
+					/>
+					<ThumbnailAsignatura
+					  navigation={this.props.navigation}
+					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
+					  name="Multiprocesadores"
 					/>
 					<FullScreenThumbnail
 						navigation={this.props.navigation}
@@ -65,6 +95,11 @@ export default class Searching extends React.Component {
 						info="Hece 3 años"
 						asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
 						asignaturaName="Multiprocesadores"
+					/>
+					<ThumbnailAsignatura
+					  navigation={this.props.navigation}
+					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
+					  name="Multiprocesadores"
 					/>
 					<FullScreenThumbnail
 						navigation={this.props.navigation}

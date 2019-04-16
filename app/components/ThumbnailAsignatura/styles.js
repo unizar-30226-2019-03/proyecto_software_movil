@@ -1,30 +1,22 @@
-import { Dimensions,StyleSheet } from "react-native";
-const {width, height} = Dimensions.get('window');
-
-const alturaCelda = height*0.15;
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-	container: {
-		height:alturaCelda,
-		borderColor:'black',
-		borderWidth:alturaCelda*0.02
-		
-		
-	},
-	texto:{
-		textAlign:'left',
-		color:'black',
-		fontSize: width*0.05,
-		marginLeft: width * 0.05
-
-	},
-	asignaturaIcon:{
-		width:'30%',
-		height:'50%',
-		marginTop: alturaCelda*0.05,
-		marginLeft: width*0.05
-		
-	},
-
-
+  asignaturaContainer: {
+  	flex: 1,
+  	flexDirection: "row",
+  },
+  titleContainer: {
+    justifyContent: 'center', 
+  	flex: 1,
+  	marginRight: 15
+  },
+  title: {
+    fontSize: 18,
+  },
+  asignaturaIcon: {
+		width: 70,
+		height: 70,
+		alignSelf: "flex-start",
+		borderRadius: 50,
+  }
 });
