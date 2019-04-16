@@ -7,6 +7,13 @@ import {
 	TouchableOpacity
 } from "react-native";
 
+import {
+	Menu,
+	MenuOptions,
+	MenuOption,
+	MenuTrigger
+} from "react-native-popup-menu";
+
 import { VerdeClaro, RojoClaro } from "../../constants";
 
 import IconoAsignaturaUniversidad from "../IconoAsignaturaUniversidad";
@@ -14,8 +21,6 @@ import IconoAsignaturaUniversidad from "../IconoAsignaturaUniversidad";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
 import styles from "./styles";
-
-// TODO: Parametrizar ir a otras pantallas (a la asignatura y video que toque).
 
 const HalfScreenThumbnail = ({
 	navigation,
@@ -57,19 +62,29 @@ const HalfScreenThumbnail = ({
 					</View>
 				</View>
 			</TouchableOpacity>
-			<View>
-				<TouchableOpacity
-					style={styles.optionsIconContainer}
-					underlayColor="transparent"
-					activeOpacity={0.5}
-				>
-					<SimpleLineIcons
-						name={"options-vertical"}
-						style={styles.optionsIcon}
-					/>
-				</TouchableOpacity>
+				<Menu style={styles.dropDownMenuContainer}>
+					<MenuTrigger>
+						<SimpleLineIcons
+							name={"options-vertical"}
+							style={styles.optionsIcon}
+						/>
+					</MenuTrigger>
+					<MenuOptions>
+						<MenuOption>
+							<Text style={styles.popUpMenuText}>Opcion muy muy muy muy muy larga</Text>
+						</MenuOption>
+						<MenuOption >
+							<Text style={styles.popUpMenuText}>Anyadir a lista</Text>
+						</MenuOption>
+						<MenuOption>
+							<Text style={styles.popUpMenuText}>Opcion 3</Text>
+						</MenuOption>
+						<MenuOption>
+							<Text style={styles.popUpMenuText}>Opcion 4</Text>
+						</MenuOption>
+					</MenuOptions>
+				</Menu>
 			</View>
-		</View>
 	);
 };
 

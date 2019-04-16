@@ -34,7 +34,7 @@ export default StyleSheet.create({
     marginTop: "auto",
     marginBottom: 4
   },
-  optionsIconContainer: {
+  dropDownMenuContainer: {
     marginRight: 10,
     marginLeft: 10,
     marginTop: 10
@@ -63,5 +63,8 @@ export default StyleSheet.create({
     backgroundColor: "black",
     borderRadius: 5,
     marginLeft: 5
+  },
+  popUpMenuText: {
+    fontSize: 17
   }
 });
