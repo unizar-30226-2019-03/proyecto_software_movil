@@ -12,7 +12,7 @@ export default class SignUpOne extends React.Component {
   state = {
     image: "../../../../assets/icon.png",
     _isDialogVisible: false,
-    _description: "jelouda"
+    _description: ""
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -45,7 +45,7 @@ export default class SignUpOne extends React.Component {
   };
 
   updateDescriptionAndClose = textToUpdate => {
-    this.setState({ _description: textToUpdate, _isDialogVisible: false });
+    this.setState({ _isDialogVisible: false, _description: textToUpdate });
   };
 
   render() {
@@ -94,7 +94,9 @@ export default class SignUpOne extends React.Component {
 
         <Dialog.Container visible={this.state._isDialogVisible}>
           <Dialog.Title>Descripción</Dialog.Title>
-          <Dialog.Input 
+          <Dialog.Input
+            placeholder="Escriba su descripción..."
+            autoFocus={true}
             defaultValue={this.state._description}
             onChangeText={(textInput) => auxDescription = textInput}
             multiline={true}
@@ -105,7 +107,7 @@ export default class SignUpOne extends React.Component {
           />
           <Dialog.Button
             label="Aceptar"
-            onPress={() => this.setState({ _isDialogVisible: false, _description:auxDescription })}
+            onPress={() => this.updateDescriptionAndClose(auxDescription)}
           />
         </Dialog.Container>
 

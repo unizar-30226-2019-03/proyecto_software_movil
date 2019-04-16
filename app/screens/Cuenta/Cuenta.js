@@ -55,7 +55,7 @@ export default class Cuenta extends React.Component {
 						marginLeft={20}
 					></Icon>
 
-					<Text style={styles.titulo}>CERRAR SESION</Text>
+					<Text style={styles.titulo}>CERRAR SESIÓN</Text>
 
 				</TouchableOpacity>
 
