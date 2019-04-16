@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Text,
-  View,
-  Button,
-  ScrollView,
-  ListView,
-  Image,
-  TouchableOpacity
-} from "react-native";
+import { View, ListView } from "react-native";
 
 import styles from "./styles";
+
+import ThumbnailAsignatura from "../../../components/ThumbnailAsignatura";
 
 export default class AsignaturasTab extends React.Component {
   constructor() {
@@ -35,26 +29,12 @@ export default class AsignaturasTab extends React.Component {
       <View style={styles.container}>
         <ListView
           dataSource={this.state.dataSource}
-          renderSeparator={(sectionId, rowId) => (
-            <View key={rowId} style={styles.separator} />
-          )}
           renderRow={rowData => (
-            <TouchableOpacity
-              style={styles.asignaturaContainer}
-              onPress={() => this.props.navigation.navigate("Asignatura", {
-                title: rowData
-              })}
-              activeOpacity={1}
-            >
-              <Image
-                source={require("../../../../test/imagenes/perfil.jpg")}
-                style={styles.asignaturaIcon}
-                margin={20}
-              />
-              <View style={styles.titleContainer}>
-                <Text style={styles.title}>{rowData}</Text>
-              </View>
-            </TouchableOpacity>
+            <ThumbnailAsignatura
+              navigation={this.props.navigation}
+              icon={require("../../../../test/imagenes/perfil_uni.jpg")}
+              name={rowData}
+            />
           )}
         />
       </View>
