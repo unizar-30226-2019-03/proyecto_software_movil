@@ -28,7 +28,7 @@ export default StyleSheet.create({
 		borderColor: 'grey',
 		flexDirection: "row",
 		alignItems: "flex-start",
-		justifyContent: "space-around",
+		justifyContent: "space-evenly",
 		flexWrap: "wrap",
 		paddingBottom: 10,
 	},

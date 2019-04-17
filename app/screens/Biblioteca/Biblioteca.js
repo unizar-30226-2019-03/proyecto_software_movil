@@ -26,7 +26,7 @@ export default class Biblioteca extends React.Component {
 						marginLeft={20}
 					></Icon>
 
-					<Text style={styles.titulo}>IR A HISTORIAL</Text>
+					<Text style={styles.titulo}>HISTORIAL</Text>
 					
 				</TouchableOpacity>
 				
@@ -45,7 +45,7 @@ export default class Biblioteca extends React.Component {
 						marginLeft={20}
 					></Icon>
 
-					<Text style={styles.titulo}>IR A MIS VIDEOS</Text>
+					<Text style={styles.titulo}>MIS VÍDEOS</Text>
 					
 				</TouchableOpacity>
 
@@ -61,7 +61,7 @@ export default class Biblioteca extends React.Component {
 						marginLeft={20}
 					></Icon>
 
-					<Text style={styles.titulo}>IR A MIS LISTAS</Text>
+					<Text style={styles.titulo}>MIS LISTAS</Text>
 
 				</TouchableOpacity>
 
@@ -76,7 +76,7 @@ export default class Biblioteca extends React.Component {
 						size= {30}
 						marginLeft={20}
 					></Icon>
-					<Text style={styles.titulo}>IR A SUBIR VIDEO</Text>
+					<Text style={styles.titulo}>SUBIR VÍDEO</Text>
 					
 				</TouchableOpacity>
 			</View>
