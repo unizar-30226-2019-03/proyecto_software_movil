@@ -17,33 +17,27 @@ import styles from "./styles";
 
 // TODO: Parametrizar ir a otras pantallas (a la asignatura y video que toque).
 
-const FullScreenThumbnail = ({
-	navigation,
-	image,
-	likes,
-	duracion,
-	title,
-	info,
-	asignaturaIcon,
-	asignaturaName
-}) => {
+const FullScreenThumbnail = props => {
 	return (
 		<View>
 			<TouchableOpacity
-				onPress={() => navigation.navigate("ViendoVideo")}
+				onPress={() => props.navigation.navigate("ViendoVideo")}
 				activeOpacity={1}
 			>
-				<ImageBackground source={image} style={styles.videoThumbnailContainer}>
+				<ImageBackground
+					source={props.image}
+					style={styles.videoThumbnailContainer}
+				>
 					<View style={styles.duracionYLikesContainer}>
 						<Text
 							style={[
 								styles.likes,
-								{ color: likes > "49%" ? VerdeClaro : RojoClaro }
+								{ color: props.likes > "49%" ? VerdeClaro : RojoClaro }
 							]}
 						>
-							{likes}
+							{props.likes}
 						</Text>
-						<Text style={styles.duracion}>{duracion}</Text>
+						<Text style={styles.duracion}>{props.duracion}</Text>
 					</View>
 				</ImageBackground>
 			</TouchableOpacity>
@@ -52,7 +46,7 @@ const FullScreenThumbnail = ({
 				<View>
 					<TouchableOpacity
 						onPress={() =>
-							navigation.navigate("Asignatura", {
+							props.navigation.navigate("Asignatura", {
 								title: "UPM - Proyecto software"
 							})
 						}
@@ -61,20 +55,20 @@ const FullScreenThumbnail = ({
 					>
 						<IconoAsignaturaUniversidad
 							style={styles.asignaturaIcon}
-							image={asignaturaIcon}
-							name={asignaturaName}
+							image={props.asignaturaIcon}
+							name={props.asignaturaName}
 						/>
 					</TouchableOpacity>
 				</View>
 
 				<View style={styles.titleYInfoContainer}>
 					<TouchableOpacity
-						onPress={() => navigation.navigate("ViendoVideo")}
+						onPress={() => props.navigation.navigate("ViendoVideo")}
 						activeOpacity={1}
 					>
 						<View>
-							<Text style={styles.title}>{title}</Text>
-							<Text style={styles.info}>{info}</Text>
+							<Text style={styles.title}>{props.title}</Text>
+							<Text style={styles.info}>{props.info}</Text>
 						</View>
 					</TouchableOpacity>
 				</View>

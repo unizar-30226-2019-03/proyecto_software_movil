@@ -8,15 +8,15 @@ import styles from "./styles";
 
 let MAX_CHAR_NAME = 5;
 
-const IconoAsignaturaUniversidad = ({ image, name }) => {
+const IconoAsignaturaUniversidad = props => {
 	return (
 		<View style={styles.container}>
-			<Image source={image} style={styles.universidadIcon} />
+			<Image source={props.image} style={styles.universidadIcon} />
 			<View style={styles.nombreContainer}>
 				<Text style={styles.asignaturaNombre}>
-					{name.length > MAX_CHAR_NAME
-						? name.substring(0, MAX_CHAR_NAME)
-						: name}
+					{props.name.length > MAX_CHAR_NAME
+						? props.name.substring(0, MAX_CHAR_NAME)
+						: props.name}
 				</Text>
 			</View>
 		</View>
