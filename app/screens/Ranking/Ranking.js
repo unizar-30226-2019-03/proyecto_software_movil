@@ -1,19 +1,8 @@
 import React from "react";
-import {
-  Text,
-  View,
-  Button,
-  ScrollView,
-  TouchableHighlight
-} from "react-native";
+import { Text, View, Button, ScrollView, TouchableOpacity } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
 
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger
-} from "react-native-popup-menu";
+import { Menu, MenuOptions, MenuTrigger } from "react-native-popup-menu";
 
 import styles from "./styles";
 import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
@@ -43,6 +32,9 @@ export default class Ranking extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.viewFilter}>
+          <View style={styles.viewRankingTitle}>
+            <Text style={styles.rankingTitle}>{this.state.filter}</Text>
+          </View>
           <Menu style={styles.dropDownMenuContainer}>
             <MenuTrigger>
               <Icon name="filter" type="font-awesome" size={30} color="grey" />
@@ -72,55 +64,77 @@ export default class Ranking extends React.Component {
         <ScrollView>
           <View style={styles.rankingPlace}>
             <Text style={styles.rankNumber}>1.</Text>
-			<IconoAsignaturaUniversidad
-				name="Multiprocesadores"
-				image={require("../../../test/imagenes/perfil_uni.jpg")}
-			/>
-			<Icon
-				name="trophy"
-				type="font-awesome"
-				color="gold"
-			/>
-			<Text style={styles.rankScore}>99.98%</Text>
+            <TouchableOpacity
+              style={styles.touchableAsign}
+              onPress={() =>
+                this.props.navigation.navigate("Asignatura", {
+                  title: "UPM - Proyecto software"
+                })
+              }
+            >
+              <IconoAsignaturaUniversidad
+                name="Multiprocesadores"
+                image={require("../../../test/imagenes/perfil_uni.jpg")}
+              />
+            </TouchableOpacity>
+            <Icon name="trophy" type="font-awesome" color="gold" />
+            <Text style={styles.rankScore}>99.98%</Text>
           </View>
-		  <View style={styles.rankingPlace}>
-            <Text style={styles.rankNumber}>1.</Text>
-			<IconoAsignaturaUniversidad
-				name="Multiprocesadores"
-				image={require("../../../test/imagenes/perfil_uni.jpg")}
-			/>
-			<Icon
-				name="trophy"
-				type="font-awesome"
-				color="silver"
-			/>
-			<Text style={styles.rankScore}>99.98%</Text>
+          <View style={styles.rankingPlace}>
+            <Text style={styles.rankNumber}>2.</Text>
+            <TouchableOpacity
+              style={styles.touchableAsign}
+              onPress={() =>
+                this.props.navigation.navigate("Asignatura", {
+                  title: "UPM - Proyecto software"
+                })
+              }
+            >
+              <IconoAsignaturaUniversidad
+                name="Multiprocesadores"
+                image={require("../../../test/imagenes/perfil_uni.jpg")}
+              />
+            </TouchableOpacity>
+            <Icon name="trophy" type="font-awesome" color="silver" />
+            <Text style={styles.rankScore}>99.93%</Text>
           </View>
-		  <View style={styles.rankingPlace}>
-            <Text style={styles.rankNumber}>1.</Text>
-			<IconoAsignaturaUniversidad
-				name="Multiprocesadores"
-				image={require("../../../test/imagenes/perfil_uni.jpg")}
-			/>
-			<Icon
-				name="trophy"
-				type="font-awesome"
-				color="brown"
-			/>
-			<Text style={styles.rankScore}>99.98%</Text>
+          <View style={styles.rankingPlace}>
+            <Text style={styles.rankNumber}>3.</Text>
+            <TouchableOpacity
+              style={styles.touchableAsign}
+              onPress={() =>
+                this.props.navigation.navigate("Asignatura", {
+                  title: "UPM - Proyecto software"
+                })
+              }
+            >
+              <IconoAsignaturaUniversidad
+                name="Multiprocesadores"
+                image={require("../../../test/imagenes/perfil_uni.jpg")}
+              />
+            </TouchableOpacity>
+            <Icon name="trophy" type="font-awesome" color="brown" />
+            <Text style={styles.rankScore}>98.10%</Text>
           </View>
-		  <View style={styles.rankingPlace}>
-            <Text style={styles.rankNumber}>1.</Text>
-			<IconoAsignaturaUniversidad
-				name="Multiprocesadores"
-				image={require("../../../test/imagenes/perfil_uni.jpg")}
-			/>
-			<Icon
-				name=""
-				type="font-awesome"
-				color="yellow"
-			/>
-			<Text style={styles.rankScore}>99.98%</Text>
+          <View style={styles.rankingPlace}>
+            <Text style={styles.rankNumber}>4.</Text>
+            <TouchableOpacity
+              style={styles.touchableAsign}
+              onPress={() =>
+                this.props.navigation.navigate("Asignatura", {
+                  title: "UPM - Proyecto software"
+                })
+              }
+            >
+              <IconoAsignaturaUniversidad
+                name="Multiprocesadores"
+                image={require("../../../test/imagenes/perfil_uni.jpg")}
+              />
+            </TouchableOpacity>
+            <View style={styles.hidden}>
+              <Icon name="trophy" type="font-awesome" />
+            </View>
+            <Text style={styles.rankScore}>85.77%</Text>
           </View>
         </ScrollView>
 
