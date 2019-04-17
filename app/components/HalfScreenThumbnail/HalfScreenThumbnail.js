@@ -22,46 +22,40 @@ import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
 import styles from "./styles";
 
-const HalfScreenThumbnail = ({
-	navigation,
-	image,
-	likes,
-	duracion,
-	title,
-	info
-}) => {
-	return (
-		<View style={styles.container}>
-			<TouchableOpacity
-				onPress={() => navigation.navigate("ViendoVideo")}
-				style={styles.flexContainer}
-				activeOpacity={1}
-			>
-				<View style={styles.rowContainer}>
-					<ImageBackground
-						source={image}
-						style={styles.videoThumbnailContainer}
-					>
-						<View style={styles.duracionYLikesContainer}>
-							<Text
-								style={[
-									styles.likes,
-									{ color: likes > "49%" ? VerdeClaro : RojoClaro }
-								]}
-							>
-								{likes}
+export default class HalfScreenThumbnail extends React.Component {
+	render() {
+		return (
+			<View style={styles.container}>
+				<TouchableOpacity
+					onPress={() => this.props.navigation.navigate("ViendoVideo")}
+					style={styles.flexContainer}
+					activeOpacity={1}
+				>
+					<View style={styles.rowContainer}>
+						<ImageBackground
+							source={this.props.image}
+							style={styles.videoThumbnailContainer}
+						>
+							<View style={styles.duracionYLikesContainer}>
+								<Text
+									style={[
+										styles.likes,
+										{ color: this.props.likes > "49%" ? VerdeClaro : RojoClaro }
+									]}
+								>
+									{this.props.likes}
+								</Text>
+								<Text style={styles.duracion}>{this.props.duracion}</Text>
+							</View>
+						</ImageBackground>
+						<View style={styles.titleYInfoContainer}>
+							<Text style={styles.title} numberOfLines={3}>
+								{this.props.title}
 							</Text>
-							<Text style={styles.duracion}>{duracion}</Text>
+							<Text style={styles.info}>{this.props.info}</Text>
 						</View>
-					</ImageBackground>
-					<View style={styles.titleYInfoContainer}>
-						<Text style={styles.title} numberOfLines={3}>
-							{title}
-						</Text>
-						<Text style={styles.info}>{info}</Text>
 					</View>
-				</View>
-			</TouchableOpacity>
+				</TouchableOpacity>
 				<Menu style={styles.dropDownMenuContainer}>
 					<MenuTrigger>
 						<SimpleLineIcons
@@ -71,9 +65,11 @@ const HalfScreenThumbnail = ({
 					</MenuTrigger>
 					<MenuOptions>
 						<MenuOption>
-							<Text style={styles.popUpMenuText}>Opcion muy muy muy muy muy larga</Text>
+							<Text style={styles.popUpMenuText}>
+								Opcion muy muy muy muy muy larga
+							</Text>
 						</MenuOption>
-						<MenuOption >
+						<MenuOption>
 							<Text style={styles.popUpMenuText}>Anyadir a lista</Text>
 						</MenuOption>
 						<MenuOption>
@@ -85,7 +81,6 @@ const HalfScreenThumbnail = ({
 					</MenuOptions>
 				</Menu>
 			</View>
-	);
-};
-
-export default HalfScreenThumbnail;
+		);
+	}
+}
