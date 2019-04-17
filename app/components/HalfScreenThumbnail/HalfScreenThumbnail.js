@@ -17,12 +17,24 @@ import {
 import { VerdeClaro, RojoClaro } from "../../constants";
 
 import IconoAsignaturaUniversidad from "../IconoAsignaturaUniversidad";
+import AnyadirALista from "../AnyadirALista";
 
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
 import styles from "./styles";
 
 export default class HalfScreenThumbnail extends React.Component {
+	state = {
+		popUpVisible: false,
+		anyadirAListaVisible: false
+	};
+
+	hideAnyadirALista = () => {
+		this.setState({
+			anyadirAListaVisible: false
+		});
+	};
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -56,8 +68,18 @@ export default class HalfScreenThumbnail extends React.Component {
 						</View>
 					</View>
 				</TouchableOpacity>
-				<Menu style={styles.dropDownMenuContainer}>
-					<MenuTrigger>
+				<Menu
+					style={styles.dropDownMenuContainer}
+					opened={this.state.popUpVisible}
+					onBackdropPress={() => this.setState({ popUpVisible: false })}
+					onSelect={() =>
+						this.setState({
+							popUpVisible: false,
+							anyadirAListaVisible: true
+						})
+					}
+				>
+					<MenuTrigger onPress={() => this.setState({ popUpVisible: true })}>
 						<SimpleLineIcons
 							name={"options-vertical"}
 							style={styles.optionsIcon}
@@ -69,7 +91,7 @@ export default class HalfScreenThumbnail extends React.Component {
 								Opcion muy muy muy muy muy larga
 							</Text>
 						</MenuOption>
-						<MenuOption>
+						<MenuOption onSelect={this.showAnyadirALista}>
 							<Text style={styles.popUpMenuText}>Anyadir a lista</Text>
 						</MenuOption>
 						<MenuOption>
@@ -80,6 +102,10 @@ export default class HalfScreenThumbnail extends React.Component {
 						</MenuOption>
 					</MenuOptions>
 				</Menu>
+				<AnyadirALista
+					visible={this.state.anyadirAListaVisible}
+					hide={this.hideAnyadirALista}
+				/>
 			</View>
 		);
 	}
