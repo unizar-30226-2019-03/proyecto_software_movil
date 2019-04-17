@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Text,
-  Image,
-  View,
-  ScrollView,
-  TouchableHighlight
-} from "react-native";
+import { Text, Image, View, ScrollView, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 
 import { createAppContainer, createStackNavigator } from "react-navigation";
@@ -33,9 +27,7 @@ export default class Asignatura extends React.Component {
           </View>
 
           <View style={styles.userView}>
-            <TouchableHighlight
-              activeOpacity={0.2}
-              underlayColor="grey"
+            <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
                   title: "Juancho Provisional"
@@ -50,10 +42,8 @@ export default class Asignatura extends React.Component {
                 />
                 <Text style={styles.userName}>Pedro E.</Text>
               </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              activeOpacity={0.2}
-              underlayColor="grey"
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
                   title: "Juancho Provisional"
@@ -68,10 +58,8 @@ export default class Asignatura extends React.Component {
                 />
                 <Text style={styles.userName}>Recesvinto W.</Text>
               </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              activeOpacity={0.2}
-              underlayColor="grey"
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
                   title: "Juancho Provisional"
@@ -86,10 +74,8 @@ export default class Asignatura extends React.Component {
                 />
                 <Text style={styles.userName}>Almudena S.</Text>
               </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              activeOpacity={0.2}
-              underlayColor="grey"
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
                   title: "Juancho Provisional"
@@ -104,10 +90,8 @@ export default class Asignatura extends React.Component {
                 />
                 <Text style={styles.userName}>Juan P.</Text>
               </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              activeOpacity={0.2}
-              underlayColor="grey"
+            </TouchableOpacity>
+            <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Chat", {
                   title: "Juancho Provisional"
@@ -122,7 +106,7 @@ export default class Asignatura extends React.Component {
                 />
                 <Text style={styles.userName}>Turismundo R.</Text>
               </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
           </View>
 
           <FullScreenThumbnail

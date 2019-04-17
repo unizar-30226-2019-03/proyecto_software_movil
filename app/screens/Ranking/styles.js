@@ -5,15 +5,14 @@ export default StyleSheet.create({
     flex: 1
   },
   viewFilter: {
-    alignItems: "flex-end"
+    paddingHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  touchableFilter: {
-    paddingTop: 7,
-    paddingRight: 10
-  },
-  viewFilterMenu: {
-    borderWidth: 6,
-    borderColor: "red"
+  rankingTitle: {
+    fontWeight: "bold",
+    fontSize: 17,
   },
   dropDownMenuContainer: {
     marginRight: 5,
@@ -21,20 +20,26 @@ export default StyleSheet.create({
     marginTop: 5
   },
   rankingPlace: {
-	paddingHorizontal: 10,
+    paddingHorizontal: 10,
     height: 70,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderColor: "lightgrey",
+    borderColor: "lightgrey"
   },
   rankNumber: {
     fontSize: 17,
     fontWeight: "bold"
   },
+  touchableAsign: {
+    minWidth: 80
+  },
   rankScore: {
-	fontSize: 20,
-    fontWeight: "bold"  
+    fontSize: 20,
+    fontWeight: "bold"
+  },
+  hidden: {
+    opacity: 0
   }
 });
