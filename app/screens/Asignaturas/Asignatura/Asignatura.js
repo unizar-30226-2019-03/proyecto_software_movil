@@ -230,10 +230,6 @@ export default class Asignatura extends React.Component {
             asignaturaName="Multiprocesadores"
           />
         </ScrollView>
-        <Button
-          onPress={() => this.props.navigation.navigate("ViendoVideo")}
-          title="IR A VIDEO"
-        />
       </View>
     );
   }
