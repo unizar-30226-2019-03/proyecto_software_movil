@@ -1,55 +1,76 @@
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
-
-import { SearchBar, Button } from "react-native-elements";
+import {
+	Text,
+	View,
+	ScrollView,
+	TextInput,
+	TouchableOpacity
+} from "react-native";
 
 import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 import ThumbnailAsignatura from "../../components/ThumbnailAsignatura";
 
+import EntypoIcons from "react-native-vector-icons/Entypo";
+
 import styles from "./styles";
 
 export default class Searching extends React.Component {
-	state = {
-		search: ""
-	};
+	constructor(props) {
+		super(props);
 
-	updateSearch = search => {
-		this.setState({ search });
-	};
+		this.state = {
+			search: ""
+		};
+
+		this.changeSearchText = this.changeSearchText.bind(this);
+		this.props.navigation.setParams({
+			changeSearchText: this.changeSearchText
+		});
+	}
 
 	static navigationOptions = ({ navigation }) => {
 		return {
 			headerTitle: (
 				<View style={styles.headerContainer}>
-					<SearchBar
-						placeholder="Buscar..."
-						inputContainerStyle={styles.searchBarIn}
-						searchIcon={false}
-						containerStyle={styles.searchBarOut}
-					/>
+					<View style={styles.barraBusqueda}>
+						<TextInput
+							placeholder="Buscar..."
+							autoFocus
+							onChangeText={text =>
+								navigation.state.params.changeSearchText(text)
+							}
+							style={styles.inputSearch}
+						/>
+					</View>
 				</View>
 			)
 		};
 	};
+
+	changeSearchText(text) {
+		this.setState({
+			search: text
+		});
+	}
 
 	render() {
 		return (
 			<View style={styles.container}>
 				<ScrollView>
 					<ThumbnailAsignatura
-					  navigation={this.props.navigation}
-					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
-					  name="Una asignatura con nombre largo"
+						navigation={this.props.navigation}
+						icon={require("../../../test/imagenes/perfil_uni.jpg")}
+						name="Una asignatura con nombre largo"
 					/>
 					<ThumbnailAsignatura
-					  navigation={this.props.navigation}
-					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
-					  name="Proyecto software"
+						navigation={this.props.navigation}
+						icon={require("../../../test/imagenes/perfil_uni.jpg")}
+						name="Proyecto software"
 					/>
 					<ThumbnailAsignatura
-					  navigation={this.props.navigation}
-					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
-					  name="Multiprocesadores"
+						navigation={this.props.navigation}
+						icon={require("../../../test/imagenes/perfil_uni.jpg")}
+						name="Multiprocesadores"
 					/>
 					<FullScreenThumbnail
 						navigation={this.props.navigation}
@@ -62,19 +83,19 @@ export default class Searching extends React.Component {
 						asignaturaName="Multiprocesadores"
 					/>
 					<ThumbnailAsignatura
-					  navigation={this.props.navigation}
-					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
-					  name="Multiprocesadores"
+						navigation={this.props.navigation}
+						icon={require("../../../test/imagenes/perfil_uni.jpg")}
+						name="Multiprocesadores"
 					/>
 					<ThumbnailAsignatura
-					  navigation={this.props.navigation}
-					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
-					  name="Multiprocesadores"
+						navigation={this.props.navigation}
+						icon={require("../../../test/imagenes/perfil_uni.jpg")}
+						name="Multiprocesadores"
 					/>
 					<ThumbnailAsignatura
-					  navigation={this.props.navigation}
-					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
-					  name="Multiprocesadores"
+						navigation={this.props.navigation}
+						icon={require("../../../test/imagenes/perfil_uni.jpg")}
+						name="Multiprocesadores"
 					/>
 					<FullScreenThumbnail
 						navigation={this.props.navigation}
@@ -97,9 +118,9 @@ export default class Searching extends React.Component {
 						asignaturaName="Multiprocesadores"
 					/>
 					<ThumbnailAsignatura
-					  navigation={this.props.navigation}
-					  icon={require("../../../test/imagenes/perfil_uni.jpg")}
-					  name="Multiprocesadores"
+						navigation={this.props.navigation}
+						icon={require("../../../test/imagenes/perfil_uni.jpg")}
+						name="Multiprocesadores"
 					/>
 					<FullScreenThumbnail
 						navigation={this.props.navigation}
