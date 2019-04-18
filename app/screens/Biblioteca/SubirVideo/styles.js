@@ -25,13 +25,35 @@ export default StyleSheet.create({
   },
   pickerAsign: {
     height: 50,
-	width: 200,
-	color: "blue",
-	//borderWidth: 1,
-	//borderColor: "grey"
+    width: 200,
+    color: "blue"
+    //borderWidth: 1,
+    //borderColor: "grey"
   },
-  viewEnterTitle: {
-	paddingTop: 8,
+  viewInput: {
+    paddingTop: 18,
     paddingHorizontal: 8,
+  },
+  viewSelectThumbnail: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    paddingTop: 18,
+  },
+  imageThumbnail: {
+    aspectRatio: 16/9,
+    height: 70,
+    borderRadius: 3,
+  },
+  uploadButtonView: {
+    paddingTop: 20,
+    flexDirection: "row",
+    justifyContent: "flex-end"
+  },
+  uploadButton: {
+    marginRight: 12,
+    marginBottom: 7,
+    width: 120,
   }
+
 });

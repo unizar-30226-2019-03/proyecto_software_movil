@@ -25,8 +25,6 @@ export default class SignUpOne extends React.Component {
       aspect: [4, 4]
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       this.setState({ image: result.uri });
     }
