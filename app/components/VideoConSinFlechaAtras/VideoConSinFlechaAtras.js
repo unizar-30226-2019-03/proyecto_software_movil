@@ -7,15 +7,15 @@ import styles from "./styles";
 
 import { Video } from "expo";
 import VideoPlayer from "expo-video-player";
-
-// Guía completa de props: https://github.com/abbasfreestyle/react-native-af-video-player
-
-goBack = destination => {
-  props.navigation.navigate(destination);
-};
-
-// PROPS OBLIGATORIAS: NAVIGATION , SOURCE, POSTERSOURCE, SHOULDPLAY, STYLE, FLECHASI (Si FLECHASI = 1, necesaria
-// también GOBACKDESTINATION)
+/*
+ * PROPS:
+ * source={uri} uri del video
+ * thumbnail={uri} uri de la thumbnail
+ * autoplay={true / false}
+ * style={styles.____}
+ * flechaSi={true / false} si el video tiene flecha para volver atrás o no
+ * goBackDestination="destino" destino de navigation, en caso de que flechaSi == {true}
+ */
 const VideoConSinFlechaAtras = props => {
   return (
     <View>

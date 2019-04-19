@@ -11,14 +11,12 @@ import {
 } from "react-native";
 
 import { ImagePicker } from "expo";
-//import VideoPlayer from "expo-video-player";
 import { Button, Input, Image } from "react-native-elements";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
 import styles from "./styles";
 
 const { State: TextInputState } = TextInput;
-const sintel = require("../../../../test/videos/nyancat.mp4");
 
 export default class SubirVideo extends React.Component {
   state = {
