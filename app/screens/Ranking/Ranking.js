@@ -137,15 +137,6 @@ export default class Ranking extends React.Component {
             <Text style={styles.rankScore}>85.77%</Text>
           </View>
         </ScrollView>
-
-        <Button
-          onPress={() =>
-            this.props.navigation.navigate("Asignatura", {
-              title: "UPM - Proyecto software"
-            })
-          }
-          title="IR A ASIGNATURA CONCRETA"
-        />
       </View>
     );
   }

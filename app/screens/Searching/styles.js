@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { ScreenWidth, FullScreen16_9_Height, GrisClaro } from "../../constants";
+import { ScreenWidth, GrisFondoBarraBusqueda } from "../../constants";
 
 export default StyleSheet.create({
 	container: {
@@ -16,5 +16,19 @@ export default StyleSheet.create({
 		backgroundColor: "white",
 		borderTopWidth: 0,
 		borderBottomWidth: 0
+	},
+	barraBusqueda: {
+		backgroundColor: GrisFondoBarraBusqueda,
+		borderRadius: 2,
+		marginRight: 10,
+		flexDirection: "row"
+	},
+	inputSearch: {
+		flex: 1,
+		padding: 3,
+		marginLeft: 5
+	},
+	crossIcon: {
+		marginLeft: "auto"
 	}
 });
