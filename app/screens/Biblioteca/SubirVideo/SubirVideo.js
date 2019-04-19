@@ -10,7 +10,8 @@ import {
   TextInput
 } from "react-native";
 
-import { ImagePicker, Video } from "expo";
+import { ImagePicker } from "expo";
+//import VideoPlayer from "expo-video-player";
 import { Button, Input, Image } from "react-native-elements";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
@@ -22,8 +23,9 @@ const sintel = require("../../../../test/videos/nyancat.mp4");
 export default class SubirVideo extends React.Component {
   state = {
     shift: new Animated.Value(0),
+    videoIsChosen: 0,
     asignatura: "undefined",
-    videoChosen: 0,
+    video: "undefined",
     thumbnail: "undefined"
   };
 
@@ -51,7 +53,9 @@ export default class SubirVideo extends React.Component {
     });
 
     if (!result.cancelled) {
-      this.setState({ video: result.uri, videoChosen: 1 });
+      this.setState({ video: result.uri, videoIsChosen: 1 });
+      console.log("HELLO");
+      console.log(result.uri);
     }
   };
 
@@ -74,6 +78,7 @@ export default class SubirVideo extends React.Component {
   render() {
     const { shift } = this.state;
     const { thumbnail } = this.state;
+    const { video } = this.state;
 
     return (
       <Animated.ScrollView
@@ -86,22 +91,22 @@ export default class SubirVideo extends React.Component {
           borderStyle="dashed"
           borderRadius={4}
         >
-          <View
-            style={[
-              styles.videoPreview,
-              { opacity: this.state.videoChosen == 0 ? 100 : 0 }
-            ]}
-          >
-            <Video
-              source={require('../../../../test/videos/nyancat.mp4')}
-              style={styles.videoPreview}
+          {this.state.videoIsChosen == 0 ? (
+            <Button
+              buttonStyle={styles.selectVideoButton}
+              title="ELEGIR VÍDEO"
+              onPress={this.pickVideo}
             />
-          </View>
-          <Button
-            buttonStyle={styles.selectVideoButton}
-            title="ELEGIR VÍDEO"
-            onPress={this.pickVideo}
-          />
+          ) : (
+            <VideoConSinFlechaAtras
+              flechaSi={false}      
+              navigation={this.props.navigation}
+              source={video}
+              thumbnail={thumbnail}
+              autoplay={false}
+              style={styles.videoPlayer}
+            />
+          )}
         </View>
 
         <View style={styles.viewSelectAsign}>
