@@ -1,47 +1,49 @@
 import React from "react";
-import {
-  View,
-  Image,
-  ImageBackground,
-  Text,
-  TouchableOpacity
-} from "react-native";
+import { View, TouchableOpacity } from "react-native";
 
 import { Icon } from "react-native-elements";
 
 import styles from "./styles";
 
-import Video from "react-native-video";
+import { Video } from "expo";
+import VideoPlayer from "expo-video-player";
 
 // Guía completa de props: https://github.com/abbasfreestyle/react-native-af-video-player
 
+goBack = destination => {
+  props.navigation.navigate(destination);
+};
+
+// PROPS OBLIGATORIAS: NAVIGATION , SOURCE, POSTERSOURCE, SHOULDPLAY, STYLE, FLECHASI (Si FLECHASI = 1, necesaria
+// también GOBACKDESTINATION)
 const VideoConSinFlechaAtras = props => {
   return (
     <View>
-      <Video
-        url={props.url}
-        autoPlay={props.autoPlay}
-        title={props.title}
-        placeholder={props.placeholder} //IMAGEN PLACEHOLDER MIENTRAS CARGA
-        logo={props.logo} //LOGO PARA LA ESQUINA SUPERIOR IZQUIERDA
-        style={props.style}
-        rotateToFullScreen={true}
-        volume={props.volume}
-        onMorePress={props.onMorePress} //CALLBACK PARA UN BOTÓN DE LA ESQUINA SUP. DERECHA
-        onFullScreen={props.onFullScreen} //CALLBACK CUANDO SE CAMBIA FULLSCREEN<->NORMAL
-        scrollBounce={props.scrollBounce} //BOUNCE AL HACER SCROLL
-        onLoad={props.onLoad} //CALLBACK CUANDO EL VÍDEO HA CARGADO
-        onEnd={props.onEnd} //CALLBACK CUANDO EL VÍDEO HA LLEGADO AL FINAL
+      <VideoPlayer
+        videoProps={{
+          source: { uri: props.source },
+          posterSource: { uri: props.thumbnail },
+          resizeMode: Video.RESIZE_MODE_CONTAIN,
+          shouldPlay: props.autoplay,
+          volume: 0.75,
+          style: props.style,
+        }}
+        showControlsOnLoad={true}
+        sliderColor="#009485"
       />
-      <View
-        style={[
-          {
-            opacity: props.flechaSiNo == 1 ? 100 : 0
-          }
-        ]}
-      >
-        <Icon style={styles.iconoFlechaAtras} type="entypo" name="left-open" />
-      </View>
+      {props.flechaSi ? (
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate(props.goBackDestination)}
+          style={styles.zonaFlechaAtras}>
+          <Icon
+            type="octicon"
+            size={35}
+            name="chevron-left"
+            color="lightgrey"
+            iconStyle={styles.flechaAtras}
+          />
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };
