@@ -10,19 +10,21 @@ import {
   TextInput
 } from "react-native";
 
-import { ImagePicker } from "expo";
+import { ImagePicker, Video } from "expo";
 import { Button, Input, Image } from "react-native-elements";
 
+import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
 import styles from "./styles";
 
 const { State: TextInputState } = TextInput;
+const sintel = require("../../../../test/videos/nyancat.mp4");
 
 export default class SubirVideo extends React.Component {
   state = {
     shift: new Animated.Value(0),
-    asignatura: "",
-    video: "",
-    thumbnail: "undefined",
+    asignatura: "undefined",
+    videoChosen: 0,
+    thumbnail: "undefined"
   };
 
   componentWillMount() {
@@ -43,18 +45,20 @@ export default class SubirVideo extends React.Component {
 
   pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
       mediaTypes: "Videos",
       aspect: [16, 9]
     });
 
     if (!result.cancelled) {
-      this.setState({ video: result.uri });
+      this.setState({ video: result.uri, videoChosen: 1 });
     }
   };
 
   pickThumbnail = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
+      mediaTypes: "Images",
       aspect: [16, 9]
     });
 
@@ -82,6 +86,17 @@ export default class SubirVideo extends React.Component {
           borderStyle="dashed"
           borderRadius={4}
         >
+          <View
+            style={[
+              styles.videoPreview,
+              { opacity: this.state.videoChosen == 0 ? 100 : 0 }
+            ]}
+          >
+            <Video
+              source={require('../../../../test/videos/nyancat.mp4')}
+              style={styles.videoPreview}
+            />
+          </View>
           <Button
             buttonStyle={styles.selectVideoButton}
             title="ELEGIR VÍDEO"
@@ -122,10 +137,7 @@ export default class SubirVideo extends React.Component {
         <View style={styles.viewSelectThumbnail}>
           <Button title="Elegir miniatura" onPress={this.pickThumbnail} />
           {thumbnail && (
-            <Image
-              source={{ uri: thumbnail }}
-              style={styles.imageThumbnail}
-            />
+            <Image source={{ uri: thumbnail }} style={styles.imageThumbnail} />
           )}
         </View>
 

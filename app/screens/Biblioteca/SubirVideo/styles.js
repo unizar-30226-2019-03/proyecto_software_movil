@@ -8,6 +8,11 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  videoPreview: {
+    position: "absolute",
+    top: 0,
+    left: 0
+  },
   selectVideoButton: {
     margin: 90,
     width: 177,

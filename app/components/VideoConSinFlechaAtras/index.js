@@ -1,3 +1,3 @@
-import FullScreenThumbnail from "./FullScreenThumbnail";
+import VideoConSinFlechaAtras from "./VideoConSinFlechaAtras";
 
-export default FullScreenThumbnail;
+export default VideoConSinFlechaAtras;
