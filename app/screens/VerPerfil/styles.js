@@ -8,8 +8,6 @@ export default StyleSheet.create({
 		paddingVertical: 25,
 		alignItems: "center",
 		justifyContent: "center",
-		//borderBottomWidth: 1,
-		//borderColor: "grey",
 	},
 	profPic: {
 		height: 200,
@@ -23,7 +21,8 @@ export default StyleSheet.create({
 	},
 	viewDescripcion: {
 		alignItems: "flex-start",
-		justifyContent: "center"
+		justifyContent: "center",
+		paddingBottom: 25,
 	},
 	leftIconName: {
 		paddingRight: 15,

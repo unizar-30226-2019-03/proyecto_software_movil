@@ -54,7 +54,7 @@ export default class VerPerfil extends React.Component {
               style={styles.viewNombre}
               onPress={() =>
                 this.props.navigation.navigate("ModificarCampo", {
-                  title: "Escribe tu nombre"
+                  title: "Escribe tu nombre", modificando: "nombre", texto: this.state.nombre, 
                 })
               }
             >
@@ -81,7 +81,7 @@ export default class VerPerfil extends React.Component {
               style={styles.viewDescripcion}
               onPress={() =>
                 this.props.navigation.navigate("ModificarCampo", {
-                  title: "Escribe tu descripción"
+                  title: "Escribe tu descripción", modificando: "descripcion", texto: this.state.descripcion, 
                 })
               }
             >
