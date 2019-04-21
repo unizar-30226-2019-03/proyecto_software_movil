@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity, ScrollView, View } from "react-native";
-import { Button, Image } from "react-native-elements";
+import { Image } from "react-native-elements";
 
 import styles from "./styles";
 
