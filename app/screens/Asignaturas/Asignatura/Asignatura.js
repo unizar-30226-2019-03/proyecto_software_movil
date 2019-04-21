@@ -7,6 +7,10 @@ import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 import styles from "./styles";
 
 export default class Asignatura extends React.Component {
+  state = {
+    asignaturaSeguida: false,
+  }
+
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam("title")
   });
@@ -18,7 +22,9 @@ export default class Asignatura extends React.Component {
           <View style={styles.viewSeguirAsignatura}>
             <Button
               buttonStyle={styles.buttonSeguirAsignatura}
-              title="Seguir asignatura"
+              title={ this.state.asignaturaSeguida ? "Siguiendo" : "Seguir asignatura" }
+              type={ this.state.asignaturaSeguida ? "outline" : "solid" }
+              onPress={ () => this.setState({ asignaturaSeguida: !this.state.asignaturaSeguida }) }
             />
           </View>
 
