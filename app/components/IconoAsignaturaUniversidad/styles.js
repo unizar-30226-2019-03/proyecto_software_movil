@@ -5,7 +5,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     borderWidth: 1,
     borderRadius: 20,
-    maxWidth: 80,
+    width: 80
   },
   nombreContainer: {
     flex: 1,

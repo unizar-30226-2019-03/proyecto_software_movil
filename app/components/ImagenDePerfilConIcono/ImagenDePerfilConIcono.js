@@ -23,7 +23,6 @@ const ImagenDePerfilConIcono = props => {
             type="font-awesome"
             name="camera"
             color="white"
-            iconStyle={styles.changeIcon}
           />
         </TouchableOpacity>
       ) : null}

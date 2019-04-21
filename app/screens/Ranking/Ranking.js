@@ -65,7 +65,6 @@ export default class Ranking extends React.Component {
           <View style={styles.rankingPlace}>
             <Text style={styles.rankNumber}>1.</Text>
             <TouchableOpacity
-              style={styles.touchableAsign}
               onPress={() =>
                 this.props.navigation.navigate("Asignatura", {
                   title: "UPM - Proyecto software"
@@ -83,7 +82,6 @@ export default class Ranking extends React.Component {
           <View style={styles.rankingPlace}>
             <Text style={styles.rankNumber}>2.</Text>
             <TouchableOpacity
-              style={styles.touchableAsign}
               onPress={() =>
                 this.props.navigation.navigate("Asignatura", {
                   title: "UPM - Proyecto software"
@@ -101,7 +99,6 @@ export default class Ranking extends React.Component {
           <View style={styles.rankingPlace}>
             <Text style={styles.rankNumber}>3.</Text>
             <TouchableOpacity
-              style={styles.touchableAsign}
               onPress={() =>
                 this.props.navigation.navigate("Asignatura", {
                   title: "UPM - Proyecto software"
@@ -119,7 +116,6 @@ export default class Ranking extends React.Component {
           <View style={styles.rankingPlace}>
             <Text style={styles.rankNumber}>4.</Text>
             <TouchableOpacity
-              style={styles.touchableAsign}
               onPress={() =>
                 this.props.navigation.navigate("Asignatura", {
                   title: "UPM - Proyecto software"

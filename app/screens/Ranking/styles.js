@@ -32,9 +32,6 @@ export default StyleSheet.create({
     fontSize: 17,
     fontWeight: "bold"
   },
-  touchableAsign: {
-    minWidth: 80
-  },
   rankScore: {
     fontSize: 20,
     fontWeight: "bold"

@@ -25,7 +25,6 @@ export default StyleSheet.create({
   },
   asignaturaContainer: {
     marginLeft: 10,
-    width: 80,
     marginTop: 7
   },
   title: {

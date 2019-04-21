@@ -8,11 +8,8 @@ export default StyleSheet.create({
     width: 60,
     height: 60,
     backgroundColor: "dodgerblue",
-    borderRadius: 300,
+    borderRadius: 90,
     justifyContent: "center",
     alignItems: "center"
-  },
-  changeIcon: {
-		
-	}
+  }
 });

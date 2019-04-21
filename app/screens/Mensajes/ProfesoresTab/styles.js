@@ -5,6 +5,7 @@ export default StyleSheet.create({
 		flex: 1
 	},
 	chatContainer: {
+		flex: 1,
 		marginHorizontal: 8,
 		borderBottomWidth: 1,
 		borderColor: "lightgrey",
@@ -19,20 +20,17 @@ export default StyleSheet.create({
 		margin: 8,
 	},
 	nameAndMsgContainer: {
+		flex: 1,
 		paddingLeft: 10,
 		flexDirection: "column",
 		alignItems: "flex-start",
-		justifyContent: "space-between",
-		width: 300,
-		height: 47,
+		justifyContent: "space-between"
 	},
 	nameText: {
-		maxWidth: 300,
 		fontWeight: "bold",
 		fontSize: 17
 	},
 	msgText: {
-		maxWidth: 300,
 		color: "darkgrey",
 		fontSize: 15,
 	},

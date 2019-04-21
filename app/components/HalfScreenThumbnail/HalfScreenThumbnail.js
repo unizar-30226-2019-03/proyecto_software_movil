@@ -16,7 +16,6 @@ import {
 
 import { VerdeClaro, RojoClaro } from "../../constants";
 
-import IconoAsignaturaUniversidad from "../IconoAsignaturaUniversidad";
 import AnyadirALista from "../AnyadirALista";
 
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
