@@ -1,19 +1,42 @@
 import React from "react";
-import { View, ActivityIndicator, KeyboardAvoidingView } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  TextInput,
+  Animated,
+  Dimensions,
+  Keyboard,
+  UIManager
+} from "react-native";
 import { Input, Image, Button } from "react-native-elements";
-import Dialog from "react-native-dialog";
 
 import { ImagePicker } from "expo";
 
 import styles from "./styles";
-import { TextInput } from "react-native-gesture-handler";
+
+const { State: TextInputState } = TextInput;
 
 export default class SignUpOne extends React.Component {
   state = {
-    image: "../../../../assets/icon.png",
-    _isDialogVisible: false,
-    _description: ""
+    shift: new Animated.Value(0),
+    image: "../../../../assets/icon.png"
   };
+
+  componentWillMount() {
+    this.keyboardDidShowSub = Keyboard.addListener(
+      "keyboardDidShow",
+      this.handleKeyboardDidShow
+    );
+    this.keyboardDidHideSub = Keyboard.addListener(
+      "keyboardDidHide",
+      this.handleKeyboardDidHide
+    );
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowSub.remove();
+    this.keyboardDidHideSub.remove();
+  }
 
   static navigationOptions = ({ navigation }) => ({
     title: "Registrarse"
@@ -47,11 +70,14 @@ export default class SignUpOne extends React.Component {
   };
 
   render() {
+    const { shift } = this.state;
     let { image } = this.state;
     var auxDescription = "ph";
 
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <Animated.ScrollView
+        style={[styles.container, { transform: [{ translateY: shift }] }]}
+      >
         <View style={styles.logoView}>
           <Image
             source={require("../../../../assets/icon.png")}
@@ -59,74 +85,88 @@ export default class SignUpOne extends React.Component {
             PlaceholderContent={<ActivityIndicator />}
           />
         </View>
-        <View style={styles.container07}>
-          <View style={styles.inputBoxSeparation}>
-            <Input
-              placeholder="Nombre de usuario*"
-              leftIcon={{ type: "font-awesome", name: "user" }}
-              leftIconContainerStyle={styles.inputSeparation}
-            />
-          </View>
-          <View style={styles.inputBoxSeparation}>
-            <Input
-              placeholder="Contraseña*"
-              secureTextEntry={true}
-              leftIcon={{ type: "font-awesome", name: "lock" }}
-              leftIconContainerStyle={styles.inputSeparation}
-            />
-          </View>
-          <View style={styles.inputBoxSeparation}>
-            <Input
-              placeholder="Vuelva a introducir la contraseña*"
-              secureTextEntry={true}
-              leftIcon={{ type: "font-awesome", name: "lock" }}
-              leftIconContainerStyle={styles.inputSeparation}
-            />
-          </View>
 
-          <View style={styles.viewImageContainer}>
-            {image && <Image source={{ uri: image }} style={styles.profPic} />}
-            <Button title="Seleccionar foto" onPress={this.pickProfileImage} />
-          </View>
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            placeholder="Nombre de usuario*"
+            leftIcon={{ type: "font-awesome", name: "user" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
+        </View>
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            placeholder="Contraseña*"
+            secureTextEntry={true}
+            leftIcon={{ type: "font-awesome", name: "lock" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
+        </View>
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            placeholder="Repita la contraseña*"
+            secureTextEntry={true}
+            leftIcon={{ type: "font-awesome", name: "lock" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
         </View>
 
-        <Dialog.Container visible={this.state._isDialogVisible}>
-          <Dialog.Title>Descripción</Dialog.Title>
-          <Dialog.Input
+        <View style={styles.viewImageContainer}>
+          {image && <Image source={{ uri: image }} style={styles.profPic} />}
+          <Button
+            title="Seleccionar foto"
+            containerStyle={styles.profPicButton}
+            onPress={this.pickProfileImage}
+          />
+        </View>
+
+        <View style={styles.descriptionContainer}>
+          <Input
             placeholder="Escriba su descripción..."
-            autoFocus={true}
-            defaultValue={this.state._description}
-            onChangeText={(textInput) => auxDescription = textInput}
+            leftIcon={{ type: "font-awesome", name: "info" }}
+            leftIconContainerStyle={styles.inputSeparationInfo}
             multiline={true}
-            />
-          <Dialog.Button
-            label="Cancelar"
-            onPress={() => this.setState({ _isDialogVisible: false })}
           />
-          <Dialog.Button
-            label="Aceptar"
-            onPress={() => this.updateDescriptionAndClose(auxDescription)}
-          />
-        </Dialog.Container>
-
-        <View style={styles.containerDescr}>
-          <View style={styles.description}>
-            <Input
-              placeholder="Escriba una descripción suya"
-              value={this.state._description}
-              multiline={true}
-              onFocus={() => this.setState({ _isDialogVisible: true })}
-            />
-          </View>
         </View>
 
-        <View style={styles.nextButton}>
+        <View style={styles.viewNextButton}>
           <Button
             onPress={() => this.props.navigation.navigate("SignUpTwo")}
             title="Siguiente"
+            containerStyle={styles.nextButton}
           />
         </View>
-      </KeyboardAvoidingView>
+      </Animated.ScrollView>
     );
   }
+
+  handleKeyboardDidShow = event => {
+    const { height: windowHeight } = Dimensions.get("window");
+    const keyboardHeight = event.endCoordinates.height;
+    const currentlyFocusedField = TextInputState.currentlyFocusedField();
+    UIManager.measure(
+      currentlyFocusedField,
+      (originX, originY, width, height, pageX, pageY) => {
+        const fieldHeight = height;
+        const fieldTop = pageY;
+        const gap =
+          windowHeight - keyboardHeight - (fieldTop + fieldHeight + 100);
+        if (gap >= 0) {
+          return;
+        }
+        Animated.timing(this.state.shift, {
+          toValue: gap,
+          duration: 200,
+          useNativeDriver: true
+        }).start();
+      }
+    );
+  };
+
+  handleKeyboardDidHide = () => {
+    Animated.timing(this.state.shift, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true
+    }).start();
+  };
 }

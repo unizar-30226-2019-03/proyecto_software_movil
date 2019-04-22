@@ -3,64 +3,53 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingHorizontal: 30,
-		paddingTop: 20,
-		justifyContent: "flex-start",
 		backgroundColor: "#F5FCFF"
 	},
 	logoView: {
-		paddingTop: 15,
-		paddingBottom: 25,
+		paddingHorizontal: 80,
+		paddingVertical: 40,
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	appLogo: { 
-		width: 50, 
-		height: 50 
-	},
-	container07: {
-		flex: 0.7,
-		justifyContent: "space-around",
-		backgroundColor: "#F5FCFF"
+		width: 75, 
+		height: 75 
 	},
 	inputBoxSeparation: {
+		paddingHorizontal: 40,
 		paddingBottom: 25,
-	},
-	containerDescr: {
-		marginTop: 15,
-		maxHeight: 50,
-		justifyContent: "space-around",
-		backgroundColor: "#F5FCFF"
-	},
-	description: {
-		//position: "absolute",
-		//bottom: 90,
-		//left: 30,
-		//maxHeight: 10,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "center",
-
 	},
 	inputSeparation: {
 		paddingRight: 10,
 	},
+	inputSeparationInfo: {
+		paddingRight: 15,
+	},
 	viewImageContainer: {
-		paddingTop: 15,
+		paddingHorizontal: 50,
 		flexDirection: "row",
-		flex: 1,
 		alignItems: "center",
-		justifyContent: "space-between"
+		justifyContent: "space-between",
+		paddingBottom: 10
 	},
 	profPic: {
-		width: 70, 
-		height: 70 
+		width: 85, 
+		height: 85,
+		borderRadius: 85
+	},
+	profPicButton: {
+		width: 150
+	},
+	descriptionContainer: {
+		paddingHorizontal: 40,
+		paddingBottom: 30,
+	},
+	viewNextButton: {
+		paddingRight: 20,
+		alignItems: "flex-end",
+		paddingBottom: 20,
 	},
 	nextButton: {
-		position: "absolute",
-		bottom: 10,
-		right: 10,
-		justifyContent: "flex-end",
-		alignItems: "flex-end"
-	},
+		width: 120
+	}
 });
