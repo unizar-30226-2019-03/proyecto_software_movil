@@ -3,30 +3,22 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingHorizontal: 30,
-		paddingTop: 20,
-		justifyContent: "flex-start",
 		backgroundColor: "#F5FCFF"
 	},
 	logoView: {
-		paddingTop: 15,
-		paddingBottom: 25,
+		paddingHorizontal: 80,
+		paddingTop: 85,
+		paddingBottom: 40,
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	appLogo: { 
-		width: 50, 
-		height: 50 
-	},
-	container07: {
-		flex: 0.7,
-		justifyContent: "center",
-		backgroundColor: "#F5FCFF",
-		paddingBottom: 120,
-		paddingTop: 60,
+		width: 75, 
+		height: 75 
 	},
 	inputBoxSeparation: {
-		paddingBottom: 20,
+		paddingHorizontal: 40,
+		paddingTop: 30,
 	},
 	description: {
 		paddingTop: 10,
@@ -35,34 +27,24 @@ export default StyleSheet.create({
 	inputSeparation: {
 		paddingRight: 10,
 	},
+	viewForgotPassword: {
+		paddingTop: 20,
+		alignItems: "center"
+	},
 	forgotPassword: {
 		color: "skyblue",
 		textDecorationLine: "underline",
-		textAlign: "center"
+		fontSize: 17,
 	},
-	loginContainer: {
-		paddingTop: 25,
-		paddingHorizontal: 0,
-		
+	loginButtonContainer: {
+		paddingTop: 40,
+		paddingHorizontal: 50,
 	},
-	googleButton: {
-		backgroundColor: "#dd4e41"
+	registerButtonContainer: {
+		paddingTop: 20,
+		paddingHorizontal: 50,
 	},
-	googleContainer: {
-		paddingBottom: 10
-	},
-	viewImageContainer: {
-		paddingTop: 15,
-		flexDirection: "row",
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "space-between"
-	},
-	nextButton: {
-		position: "absolute",
-		bottom: 10,
-		right: 10,
-		justifyContent: "flex-end",
-		alignItems: "flex-end"
-	},
+	registerButton: {
+		//backgroundColor: "grey"
+	}
 });
