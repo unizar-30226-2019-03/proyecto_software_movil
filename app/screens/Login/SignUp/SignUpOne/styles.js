@@ -17,7 +17,7 @@ export default StyleSheet.create({
 	},
 	inputBoxSeparation: {
 		paddingHorizontal: 40,
-		paddingBottom: 25,
+		paddingBottom: 30,
 	},
 	inputSeparation: {
 		paddingRight: 10,

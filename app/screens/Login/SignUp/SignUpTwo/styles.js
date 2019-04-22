@@ -3,34 +3,35 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingHorizontal: 30,
-		paddingTop: 20,
-		justifyContent: "flex-start",
 		backgroundColor: "#F5FCFF"
 	},
 	logoView: {
-		paddingTop: 15,
-		paddingBottom: 25,
+		paddingHorizontal: 80,
+		paddingVertical: 40,
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	appLogo: { 
-		width: 50, 
-		height: 50 
-	},
-	container07: {
-		flex: 0.7,
-		justifyContent: "space-around",
-		backgroundColor: "#F5FCFF"
+		width: 75, 
+		height: 75 
 	},
 	inputBoxSeparation: {
-		paddingBottom: 25,
+		paddingHorizontal: 40,
+		paddingBottom: 30,
+	},
+	placeholderText: {
+		fontSize: 16
+	},
+	viewNextButton: {
+		paddingTop: 20,
+		paddingRight: 20,
+		alignItems: "flex-end",
+		paddingBottom: 20,
+	},
+	nextText: {
+		fontSize: 17,
 	},
 	nextButton: {
-		position: "absolute",
-		bottom: 10,
-		right: 10,
-		justifyContent: "flex-end",
-		alignItems: "flex-end"
-	},
+		width: 140
+	}
 });

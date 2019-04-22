@@ -148,8 +148,7 @@ export default class SignUpOne extends React.Component {
       (originX, originY, width, height, pageX, pageY) => {
         const fieldHeight = height;
         const fieldTop = pageY;
-        const gap =
-          windowHeight - keyboardHeight - (fieldTop + fieldHeight + 100);
+        const gap = keyboardHeight - (fieldTop + fieldHeight + 100);
         if (gap >= 0) {
           return;
         }
