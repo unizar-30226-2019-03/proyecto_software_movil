@@ -16,6 +16,8 @@ import { Button, Input, Image } from "react-native-elements";
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
 import styles from "./styles";
 
+import { ScreenWidth, FullScreen16_9_Height } from "../../../constants";
+
 const { State: TextInputState } = TextInput;
 
 export default class SubirVideo extends React.Component {
@@ -84,10 +86,6 @@ export default class SubirVideo extends React.Component {
       >
         <View
           style={styles.viewSelectVideo}
-          borderWidth={2}
-          borderColor="grey"
-          borderStyle="dashed"
-          borderRadius={4}
         >
           {this.state.videoIsChosen == 0 ? (
             <Button
@@ -102,7 +100,6 @@ export default class SubirVideo extends React.Component {
               source={video}
               thumbnail={thumbnail}
               autoplay={false}
-              style={styles.videoPlayer}
             />
           )}
         </View>

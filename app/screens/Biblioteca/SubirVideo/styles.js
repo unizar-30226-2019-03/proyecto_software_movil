@@ -1,26 +1,20 @@
 import { StyleSheet, Dimensions } from "react-native";
 
+import { ScreenWidth, FullScreen16_9_Height } from "../../../constants";
+
 export default StyleSheet.create({
   container: {
     flex: 1
   },
   viewSelectVideo: {
+    borderWidth: 2,
+    borderColor: "grey",
+    borderStyle: "dashed",
+    borderRadius: 4,
+    width: ScreenWidth,
+    height: FullScreen16_9_Height,
     justifyContent: "center",
     alignItems: "center"
-  },
-  videoPreview: {
-    //aspectRatio: 16/9,
-    maxHeight: 100,
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  videoPlayer: {
-    maxHeight: 100,
-    //aspectRatio: 16/9,
-    //aspectRatio: 16/9,
-    //width: Dimensions.get("window").width,
-    //height: Dimensions.get("window").height,
-    //minHeight: 900/3,
   },
   selectVideoButton: {
     margin: 90,
@@ -67,5 +61,4 @@ export default StyleSheet.create({
     marginBottom: 7,
     width: 120,
   }
-
 });
