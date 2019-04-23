@@ -1,0 +1,1 @@
+Librebería expo-video-player `https://github.com/ihmpavel/expo-video-player` modificada.
