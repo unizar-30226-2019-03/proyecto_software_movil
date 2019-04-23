@@ -16,8 +16,6 @@ import { Button, Input, Image } from "react-native-elements";
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
 import styles from "./styles";
 
-import { ScreenWidth, FullScreen16_9_Height } from "../../../constants";
-
 const { State: TextInputState } = TextInput;
 
 export default class SubirVideo extends React.Component {
@@ -84,9 +82,7 @@ export default class SubirVideo extends React.Component {
       <Animated.ScrollView
         style={[styles.container, { transform: [{ translateY: shift }] }]}
       >
-        <View
-          style={styles.viewSelectVideo}
-        >
+        <View style={styles.viewSelectVideo}>
           {this.state.videoIsChosen == 0 ? (
             <Button
               buttonStyle={styles.selectVideoButton}
@@ -95,7 +91,7 @@ export default class SubirVideo extends React.Component {
             />
           ) : (
             <VideoConSinFlechaAtras
-              flechaSi={false}      
+              flechaSi={false}
               navigation={this.props.navigation}
               source={video}
               thumbnail={thumbnail}

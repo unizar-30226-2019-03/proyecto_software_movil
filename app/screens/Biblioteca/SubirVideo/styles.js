@@ -38,18 +38,18 @@ export default StyleSheet.create({
   },
   viewInput: {
     paddingTop: 18,
-    paddingHorizontal: 8,
+    paddingHorizontal: 8
   },
   viewSelectThumbnail: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    paddingTop: 18,
+    paddingTop: 18
   },
   imageThumbnail: {
-    aspectRatio: 16/9,
+    aspectRatio: 16 / 9,
     height: 70,
-    borderRadius: 3,
+    borderRadius: 3
   },
   uploadButtonView: {
     paddingTop: 20,
@@ -59,6 +59,6 @@ export default StyleSheet.create({
   uploadButton: {
     marginRight: 12,
     marginBottom: 7,
-    width: 120,
+    width: 120
   }
 });
