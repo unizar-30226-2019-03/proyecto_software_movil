@@ -6,7 +6,7 @@ import {
   Image,
   ListView,
   TextInput,
-  KeyboardAvoidingView,
+  KeyboardAvoidingView
 } from "react-native";
 
 import styles from "./styles";
