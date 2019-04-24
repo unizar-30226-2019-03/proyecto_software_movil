@@ -46,7 +46,7 @@ export default class Chat extends React.Component {
     headerTitle: (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("VerPerfil", { title: "Perfil de Pedro" })
+          navigation.navigate("VerPerfil", { title: "Perfil de Pedro", perfilPropioSi: false })
         }
         activeOpacity={0.6}
       >

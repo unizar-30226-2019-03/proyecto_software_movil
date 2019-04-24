@@ -27,7 +27,7 @@ export default class Cuenta extends React.Component {
 					style={styles.boton}
 					activeOpacity={1}
 					onPress={() =>
-						this.props.navigation.navigate("VerPerfil", { title: "Mi perfil" })
+						this.props.navigation.navigate("VerPerfil", { title: "Mi perfil", perfilPropioSi: true })
 					}
 					>
 
