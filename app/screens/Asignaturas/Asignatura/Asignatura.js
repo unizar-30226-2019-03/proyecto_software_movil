@@ -1,15 +1,12 @@
 import React from "react";
 import { Text, Image, View, ScrollView, TouchableOpacity } from "react-native";
-import { Button } from "react-native-elements";
 
 import { createAppContainer, createStackNavigator } from "react-navigation";
 import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 import styles from "./styles";
+import BotonSeguirAsignatura from "../../../components/BotonSeguirAsignatura";
 
 export default class Asignatura extends React.Component {
-  state = {
-    asignaturaSeguida: false,
-  }
 
   static navigationOptions = ({ navigation }) => ({
     title: navigation.getParam("title")
@@ -20,12 +17,7 @@ export default class Asignatura extends React.Component {
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.viewSeguirAsignatura}>
-            <Button
-              buttonStyle={styles.buttonSeguirAsignatura}
-              title={ this.state.asignaturaSeguida ? "Siguiendo" : "Seguir asignatura" }
-              type={ this.state.asignaturaSeguida ? "outline" : "solid" }
-              onPress={ () => this.setState({ asignaturaSeguida: !this.state.asignaturaSeguida }) }
-            />
+            <BotonSeguirAsignatura/>
           </View>
 
           <View style={styles.viewTextProfes}>

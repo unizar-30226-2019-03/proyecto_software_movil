@@ -8,7 +8,7 @@ import ImagenDePerfilConIcono from "../../components/ImagenDePerfilConIcono";
 
 export default class VerPerfil extends React.Component {
   state = {
-    perfilPropioSi: 1,
+    perfilPropioSi: this.props.navigation.getParam("perfilPropioSi"),
     nombre: "Turismundo",
     descripcion:
       "Profe tajo guay co\nen plan asi pim pam explicando sistemas empotrados\n\ny otras cosas youknow\njugador profesionaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaal de cricket",
@@ -106,14 +106,39 @@ export default class VerPerfil extends React.Component {
             </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.viewNombre}>
-            <Input
-              label="Nombre"
-              defaultValue={this.state.nombre}
-              leftIcon={{ type: "font-awesome", name: "user" }}
-              leftIconContainerStyle={styles.leftIcon}
-              editable={false}
-            />
+          <View>
+            <View
+              style={styles.viewNombre}
+            >
+              <Input
+                label="Nombre"
+                defaultValue={this.state.nombre}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "user",
+                  color: "dodgerblue"
+                }}
+                leftIconContainerStyle={styles.leftIconName}
+                editable={false}
+              />
+            </View>
+
+            <View
+              style={styles.viewDescripcion}
+            >
+              <Input
+                label="Descripción"
+                defaultValue={this.state.descripcion}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "info",
+                  color: "dodgerblue"
+                }}
+                leftIconContainerStyle={styles.leftIconDescr}
+                editable={false}
+                multiline={true}
+              />
+            </View>
           </View>
         )}
       </ScrollView>
