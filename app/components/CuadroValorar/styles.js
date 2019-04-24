@@ -1,12 +1,13 @@
 import { StyleSheet, Dimensions } from "react-native";
 var { windowHeight, windowWidth } = Dimensions.get("window");
+import { GrisClaro } from "../../constants/constants";
 export default StyleSheet.create({
   container: {
-    flex: 0.3,
+    flex: 1,
     borderWidth: 2
   },
   valorar: {
-    flex: 0.6,
+    flex: 0.23,
     borderWidth: 1
   },
   dejarSeguir: {
@@ -21,13 +22,17 @@ export default StyleSheet.create({
 
     flex: 0.2
   },
+  fecha: {
+    color: GrisClaro
+  },
+
   popUp: {
     backgroundColor: "rgba(52,52,52,0.2)",
     flex: 1
   },
   apartados: {
     backgroundColor: "white",
-    width: windowWidth * 0.99,
+    width: windowWidth,
     height: windowHeight * 0.7,
     alignSelf: "center",
     marginVertical: 100,
@@ -37,33 +42,46 @@ export default StyleSheet.create({
   },
   apartado: {
     borderBottomWidth: 2,
-    flexDirection: "row",
-    padding: 10
+    width: windowWidth / 2,
+    flexDirection: "column",
+    flex: 1,
+    padding: 5,
+    alignItems: "center",
+    marginHorizontal: "10%"
   },
   textoApartado: {
-    flex: 0.5,
-    alignSelf: "center"
+    alignSelf: "center",
+    fontSize: 20,
+    marginRight: 5
   },
-  ratingApartado: {
-    flex: 0.5,
-    alignSelf: "center"
-  },
+
   valorarTexto: {
-    borderWidth: 2,
+    borderBottomWidth: 4,
     marginVertical: 10,
     fontSize: 20,
     padding: 10,
-    borderRadius: 20,
+    borderRadius: 50,
     alignItems: "center",
     borderColor: "rgba(52,52,52,0.15)"
   },
   cancelarTexto: {
-    borderWidth: 2,
+    borderBottomWidth: 4,
     marginVertical: 10,
     fontSize: 15,
     padding: 10,
     borderRadius: 50,
     alignSelf: "center",
     borderColor: "rgba(52,52,52,0.15)"
+  },
+  botonValorar: {
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: "rgba(52,52,52,0.15)",
+    alignItems: "center",
+    marginVertical: 10,
+    marginHorizontal: 3,
+    flexDirection: "row",
+    width: "40%",
+    padding: 5
   }
 });
