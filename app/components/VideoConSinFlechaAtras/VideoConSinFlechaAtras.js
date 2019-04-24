@@ -6,15 +6,17 @@ import { Icon } from "react-native-elements";
 import styles from "./styles";
 
 import { Video } from "expo";
-import VideoPlayer from "expo-video-player";
+
+import VideoPlayer from "./ExpoVideoPlayerControls/dist"
+
 /*
  * PROPS:
  * source={uri} uri del video
  * thumbnail={uri} uri de la thumbnail
  * autoplay={true / false}
- * style={styles.____}
  * flechaSi={true / false} si el video tiene flecha para volver atrás o no
  * goBackDestination="destino" destino de navigation, en caso de que flechaSi == {true}
+ * width, height: altura y anchura del vídeo.
  */
 const VideoConSinFlechaAtras = props => {
   return (
@@ -26,7 +28,8 @@ const VideoConSinFlechaAtras = props => {
           resizeMode: Video.RESIZE_MODE_CONTAIN,
           shouldPlay: props.autoplay,
           volume: 0.75,
-          style: props.style,
+          width: props.width,
+          height: props.height
         }}
         showControlsOnLoad={true}
         sliderColor="#009485"

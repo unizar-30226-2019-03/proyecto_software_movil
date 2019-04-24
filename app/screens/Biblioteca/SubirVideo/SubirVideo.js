@@ -82,13 +82,7 @@ export default class SubirVideo extends React.Component {
       <Animated.ScrollView
         style={[styles.container, { transform: [{ translateY: shift }] }]}
       >
-        <View
-          style={styles.viewSelectVideo}
-          borderWidth={2}
-          borderColor="grey"
-          borderStyle="dashed"
-          borderRadius={4}
-        >
+        <View style={styles.viewSelectVideo}>
           {this.state.videoIsChosen == 0 ? (
             <Button
               buttonStyle={styles.selectVideoButton}
@@ -97,12 +91,11 @@ export default class SubirVideo extends React.Component {
             />
           ) : (
             <VideoConSinFlechaAtras
-              flechaSi={false}      
+              flechaSi={false}
               navigation={this.props.navigation}
               source={video}
               thumbnail={thumbnail}
               autoplay={false}
-              style={styles.videoPlayer}
             />
           )}
         </View>
