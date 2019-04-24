@@ -9,7 +9,6 @@ export default StyleSheet.create({
   },
   videoContainer: {
     width: FullScreenWidth,
-    height: FullScreen16_9_Height,
-    borderWidth: 2
+    height: FullScreen16_9_Height
   }
 });

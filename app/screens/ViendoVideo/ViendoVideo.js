@@ -7,7 +7,8 @@ import CuadroValorar from "../../components/CuadroValorar";
 export default class ViendoVideo extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
+      /*
+      
         <Text>TODO VIENDO VIDEO</Text>
         <Button
           title="ATRAS"
@@ -22,8 +23,22 @@ export default class ViendoVideo extends React.Component {
             })
           }
           title="IR ASIGNATURA"
-        />
-        <View style={styles.videoContainer} />
+        /> */
+      //QUITO TODO LO ANTERIOR?????????
+      <View style={styles.container}>
+        <View style={styles.videoContainer}>
+          <VideoConSinFlechaAtras
+            flechaSi={false}
+            navigation={this.props.navigation}
+            source={
+              "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            }
+            thumbnail={
+              "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            }
+            autoplay={true}
+          />
+        </View>
         <CuadroValorar />
       </View>
     );

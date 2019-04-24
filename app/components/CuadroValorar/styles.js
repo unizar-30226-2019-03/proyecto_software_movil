@@ -7,7 +7,7 @@ export default StyleSheet.create({
     borderWidth: 2
   },
   valorar: {
-    flex: 0.23,
+    flex: 0.2,
     borderWidth: 1
   },
   dejarSeguir: {
