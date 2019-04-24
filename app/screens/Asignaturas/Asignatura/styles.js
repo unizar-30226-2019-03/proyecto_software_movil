@@ -10,9 +10,6 @@ export default StyleSheet.create({
 		paddingTop: 10,
 		paddingRight: 5,
 	},
-	buttonSeguirAsignatura: {
-		width: 200,
-	},
 	viewTextProfes: {
 		paddingTop: 20,
 		//borderWidth: 7,
