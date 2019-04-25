@@ -10,12 +10,16 @@ import {
 } from "react-native";
 import { Image, Text, Input, Button } from "react-native-elements";
 
+import SwaggerUnicast from 'swagger_unicast';
+
 import styles from "./styles";
 
 const { State: TextInputState } = TextInput;
 
 export default class SignIn extends React.Component {
   state = {
+    username: "",
+    password: "",
     shift: new Animated.Value(0)
   };
 
@@ -33,6 +37,17 @@ export default class SignIn extends React.Component {
   componentWillUnmount() {
     this.keyboardDidShowSub.remove();
     this.keyboardDidHideSub.remove();
+  }
+
+  tryLogin() {
+    let apiInstance = new SwaggerUnicast.UserApi();
+    apiInstance.authUser(this.state.username, this.state.password, (error, data, response) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log('API called successfully.');
+      }
+    });
   }
 
   render() {
@@ -75,7 +90,8 @@ export default class SignIn extends React.Component {
 
         <Button
           containerStyle={styles.loginButtonContainer}
-          onPress={() => this.props.navigation.navigate("TopBarScreens")}
+          onPress={() => tryLogin()}
+          //             this.props.navigation.navigate("TopBarScreens")
           title="ENTRAR"
         />
 
