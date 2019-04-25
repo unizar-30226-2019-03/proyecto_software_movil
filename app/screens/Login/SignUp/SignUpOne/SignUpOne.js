@@ -93,6 +93,16 @@ export default class SignUpOne extends React.Component {
             leftIconContainerStyle={styles.inputSeparation}
           />
         </View>
+
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            placeholder="Correo electrónico*"
+            secureTextEntry={true}
+            leftIcon={{ type: "font-awesome", name: "at" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
+        </View>
+
         <View style={styles.inputBoxSeparation}>
           <Input
             placeholder="Contraseña*"
@@ -109,13 +119,29 @@ export default class SignUpOne extends React.Component {
             leftIconContainerStyle={styles.inputSeparation}
           />
         </View>
-
+        
         <View style={styles.viewImageContainer}>
           {image && <Image source={{ uri: image }} style={styles.profPic} />}
           <Button
             title="Seleccionar foto"
             containerStyle={styles.profPicButton}
             onPress={this.pickProfileImage}
+          />
+        </View>
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            placeholder="Nombre*"
+            secureTextEntry={true}
+            leftIcon={{ type: "font-awesome", name: "id-card" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
+        </View>
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            placeholder="Apellidos*"
+            secureTextEntry={true}
+            leftIcon={{ type: "font-awesome", name: "id-card" }}
+            leftIconContainerStyle={styles.inputSeparation}
           />
         </View>
 
