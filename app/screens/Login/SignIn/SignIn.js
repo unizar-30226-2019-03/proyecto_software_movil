@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Image, Text, Input, Button } from "react-native-elements";
 
-import SwaggerUnicast from 'swagger_unicast';
+import { UserApi } from 'swagger_unicast';
 
 import styles from "./styles";
 
@@ -40,14 +40,17 @@ export default class SignIn extends React.Component {
   }
 
   tryLogin() {
-    let apiInstance = new SwaggerUnicast.UserApi();
-    apiInstance.authUser(this.state.username, this.state.password, (error, data, response) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log('API called successfully.');
-      }
-    });
+    // let apiInstance = new UserApi();
+    // apiInstance.authUser(this.state.username, this.state.password, (error, data, response) => {
+    //   if (error) {
+    //     console.error(error);
+    //   } 
+    //   else {
+    //     console.log(data);
+    //     this.props.navigation.navigate("TopBarScreens")
+    //   }
+    // });
+    this.props.navigation.navigate("TopBarScreens");
   }
 
   render() {
@@ -69,6 +72,7 @@ export default class SignIn extends React.Component {
             placeholder="Usuario"
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
+            onChangeText={text => this.setState({ username: text })}
           />
         </View>
         <View style={styles.inputBoxSeparation}>
@@ -77,6 +81,7 @@ export default class SignIn extends React.Component {
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
             leftIconContainerStyle={styles.inputSeparation}
+            onChangeText={text => this.setState({ password: text })}
           />
         </View>
         <View style={styles.viewForgotPassword}>
@@ -90,8 +95,7 @@ export default class SignIn extends React.Component {
 
         <Button
           containerStyle={styles.loginButtonContainer}
-          onPress={() => tryLogin()}
-          //             this.props.navigation.navigate("TopBarScreens")
+          onPress={() => this.tryLogin()}   
           title="ENTRAR"
         />
 
