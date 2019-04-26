@@ -52,7 +52,7 @@ export default class Ranking extends React.Component {
                   ]}
                   leftIcon={{
                     type: "entypo",
-                    name: item.name == this.state.filter ? "check" : ""
+                    name: item.name == this.state.filter ? "check" : undefined
                   }}
                   onPress={() => this.enableFilter(item.name)}
                 />
