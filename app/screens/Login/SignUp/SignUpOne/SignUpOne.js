@@ -97,7 +97,6 @@ export default class SignUpOne extends React.Component {
         <View style={styles.inputBoxSeparation}>
           <Input
             placeholder="Correo electrónico*"
-            secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "at" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
@@ -131,7 +130,6 @@ export default class SignUpOne extends React.Component {
         <View style={styles.inputBoxSeparation}>
           <Input
             placeholder="Nombre*"
-            secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
@@ -139,7 +137,6 @@ export default class SignUpOne extends React.Component {
         <View style={styles.inputBoxSeparation}>
           <Input
             placeholder="Apellidos*"
-            secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
