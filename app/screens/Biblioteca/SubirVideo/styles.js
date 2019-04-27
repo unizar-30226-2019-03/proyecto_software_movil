@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
 
-import { ScreenWidth, FullScreen16_9_Height } from "../../../constants";
+import { ScreenWidth, FullScreen16_9_Height, Azul } from "../../../constants";
 
 export default StyleSheet.create({
   container: {
@@ -19,7 +19,8 @@ export default StyleSheet.create({
   selectVideoButton: {
     margin: 90,
     width: 177,
-    height: 47
+    height: 47,
+    backgroundColor: Azul
   },
   viewSelectAsign: {
     paddingTop: 8,
@@ -34,7 +35,7 @@ export default StyleSheet.create({
   pickerAsign: {
     height: 50,
     width: 200,
-    color: "blue"
+    color: Azul
   },
   viewInput: {
     paddingTop: 18,
@@ -45,6 +46,9 @@ export default StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     paddingTop: 18
+  },
+  selectThumbnail: {
+    backgroundColor: Azul
   },
   imageThumbnail: {
     aspectRatio: 16 / 9,
@@ -59,6 +63,7 @@ export default StyleSheet.create({
   uploadButton: {
     marginRight: 12,
     marginBottom: 7,
-    width: 120
+    width: 120,
+    backgroundColor: Azul
   }
 });
