@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Image, Text, Input, Button } from "react-native-elements";
 
-import { UserApi, UniversityApi, ApiClient } from "swagger_unicast";
+import { UserApi } from "swagger_unicast";
 
 import { signIn } from "../../../config/Auth";
 
