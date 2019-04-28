@@ -10,6 +10,7 @@ export default class VerPerfil extends React.Component {
   state = {
     perfilPropioSi: this.props.navigation.getParam("perfilPropioSi"),
     nombre: "Turismundo",
+    apellidos: "Scott Williams",
     descripcion:
       "Profe tajo guay co\nen plan asi pim pam explicando sistemas empotrados\n\ny otras cosas youknow\njugador profesionaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaal de cricket",
     imagen:
@@ -63,7 +64,34 @@ export default class VerPerfil extends React.Component {
                 defaultValue={this.state.nombre}
                 leftIcon={{
                   type: "font-awesome",
-                  name: "user",
+                  name: "id-card",
+                  color: "dodgerblue"
+                }}
+                rightIcon={{
+                  type: "font-awesome",
+                  name: "edit",
+                  color: "grey"
+                }}
+                leftIconContainerStyle={styles.leftIconName}
+                rightIconContainerStyle={styles.rightIcon}
+                editable={false}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.viewNombre}
+              onPress={() =>
+                this.props.navigation.navigate("ModificarCampo", {
+                  title: "Escribe tus apellidos", modificando: "apellidos", texto: this.state.apellidos, 
+                })
+              }
+            >
+              <Input
+                label="Apellidos"
+                defaultValue={this.state.apellidos}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "id-card",
                   color: "dodgerblue"
                 }}
                 rightIcon={{
@@ -115,7 +143,23 @@ export default class VerPerfil extends React.Component {
                 defaultValue={this.state.nombre}
                 leftIcon={{
                   type: "font-awesome",
-                  name: "user",
+                  name: "id-card",
+                  color: "dodgerblue"
+                }}
+                leftIconContainerStyle={styles.leftIconName}
+                editable={false}
+              />
+            </View>
+
+            <View
+              style={styles.viewNombre}
+            >
+              <Input
+                label="Apellidos"
+                defaultValue={this.state.apellidos}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "id-card",
                   color: "dodgerblue"
                 }}
                 leftIconContainerStyle={styles.leftIconName}

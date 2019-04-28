@@ -8,7 +8,7 @@ export default StyleSheet.create({
 		paddingTop: 10,
 	},
 	leftIconName: {
-		paddingRight: 15,
+		paddingRight: 10,
 		alignSelf: "flex-start",
 	},
 	leftIconDescr: {
