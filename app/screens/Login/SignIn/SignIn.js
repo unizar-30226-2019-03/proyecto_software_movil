@@ -43,20 +43,21 @@ export default class SignIn extends React.Component {
   }
 
   tryLogin = async () => {
-    let apiInstance = new UserApi();
-    apiInstance.authUser(
-      this.state.username,
-      this.state.password,
-      async (error, data, response) => {
-        if (error) {
-          this.setState({
-            showInputError: true
-          });
-        } else {
-          await signIn(data.token, this.props.navigation);
-        }
-      }
-    );
+    await signIn("data.token", this.props.navigation);
+    // let apiInstance = new UserApi();
+    // apiInstance.authUser(
+    //   this.state.username,
+    //   this.state.password,
+    //   async (error, data, response) => {
+    //     if (error) {
+    //       this.setState({
+    //         showInputError: true
+    //       });
+    //     } else {
+    //       await signIn(data.token, this.props.navigation);
+    //     }
+    //   }
+    // );
   };
 
   render() {
