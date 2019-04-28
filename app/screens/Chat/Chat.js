@@ -91,7 +91,7 @@ export default class Chat extends React.Component {
           style={styles.vista}
           behavior="padding"
           enabled
-          keyboardVerticalOffset={headerHeight + 22}
+          keyboardVerticalOffset={headerHeight}
         >
           <ListView
             style={styles.lista}
