@@ -131,7 +131,11 @@ export default class SubirVideo extends React.Component {
         </View>
 
         <View style={styles.viewSelectThumbnail}>
-          <Button title="Elegir miniatura" onPress={this.pickThumbnail} />
+          <Button
+            title="Elegir miniatura"
+            onPress={this.pickThumbnail}
+            buttonStyle={styles.selectThumbnail}
+          />
           {thumbnail && (
             <Image source={{ uri: thumbnail }} style={styles.imageThumbnail} />
           )}

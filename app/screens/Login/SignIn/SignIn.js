@@ -10,7 +10,9 @@ import {
 } from "react-native";
 import { Image, Text, Input, Button } from "react-native-elements";
 
-import { UserApi } from 'swagger_unicast';
+import { UserApi } from "swagger_unicast";
+
+import { signIn } from "../../../config/Auth";
 
 import styles from "./styles";
 
@@ -20,6 +22,7 @@ export default class SignIn extends React.Component {
   state = {
     username: "",
     password: "",
+    showInputError: false,
     shift: new Animated.Value(0)
   };
 
@@ -39,19 +42,22 @@ export default class SignIn extends React.Component {
     this.keyboardDidHideSub.remove();
   }
 
-  tryLogin() {
-    // let apiInstance = new UserApi();
-    // apiInstance.authUser(this.state.username, this.state.password, (error, data, response) => {
-    //   if (error) {
-    //     console.error(error);
-    //   } 
-    //   else {
-    //     console.log(data);
-    //     this.props.navigation.navigate("TopBarScreens")
-    //   }
-    // });
-    this.props.navigation.navigate("TopBarScreens");
-  }
+  tryLogin = async () => {
+    let apiInstance = new UserApi();
+    apiInstance.authUser(
+      this.state.username,
+      this.state.password,
+      async (error, data, response) => {
+        if (error) {
+          this.setState({
+            showInputError: true
+          });
+        } else {
+          await signIn(data.token, this.props.navigation);
+        }
+      }
+    );
+  };
 
   render() {
     const { shift } = this.state;
@@ -72,7 +78,16 @@ export default class SignIn extends React.Component {
             placeholder="Usuario"
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
-            onChangeText={text => this.setState({ username: text })}
+            onChangeText={text =>
+              this.setState({ username: text, showInputError: false })
+            }
+            errorStyle={{ color: "red" }}
+            errorMessage={
+              this.state.showInputError
+                ? "Nombre de usuario o contraseña incorrectos"
+                : null
+            }
+            autoCorrect={false}
           />
         </View>
         <View style={styles.inputBoxSeparation}>
@@ -81,21 +96,27 @@ export default class SignIn extends React.Component {
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
             leftIconContainerStyle={styles.inputSeparation}
-            onChangeText={text => this.setState({ password: text })}
+            onChangeText={text =>
+              this.setState({ password: text, showInputError: false })
+            }
+            autoCorrect={false}
           />
         </View>
         <View style={styles.viewForgotPassword}>
           <Text
             style={styles.forgotPassword}
-            onPress={() => this.handleForgottenPW}
+            onPress={() =>
+              this.props.navigation.navigate("HasOlvidadoContrasenya")
+            }
           >
             ¿Has olvidado tu contraseña?
           </Text>
         </View>
 
         <Button
+          buttonStyle={styles.loginButton}
           containerStyle={styles.loginButtonContainer}
-          onPress={() => this.tryLogin()}   
+          onPress={() => this.tryLogin()}
           title="ENTRAR"
         />
 
