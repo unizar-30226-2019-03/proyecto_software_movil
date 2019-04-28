@@ -21,6 +21,10 @@ const SearchMenuBar = ({ navigation }) => {
         activeOpacity={1}
       >
         <View style={styles.container}>
+          <Image
+            source={require("../../assets/icon.png")}
+            style={styles.appLogo}
+          />
           <Ionicons name="ios-apps" style={styles.appIcon} />
           <Text style={styles.searchBarTitle}>UniCast</Text>
         </View>

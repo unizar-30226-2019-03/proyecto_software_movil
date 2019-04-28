@@ -14,6 +14,14 @@ export default StyleSheet.create({
     fontWeight: "bold",
     fontSize: 17,
   },
+  searchBarContainer: {
+    width: 190,
+    backgroundColor: "white",
+    borderRadius: 7,
+  },
+  searchBar: {
+    backgroundColor: "lightgrey"
+  },
   dropDownMenuContainer: {
     marginRight: 5,
     marginLeft: 5,

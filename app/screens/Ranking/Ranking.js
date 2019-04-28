@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, Button, ScrollView, TouchableOpacity } from "react-native";
-import { ListItem, Icon } from "react-native-elements";
+import { ListItem, Icon, SearchBar } from "react-native-elements";
 
 import { Menu, MenuOptions, MenuTrigger } from "react-native-popup-menu";
 
@@ -9,11 +9,19 @@ import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversi
 
 export default class Ranking extends React.Component {
   state = {
-    filter: "Por universidad"
+    filter: "Por universidad",
+    search: ""
   };
 
   enableFilter(name) {
     this.setState({ filter: name });
+  }
+
+  handleSearch(text) {
+    this.setState({ search:text });
+    if (text != "") {
+      //buscar en la API
+    }
   }
 
   render() {
@@ -32,9 +40,15 @@ export default class Ranking extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.viewFilter}>
-          <View style={styles.viewRankingTitle}>
-            <Text style={styles.rankingTitle}>{this.state.filter}</Text>
-          </View>
+          <Text style={styles.rankingTitle}>{this.state.filter}</Text>
+          <SearchBar
+            value={this.state.search}
+            onChangeText={(text) => this.handleSearch(text)}
+            lightTheme={true}
+            containerStyle={styles.searchBarContainer}
+            inputContainerStyle={styles.searchBar}
+            round={true}
+          />
           <Menu style={styles.dropDownMenuContainer}>
             <MenuTrigger>
               <Icon name="filter" type="font-awesome" size={30} color="grey" />
