@@ -6,14 +6,14 @@ export default StyleSheet.create({
 		backgroundColor: "#F5FCFF"
 	},
 	logoView: {
-		paddingHorizontal: 80,
+		paddingHorizontal: 60,
 		paddingVertical: 40,
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	appLogo: { 
-		width: 75, 
-		height: 75 
+		width: 100, 
+		height: 100 
 	},
 	inputBoxSeparation: {
 		paddingHorizontal: 40,

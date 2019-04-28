@@ -10,13 +10,13 @@ export default StyleSheet.create({
 	logoView: {
 		paddingHorizontal: 80,
 		paddingTop: 85,
-		paddingBottom: 40,
+		paddingBottom: 10,
 		alignItems: "center",
 		justifyContent: "center"
 	},
 	appLogo: {
-		width: 75,
-		height: 75
+		width: 120,
+		height: 120
 	},
 	inputBoxSeparation: {
 		paddingHorizontal: 40,
