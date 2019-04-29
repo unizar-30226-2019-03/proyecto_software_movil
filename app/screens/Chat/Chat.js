@@ -6,7 +6,7 @@ import {
   Image,
   ListView,
   TextInput,
-  KeyboardAvoidingView,
+  KeyboardAvoidingView
 } from "react-native";
 
 import styles from "./styles";
@@ -46,7 +46,10 @@ export default class Chat extends React.Component {
     headerTitle: (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("VerPerfil", { title: "Perfil de Pedro", perfilPropioSi: false })
+          navigation.navigate("VerPerfil", {
+            title: "Perfil de Pedro",
+            perfilPropioSi: false
+          })
         }
         activeOpacity={0.6}
       >
@@ -86,39 +89,36 @@ export default class Chat extends React.Component {
   };
   render() {
     return (
-      <View style={styles.vista}>
-        <KeyboardAvoidingView
-          style={styles.vista}
-          behavior="padding"
-          enabled
-          keyboardVerticalOffset={headerHeight}
-        >
-          <ListView
-            style={styles.lista}
-            keyboardShouldPersistTaps="never"
-            ref={ref => {
-              this.ListView_Ref = ref;
-            }}
-            dataSource={this.state.dataSource}
-            renderRow={rowData => (
-              <Mensaje tipo={rowData.tipo} mensaje={rowData.texto} />
-            )}
-            onContentSizeChange={() =>
-              this.ListView_Ref.scrollToEnd({ animated: true })
-            }
+      <KeyboardAvoidingView
+        style={styles.vista}
+        behavior="padding"
+        keyboardVerticalOffset={headerHeight}
+      >
+        <ListView
+          style={styles.lista}
+          keyboardShouldPersistTaps="never"
+          ref={ref => {
+            this.ListView_Ref = ref;
+          }}
+          dataSource={this.state.dataSource}
+          renderRow={rowData => (
+            <Mensaje tipo={rowData.tipo} mensaje={rowData.texto} />
+          )}
+          onContentSizeChange={() =>
+            this.ListView_Ref.scrollToEnd({ animated: true })
+          }
+        />
+        <View style={styles.entradaTexto}>
+          <TextInput
+            placeholder="Escribe un mensaje"
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+            multiline={true}
+            style={[styles.textInput, { maxHeight: 80 }]}
           />
-          <View style={styles.entradaTexto}>
-            <TextInput
-              placeholder="Escribe un mensaje"
-              onChangeText={text => this.setState({ text })}
-              value={this.state.text}
-              multiline={true}
-              style={[styles.textInput, { maxHeight: 80 }]}
-            />
-            {this.boton()}
-          </View>
-        </KeyboardAvoidingView>
-      </View>
+          {this.boton()}
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }
