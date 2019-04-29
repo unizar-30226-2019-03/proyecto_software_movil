@@ -4,8 +4,7 @@ import { Azul } from "../../../constants";
 
 export default StyleSheet.create({
 	container: {
-		flex: 1,
-		backgroundColor: "#F5FCFF"
+		flex: 1
 	},
 	logoView: {
 		paddingHorizontal: 80,

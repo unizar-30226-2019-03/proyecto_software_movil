@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  View,
-  ActivityIndicator,
-  TextInput,
-  Animated,
-  Dimensions,
-  Keyboard,
-  UIManager
-} from "react-native";
+import { View, TextInput, Animated, Keyboard } from "react-native";
+
 import { Image, Text, Input, Button } from "react-native-elements";
 
 import { UserApi } from "swagger_unicast";
@@ -42,22 +35,41 @@ export default class SignIn extends React.Component {
     this.keyboardDidHideSub.remove();
   }
 
+  handleKeyboardDidShow = event => {
+    const gap = event.endCoordinates.height - 280;
+    if (gap >= 0) {
+      return;
+    }
+    Animated.timing(this.state.shift, {
+      toValue: gap,
+      duration: 200,
+      useNativeDriver: true
+    }).start();
+  };
+
+  handleKeyboardDidHide = () => {
+    Animated.timing(this.state.shift, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true
+    }).start();
+  };
+
   tryLogin = async () => {
-    await signIn("data.token", this.props.navigation);
-    // let apiInstance = new UserApi();
-    // apiInstance.authUser(
-    //   this.state.username,
-    //   this.state.password,
-    //   async (error, data, response) => {
-    //     if (error) {
-    //       this.setState({
-    //         showInputError: true
-    //       });
-    //     } else {
-    //       await signIn(data.token, this.props.navigation);
-    //     }
-    //   }
-    // );
+    let apiInstance = new UserApi();
+    apiInstance.authUser(
+      this.state.username,
+      this.state.password,
+      async (error, data, response) => {
+        if (error) {
+          this.setState({
+            showInputError: true
+          });
+        } else {
+          await signIn(data.token, this.props.navigation);
+        }
+      }
+    );
   };
 
   render() {
@@ -71,7 +83,6 @@ export default class SignIn extends React.Component {
           <Image
             source={require("../../../assets/icon.png")}
             style={styles.appLogo}
-            PlaceholderContent={<ActivityIndicator />}
           />
         </View>
         <View style={styles.inputBoxSeparation}>
@@ -131,34 +142,4 @@ export default class SignIn extends React.Component {
       </Animated.ScrollView>
     );
   }
-
-  handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap = keyboardHeight - (fieldTop + fieldHeight + 100);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(this.state.shift, {
-          toValue: gap,
-          duration: 200,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  handleKeyboardDidHide = () => {
-    Animated.timing(this.state.shift, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  };
 }
