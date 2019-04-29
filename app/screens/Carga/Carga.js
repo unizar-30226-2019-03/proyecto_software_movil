@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text } from "react-native";
+import { View, Text, Image } from "react-native";
 
 import { isSignedIn } from "../../config/Auth"
 
@@ -17,7 +17,7 @@ export default class Carga extends React.Component {
     this.cargarAuth();
     return (
       <View>
-        <Text>TODO: PANTALLA CARGA</Text>
+        <Image source={require("../../assets/splash.png")} />
       </View>
     );
   }
