@@ -1,13 +1,14 @@
 import React from "react";
+
 import { View, TouchableOpacity } from "react-native";
 
 import { Icon } from "react-native-elements";
 
+import { Video, ScreenOrientation } from "expo";
+
+import { ScreenWidth, FullScreen16_9_Height } from "../../constants";
+
 import styles from "./styles";
-
-import { Video } from "expo";
-
-import VideoPlayer from "./ExpoVideoPlayerControls/dist"
 
 /*
  * PROPS:
@@ -18,37 +19,75 @@ import VideoPlayer from "./ExpoVideoPlayerControls/dist"
  * goBackDestination="destino" destino de navigation, en caso de que flechaSi == {true}
  * width, height: altura y anchura del vídeo.
  */
-const VideoConSinFlechaAtras = props => {
-  return (
-    <View>
-      <VideoPlayer
-        videoProps={{
-          source: { uri: props.source },
-          posterSource: { uri: props.thumbnail },
-          resizeMode: Video.RESIZE_MODE_CONTAIN,
-          shouldPlay: props.autoplay,
-          volume: 0.75,
-          width: props.width,
-          height: props.height
-        }}
-        showControlsOnLoad={true}
-        sliderColor="#009485"
-      />
-      {props.flechaSi ? (
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate(props.goBackDestination)}
-          style={styles.zonaFlechaAtras}>
-          <Icon
-            type="octicon"
-            size={35}
-            name="chevron-left"
-            color="lightgrey"
-            iconStyle={styles.flechaAtras}
-          />
-        </TouchableOpacity>
-      ) : null}
-    </View>
-  );
-};
+export default class VideoConSinFlechaAtras extends React.Component {
+  state = {
+    pantallaCompleta: false,
+    orientationChangeSecondCall: false // onFullscreenUpdate llama dos veces seguidas.
+  };
 
-export default VideoConSinFlechaAtras;
+  orientationChange() {
+    if (this.state.orientationChangeSecondCall) {
+      this.setState({
+        orientationChangeSecondCall: false,
+        pantallaCompleta: !this.state.pantallaCompleta
+      });
+
+      this.state.pantallaCompleta
+        ? ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT)
+        : ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE);
+    } else {
+      this.setState({
+        orientationChangeSecondCall: true
+      });
+    }
+  }
+
+  render() {
+    const maxWidth =
+      this.props.width == undefined ? ScreenWidth : videoProps.width;
+
+    const maxHeight =
+      this.props.height == undefined
+        ? FullScreen16_9_Height
+        : videoProps.height;
+
+    const screenRatio = maxWidth / maxHeight;
+    let videoHeight = maxHeight;
+    let videoWidth = videoHeight * screenRatio;
+    if (videoWidth > maxWidth) {
+      videoWidth = maxWidth;
+      videoHeight = videoWidth / screenRatio;
+    }
+    return (
+      <View style={{ backgroundColor: "black" }}>
+        <Video
+          posterSource={{ uri: this.props.thumbnail }}
+          source={{ uri: this.props.source }}
+          rate={1.0}
+          volume={1.0}
+          muted={false}
+          resizeMode="contain"
+          useNativeControls={true}
+          style={{ width: videoWidth, height: videoHeight }}
+          onFullscreenUpdate={() => this.orientationChange()}
+        />
+        {this.props.flechaSi == true ? (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate(this.props.goBackDestination)
+            }
+            style={styles.zonaFlechaAtras}
+          >
+            <Icon
+              type="octicon"
+              size={35}
+              name="chevron-left"
+              color="lightgrey"
+              iconStyle={styles.flechaAtras}
+            />
+          </TouchableOpacity>
+        ) : null}
+      </View>
+    );
+  }
+}
