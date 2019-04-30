@@ -1,4 +1,5 @@
 import React from "react";
+
 import { View, TextInput, Animated, Keyboard } from "react-native";
 
 import { Image, Text, Input, Button } from "react-native-elements";
@@ -6,6 +7,8 @@ import { Image, Text, Input, Button } from "react-native-elements";
 import { UserApi } from "swagger_unicast";
 
 import { signIn } from "../../../config/Auth";
+
+import MoverInputEncimaTeclado from "../../../components/MoverInputEncimaTeclado";
 
 import styles from "./styles";
 
@@ -15,45 +18,16 @@ export default class SignIn extends React.Component {
   state = {
     username: "",
     password: "",
-    showInputError: false,
-    shift: new Animated.Value(0)
+    showInputError: false
   };
 
   componentWillMount() {
-    this.keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      this.handleKeyboardDidShow
-    );
-    this.keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      this.handleKeyboardDidHide
-    );
+    this.moverInputEncimaTeclado = new MoverInputEncimaTeclado()
   }
 
   componentWillUnmount() {
-    this.keyboardDidShowSub.remove();
-    this.keyboardDidHideSub.remove();
+    this.moverInputEncimaTeclado.delete()
   }
-
-  handleKeyboardDidShow = event => {
-    const gap = event.endCoordinates.height - 280;
-    if (gap >= 0) {
-      return;
-    }
-    Animated.timing(this.state.shift, {
-      toValue: gap,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  };
-
-  handleKeyboardDidHide = () => {
-    Animated.timing(this.state.shift, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  };
 
   tryLogin = async () => {
     let apiInstance = new UserApi();
@@ -77,7 +51,7 @@ export default class SignIn extends React.Component {
 
     return (
       <Animated.ScrollView
-        style={[styles.container, { transform: [{ translateY: shift }] }]}
+        style={[styles.container, { transform: [{ translateY: this.moverInputEncimaTeclado.getShift() }] }]}
       >
         <View style={styles.logoView}>
           <Image
@@ -93,6 +67,7 @@ export default class SignIn extends React.Component {
             onChangeText={text =>
               this.setState({ username: text, showInputError: false })
             }
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             errorStyle={{ color: "red" }}
             errorMessage={
               this.state.showInputError
@@ -111,6 +86,7 @@ export default class SignIn extends React.Component {
             onChangeText={text =>
               this.setState({ password: text, showInputError: false })
             }
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             autoCorrect={false}
           />
         </View>

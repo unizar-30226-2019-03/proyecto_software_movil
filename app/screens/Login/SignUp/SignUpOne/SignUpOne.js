@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   View,
   TextInput,
@@ -12,6 +13,8 @@ import { Input, Image, Button } from "react-native-elements";
 
 import { ImagePicker } from "expo";
 
+import MoverInputEncimaTeclado from "../../../../components/MoverInputEncimaTeclado";
+
 import styles from "./styles";
 
 const { State: TextInputState } = TextInput;
@@ -23,48 +26,12 @@ export default class SignUpOne extends React.Component {
   };
 
   componentWillMount() {
-    this.keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      this.handleKeyboardDidShow
-    );
-    this.keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      this.handleKeyboardDidHide
-    );
+    this.moverInputEncimaTeclado = new MoverInputEncimaTeclado()
   }
 
   componentWillUnmount() {
-    this.keyboardDidShowSub.remove();
-    this.keyboardDidHideSub.remove();
+    this.moverInputEncimaTeclado.delete()
   }
-
-  handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const gap = keyboardHeight - (pageY - height);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(this.state.shift, {
-          toValue: gap,
-          duration: 200,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  handleKeyboardDidHide = () => {
-    Animated.timing(this.state.shift, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  };
 
   static navigationOptions = ({ navigation }) => ({
     title: "Registrarse"
@@ -103,7 +70,7 @@ export default class SignUpOne extends React.Component {
 
     return (
       <Animated.ScrollView
-        style={[styles.container, { transform: [{ translateY: shift }] }]}
+        style={[styles.container, { transform: [{ translateY: this.moverInputEncimaTeclado.getShift() }] }]}
       >
         <View style={styles.logoView}>
           <Image
@@ -114,6 +81,7 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             placeholder="Nombre de usuario*"
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -122,6 +90,7 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             placeholder="Correo electrónico*"
             leftIcon={{ type: "font-awesome", name: "at" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -130,6 +99,7 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             placeholder="Contraseña*"
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
@@ -138,6 +108,7 @@ export default class SignUpOne extends React.Component {
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             placeholder="Repita la contraseña*"
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
@@ -155,6 +126,7 @@ export default class SignUpOne extends React.Component {
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             placeholder="Nombre*"
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -162,6 +134,7 @@ export default class SignUpOne extends React.Component {
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             placeholder="Apellidos*"
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -170,6 +143,7 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.descriptionContainer}>
           <Input
+            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             placeholder="Escriba su descripción..."
             leftIcon={{ type: "font-awesome", name: "info" }}
             leftIconContainerStyle={styles.inputSeparationInfo}
