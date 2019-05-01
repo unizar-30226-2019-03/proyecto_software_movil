@@ -3,7 +3,8 @@ import React from "react";
 import { View, Text, TouchableHighlight, Modal } from "react-native";
 import { Rating, Icon } from "react-native-elements";
 import styles from "./styles";
-import { ScreenWidth } from "../../constants/constants";
+import { ScreenWidth, GrisClaro } from "../../constants/constants";
+
 export default class CuadroValorar extends React.Component {
   constructor() {
     super();
@@ -47,6 +48,7 @@ export default class CuadroValorar extends React.Component {
               size={35}
               iconStyle={{ marginLeft: 100 }}
               onPress={() => this.cambiarIcono()}
+              color={GrisClaro}
             />
             <Icon
               name="share-alt"
@@ -54,13 +56,11 @@ export default class CuadroValorar extends React.Component {
               size={35}
               iconStyle={{ marginLeft: 20 }}
               onPress={() => null}
+              color={GrisClaro}
             />
           </View>
         </View>
 
-        <View style={styles.dejarSeguir}>
-          <Text>HOLA</Text>
-        </View>
         <Modal
           visible={this.state.mostrar}
           transparent={true}
@@ -78,7 +78,7 @@ export default class CuadroValorar extends React.Component {
                 />
               </View>
               <View style={styles.apartado}>
-                <Text style={styles.textoApartado}>Calidad de video</Text>
+                <Text style={styles.textoApartado}>Calidad</Text>
                 <Rating
                   imageSize={ScreenWidth * 0.12}
                   style={styles.RatingApartado}
@@ -87,7 +87,7 @@ export default class CuadroValorar extends React.Component {
                 />
               </View>
               <View style={styles.apartado}>
-                <Text style={styles.textoApartado}>Utilidad</Text>
+                <Text style={styles.textoApartado}>Adecuación</Text>
                 <Rating
                   type="star"
                   ratingCount={5}
@@ -95,7 +95,7 @@ export default class CuadroValorar extends React.Component {
                 />
               </View>
               <View style={styles.apartado}>
-                <Text style={styles.textoApartado}>Concisión</Text>
+                <Text style={styles.textoApartado}>Amenidad</Text>
                 <Rating
                   imageSize={ScreenWidth * 0.12}
                   style={styles.RatingApartado}

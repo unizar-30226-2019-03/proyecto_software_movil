@@ -1,10 +1,23 @@
 import React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Animated, Button } from "react-native";
 
 import styles from "./styles";
 import VideoConSinFlechaAtras from "../../components/VideoConSinFlechaAtras";
 import CuadroValorar from "../../components/CuadroValorar";
+import { ScrollView } from "react-native-gesture-handler";
 export default class ViendoVideo extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      descripcion: true
+    };
+  }
+
+  _animatedHeight = new Animated.Value(0);
+
+  mostrarDescripcion = () => {
+    Animated.timing(this._animatedHeight, { toValue: 80 }).start();
+  };
   render() {
     return (
       /*

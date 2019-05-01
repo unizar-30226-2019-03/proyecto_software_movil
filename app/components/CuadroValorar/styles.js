@@ -11,8 +11,9 @@ export default StyleSheet.create({
     borderWidth: 1
   },
   dejarSeguir: {
-    flex: 0.4,
-    borderWidth: 1
+    flex: 0.2,
+    borderWidth: 1,
+    marginTop: "20%"
   },
   titulo: {
     flexDirection: "row"
