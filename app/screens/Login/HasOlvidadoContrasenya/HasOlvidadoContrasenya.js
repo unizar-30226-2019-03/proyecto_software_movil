@@ -2,7 +2,7 @@ import React from "react";
 import { View, Animated } from "react-native";
 import { Input, Button, Text, Overlay } from "react-native-elements";
 
-import MoverInputEncimaTeclado from "../../../components/MoverInputEncimaTeclado";
+import InputFixer from "../../../components/InputFixer";
 
 import styles from "./styles";
 
@@ -12,27 +12,15 @@ export default class HasOlvidadoContrasenya extends React.Component {
     emailSent: false
   };
 
-  componentWillMount() {
-    this.moverInputEncimaTeclado = new MoverInputEncimaTeclado();
-  }
-
-  componentWillUnmount() {
-    this.moverInputEncimaTeclado.delete();
-  }
-
   toggleEmailSent = () => {
     this.setState({ emailSent: !this.state.emailSent });
   };
 
   render() {
     return (
-      <Animated.ScrollView
-        style={[
-          styles.container,
-          {
-            transform: [{ translateY: this.moverInputEncimaTeclado.getShift() }]
-          }
-        ]}
+      <InputFixer
+        navigation={this.props.navigation}
+        ref={InputFixer => this.InputFixer = InputFixer}
       >
         <Overlay
           isVisible={this.state.emailSent}
@@ -57,6 +45,7 @@ export default class HasOlvidadoContrasenya extends React.Component {
         <View style={styles.viewGeneral}>
           <View style={styles.viewInput}>
             <Input
+              onFocus={() => this.InputFixer.onFocus()}
               label="Introduzca su nombre de usuario o correo electrónico"
 							placeholder="Escriba aquí..."
 							onSubmitEditing={() => this.toggleEmailSent()}
@@ -70,7 +59,7 @@ export default class HasOlvidadoContrasenya extends React.Component {
             />
           </View>
         </View>
-      </Animated.ScrollView>
+      </InputFixer>
     );
   }
 }
