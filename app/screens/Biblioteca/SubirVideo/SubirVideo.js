@@ -1,11 +1,11 @@
 import React from "react";
-import { Text, View, Animated, Picker } from "react-native";
+import { Text, View, Picker } from "react-native";
 
 import { ImagePicker } from "expo";
 import { Button, Input, Image } from "react-native-elements";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
-import MoverInputEncimaTeclado from "../../../components/MoverInputEncimaTeclado";
+import InputFixer from "../../../components/InputFixer";
 
 import styles from "./styles";
 
@@ -18,14 +18,6 @@ export default class SubirVideo extends React.Component {
     video: undefined,
     thumbnail: "uri_nula"
   };
-
-  componentWillMount() {
-    this.moverInputEncimaTeclado = new MoverInputEncimaTeclado();
-  }
-
-  componentWillUnmount() {
-    this.moverInputEncimaTeclado.delete();
-  }
 
   pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -60,13 +52,9 @@ export default class SubirVideo extends React.Component {
     const { video } = this.state;
 
     return (
-      <Animated.ScrollView
-        style={[
-          styles.container,
-          {
-            transform: [{ translateY: this.moverInputEncimaTeclado.getShift() }]
-          }
-        ]}
+      <InputFixer         
+        navigation={this.props.navigation}
+        ref={InputFixer => this.InputFixer = InputFixer}
       >
         <View style={styles.viewSelectVideo}>
           {this.state.videoIsChosen == 0 ? (
@@ -108,13 +96,14 @@ export default class SubirVideo extends React.Component {
           <Input
             placeholder="Escriba un título..."
             label="Título"
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
+            onFocus={() => this.InputFixer.onFocus()}
           />
         </View>
 
         <View style={styles.viewInput}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
+            onFocus={() => this.InputFixer.onFocus()}
+            onChangeText={() => this.InputFixer.onFocus()}
             placeholder="Escriba una descripción..."
             multiline={true}
             label="Descripción"
@@ -135,7 +124,7 @@ export default class SubirVideo extends React.Component {
         <View style={styles.uploadButtonView}>
           <Button buttonStyle={styles.uploadButton} title="Subir vídeo" />
         </View>
-      </Animated.ScrollView>
+      </InputFixer>
     );
   }
 }

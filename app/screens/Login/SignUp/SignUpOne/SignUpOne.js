@@ -1,12 +1,12 @@
 import React from "react";
 
-import { View, Animated, Text } from "react-native";
+import { View, Text } from "react-native";
 
 import { Input, Image, Button } from "react-native-elements";
 
 import { ImagePicker } from "expo";
 
-import MoverInputEncimaTeclado from "../../../../components/MoverInputEncimaTeclado";
+import InputFixer from "../../../../components/InputFixer";
 
 import styles from "./styles";
 
@@ -32,14 +32,6 @@ export default class SignUpOne extends React.Component {
     surnameLengthErr: false,
     descriptionLengthErr: false
   };
-
-  componentWillMount() {
-    this.moverInputEncimaTeclado = new MoverInputEncimaTeclado();
-  }
-
-  componentWillUnmount() {
-    this.moverInputEncimaTeclado.delete();
-  }
 
   static navigationOptions = ({ navigation }) => ({
     title: "Registrarse"
@@ -151,13 +143,11 @@ export default class SignUpOne extends React.Component {
 
   render() {
     return (
-      <Animated.ScrollView
-        style={[
-          styles.container,
-          {
-            transform: [{ translateY: this.moverInputEncimaTeclado.getShift() }]
-          }
-        ]}
+      <InputFixer
+        navigation={this.props.navigation}
+        ref={InputFixer =>
+          (this.InputFixer = InputFixer)
+        }
       >
         <View style={styles.logoView}>
           <Image
@@ -168,7 +158,7 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.inputBoxSeparation}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Nombre de usuario*"
             errorMessage={
               this.state.usernameLengthErr
@@ -183,7 +173,7 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.inputBoxSeparation}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Correo electrónico*"
             errorMessage={
               this.state.emailErr ? "Correo electrónico no válido" : null
@@ -196,7 +186,7 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.inputBoxSeparation}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Contraseña*"
             secureTextEntry={true}
             errorMessage={
@@ -211,7 +201,7 @@ export default class SignUpOne extends React.Component {
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Repita la contraseña*"
             secureTextEntry={true}
             errorMessage={
@@ -238,8 +228,7 @@ export default class SignUpOne extends React.Component {
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
-            onChangeText={name => this.setState({ name: name })}
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Nombre*"
             errorMessage={
               this.state.nameLengthErr ? "El nombre no puede ser vacío" : null
@@ -250,8 +239,7 @@ export default class SignUpOne extends React.Component {
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
-            onChangeText={surname => this.setState({ surname: surname })}
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Apellidos*"
             errorMessage={
               this.state.surnameLengthErr
@@ -265,10 +253,9 @@ export default class SignUpOne extends React.Component {
 
         <View style={styles.descriptionContainer}>
           <Input
-            onFocus={() => this.moverInputEncimaTeclado.onFocus()}
-            onChangeText={description =>
-              this.setState({ description: description })
-            }
+            onCharge
+            onFocus={() => this.InputFixer.onFocus()}
+            onChangeText={() => this.InputFixer.onFocus()}
             placeholder="Escriba su descripción..."
             errorMessage={
               this.state.descriptionLengthErr
@@ -288,7 +275,8 @@ export default class SignUpOne extends React.Component {
             containerStyle={styles.nextButton}
           />
         </View>
-      </Animated.ScrollView>
+        <View style={{ height: 60 }} />
+      </InputFixer>
     );
   }
 }
