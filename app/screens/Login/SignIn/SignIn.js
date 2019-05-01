@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, TextInput, Animated, Keyboard } from "react-native";
+import { View, TextInput, Animated } from "react-native";
 
 import { Image, Text, Input, Button } from "react-native-elements";
 
@@ -11,8 +11,6 @@ import { signIn } from "../../../config/Auth";
 import MoverInputEncimaTeclado from "../../../components/MoverInputEncimaTeclado";
 
 import styles from "./styles";
-
-const { State: TextInputState } = TextInput;
 
 export default class SignIn extends React.Component {
   state = {
@@ -47,7 +45,6 @@ export default class SignIn extends React.Component {
   };
 
   render() {
-    const { shift } = this.state;
 
     return (
       <Animated.ScrollView
@@ -88,6 +85,7 @@ export default class SignIn extends React.Component {
             }
             onFocus={() => this.moverInputEncimaTeclado.onFocus() }
             autoCorrect={false}
+            onSubmitEditing={() => this.tryLogin()}
           />
         </View>
         <View style={styles.viewForgotPassword}>
