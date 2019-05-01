@@ -21,7 +21,17 @@ export default StyleSheet.create({
     marginTop: 5
   },
   texto: {
-    margin: 7,
+    alignSelf: "flex-start",
+    marginHorizontal: 7,
+    paddingTop: 7,
+    paddingBottom: 3,
     fontSize: 16
+  },
+  textoSmall: {
+    alignSelf: "flex-end",
+    marginHorizontal: 7,
+    paddingBottom: 3,
+    fontSize: 13,
+    color: "grey"
   }
 });

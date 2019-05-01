@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, KeyboardAvoidingView } from "react-native";
+import { View } from "react-native";
 
 import { Image, Text, Input, Button } from "react-native-elements";
 
@@ -37,7 +37,6 @@ export default class SignIn extends React.Component {
   };
 
   render() {
-    const { shift } = this.state;
 
     return (
       <InputFixer
@@ -79,6 +78,7 @@ export default class SignIn extends React.Component {
             }
             onFocus={() => this.InputFixer.onFocus()}
             autoCorrect={false}
+            onSubmitEditing={() => this.tryLogin()}
           />
         </View>
         <View style={styles.viewForgotPassword}>
