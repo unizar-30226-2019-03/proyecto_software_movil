@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, TextInput, Animated, Keyboard } from "react-native";
+import { View, KeyboardAvoidingView } from "react-native";
 
 import { Image, Text, Input, Button } from "react-native-elements";
 
@@ -8,11 +8,9 @@ import { UserApi } from "swagger_unicast";
 
 import { signIn } from "../../../config/Auth";
 
-import MoverInputEncimaTeclado from "../../../components/MoverInputEncimaTeclado";
+import InputFixer from "../../../components/InputFixer";
 
 import styles from "./styles";
-
-const { State: TextInputState } = TextInput;
 
 export default class SignIn extends React.Component {
   state = {
@@ -20,14 +18,6 @@ export default class SignIn extends React.Component {
     password: "",
     showInputError: false
   };
-
-  componentWillMount() {
-    this.moverInputEncimaTeclado = new MoverInputEncimaTeclado()
-  }
-
-  componentWillUnmount() {
-    this.moverInputEncimaTeclado.delete()
-  }
 
   tryLogin = async () => {
     let apiInstance = new UserApi();
@@ -50,8 +40,9 @@ export default class SignIn extends React.Component {
     const { shift } = this.state;
 
     return (
-      <Animated.ScrollView
-        style={[styles.container, { transform: [{ translateY: this.moverInputEncimaTeclado.getShift() }] }]}
+      <InputFixer
+        navigation={this.props.navigation}
+        ref={InputFixer => this.InputFixer = InputFixer}
       >
         <View style={styles.logoView}>
           <Image
@@ -67,7 +58,7 @@ export default class SignIn extends React.Component {
             onChangeText={text =>
               this.setState({ username: text, showInputError: false })
             }
-            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
+            onFocus={() => this.InputFixer.onFocus()}
             errorStyle={{ color: "red" }}
             errorMessage={
               this.state.showInputError
@@ -86,7 +77,7 @@ export default class SignIn extends React.Component {
             onChangeText={text =>
               this.setState({ password: text, showInputError: false })
             }
-            onFocus={() => this.moverInputEncimaTeclado.onFocus() }
+            onFocus={() => this.InputFixer.onFocus()}
             autoCorrect={false}
           />
         </View>
@@ -115,7 +106,7 @@ export default class SignIn extends React.Component {
           title="REGISTRARSE"
           type="outline"
         />
-      </Animated.ScrollView>
+      </InputFixer>
     );
   }
 }
