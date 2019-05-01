@@ -41,48 +41,75 @@ export default class ModificarCampo extends React.Component {
 
   render() {
     const { shift } = this.state;
+    let modifee;
+
+    if (this.state.modificando == "nombre") {
+      modifee = (
+        <Input
+          containerStyle={styles.textContainer}
+          label="Nombre"
+          defaultValue={this.state.texto}
+          leftIcon={{
+            type: "font-awesome",
+            name: "id-card",
+            color: "dodgerblue"
+          }}
+          rightIcon={{
+            type: "font-awesome",
+            name: "edit",
+            color: "grey"
+          }}
+          leftIconContainerStyle={styles.leftIconName}
+          rightIconContainerStyle={styles.rightIcon}
+        />
+      );
+    } else if (this.state.modificando == "apellidos") {
+      modifee = (
+        <Input
+          containerStyle={styles.textContainer}
+          label="Apellidos"
+          defaultValue={this.state.texto}
+          leftIcon={{
+            type: "font-awesome",
+            name: "id-card",
+            color: "dodgerblue"
+          }}
+          rightIcon={{
+            type: "font-awesome",
+            name: "edit",
+            color: "grey"
+          }}
+          leftIconContainerStyle={styles.leftIconName}
+          rightIconContainerStyle={styles.rightIcon}
+        />
+      );
+    } else {
+      modifee = (
+        <Input
+          containerStyle={styles.textContainer}
+          label="Descripción"
+          defaultValue={this.state.texto}
+          leftIcon={{
+            type: "font-awesome",
+            name: "info",
+            color: "dodgerblue"
+          }}
+          rightIcon={{
+            type: "font-awesome",
+            name: "edit",
+            color: "grey"
+          }}
+          leftIconContainerStyle={styles.leftIconName}
+          rightIconContainerStyle={styles.rightIcon}
+          multiline={true}
+        />
+      );
+    }
     return (
       <Animated.ScrollView
         style={[styles.container, { transform: [{ translateY: shift }] }]}
       >
-        {this.state.modificando == "nombre" ? (
-          <Input
-            containerStyle={styles.textContainer}
-            label="Nombre"
-            defaultValue={this.state.texto}
-            leftIcon={{
-              type: "font-awesome",
-              name: "user",
-              color: "dodgerblue"
-            }}
-            rightIcon={{
-              type: "font-awesome",
-              name: "edit",
-              color: "grey"
-            }}
-            leftIconContainerStyle={styles.leftIconName}
-            rightIconContainerStyle={styles.rightIcon}
-          />
-        ) : (
-          <Input
-            containerStyle={styles.textContainer}
-            label="Descripción"
-            defaultValue={this.state.texto}
-            leftIcon={{
-              type: "font-awesome",
-              name: "info",
-              color: "dodgerblue"
-            }}
-            rightIcon={{
-              type: "font-awesome",
-              name: "edit",
-              color: "grey"
-            }}
-            leftIconContainerStyle={styles.leftIconName}
-            rightIconContainerStyle={styles.rightIcon}
-            multiline={true}
-          />
-        )}
+        {modifee}
       </Animated.ScrollView>
     );
   }

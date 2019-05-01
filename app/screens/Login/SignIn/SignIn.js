@@ -1,52 +1,52 @@
 import React from "react";
-import {
-  View,
-  ActivityIndicator,
-  TextInput,
-  Animated,
-  Dimensions,
-  Keyboard,
-  UIManager
-} from "react-native";
+
+import { View } from "react-native";
+
 import { Image, Text, Input, Button } from "react-native-elements";
+
+import { UserApi } from "swagger_unicast";
+
+import { signIn } from "../../../config/Auth";
+
+import InputFixer from "../../../components/InputFixer";
 
 import styles from "./styles";
 
-const { State: TextInputState } = TextInput;
-
 export default class SignIn extends React.Component {
   state = {
-    shift: new Animated.Value(0)
+    username: "",
+    password: "",
+    showInputError: false
   };
 
-  componentWillMount() {
-    this.keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      this.handleKeyboardDidShow
+  tryLogin = async () => {
+    let apiInstance = new UserApi();
+    apiInstance.authUser(
+      this.state.username,
+      this.state.password,
+      async (error, data, response) => {
+        if (error) {
+          this.setState({
+            showInputError: true
+          });
+        } else {
+          await signIn(data.token, this.props.navigation);
+        }
+      }
     );
-    this.keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      this.handleKeyboardDidHide
-    );
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowSub.remove();
-    this.keyboardDidHideSub.remove();
-  }
+  };
 
   render() {
-    const { shift } = this.state;
 
     return (
-      <Animated.ScrollView
-        style={[styles.container, { transform: [{ translateY: shift }] }]}
+      <InputFixer
+        navigation={this.props.navigation}
+        ref={InputFixer => this.InputFixer = InputFixer}
       >
         <View style={styles.logoView}>
           <Image
             source={require("../../../assets/icon.png")}
             style={styles.appLogo}
-            PlaceholderContent={<ActivityIndicator />}
           />
         </View>
         <View style={styles.inputBoxSeparation}>
@@ -54,6 +54,17 @@ export default class SignIn extends React.Component {
             placeholder="Usuario"
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
+            onChangeText={text =>
+              this.setState({ username: text, showInputError: false })
+            }
+            onFocus={() => this.InputFixer.onFocus()}
+            errorStyle={{ color: "red" }}
+            errorMessage={
+              this.state.showInputError
+                ? "Nombre de usuario o contraseña incorrectos"
+                : null
+            }
+            autoCorrect={false}
           />
         </View>
         <View style={styles.inputBoxSeparation}>
@@ -62,20 +73,29 @@ export default class SignIn extends React.Component {
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
             leftIconContainerStyle={styles.inputSeparation}
+            onChangeText={text =>
+              this.setState({ password: text, showInputError: false })
+            }
+            onFocus={() => this.InputFixer.onFocus()}
+            autoCorrect={false}
+            onSubmitEditing={() => this.tryLogin()}
           />
         </View>
         <View style={styles.viewForgotPassword}>
           <Text
             style={styles.forgotPassword}
-            onPress={() => this.handleForgottenPW}
+            onPress={() =>
+              this.props.navigation.navigate("HasOlvidadoContrasenya")
+            }
           >
             ¿Has olvidado tu contraseña?
           </Text>
         </View>
 
         <Button
+          buttonStyle={styles.loginButton}
           containerStyle={styles.loginButtonContainer}
-          onPress={() => this.props.navigation.navigate("TopBarScreens")}
+          onPress={() => this.tryLogin()}
           title="ENTRAR"
         />
 
@@ -86,37 +106,7 @@ export default class SignIn extends React.Component {
           title="REGISTRARSE"
           type="outline"
         />
-      </Animated.ScrollView>
+      </InputFixer>
     );
   }
-
-  handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap = keyboardHeight - (fieldTop + fieldHeight + 100);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(this.state.shift, {
-          toValue: gap,
-          duration: 200,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  handleKeyboardDidHide = () => {
-    Animated.timing(this.state.shift, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  };
 }

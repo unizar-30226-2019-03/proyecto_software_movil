@@ -2,18 +2,17 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
 	container: {
-		flex: 1,
-		backgroundColor: "#F5FCFF"
+		flex: 1
 	},
 	logoView: {
-		paddingHorizontal: 80,
+		paddingHorizontal: 60,
 		paddingVertical: 40,
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	appLogo: { 
-		width: 75, 
-		height: 75 
+		width: 100, 
+		height: 100 
 	},
 	inputBoxSeparation: {
 		paddingHorizontal: 40,

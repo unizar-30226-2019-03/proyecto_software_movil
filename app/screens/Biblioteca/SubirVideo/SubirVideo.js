@@ -1,47 +1,23 @@
 import React from "react";
-import {
-  Text,
-  View,
-  Animated,
-  Dimensions,
-  Keyboard,
-  UIManager,
-  Picker,
-  TextInput
-} from "react-native";
+import { Text, View, Picker } from "react-native";
 
 import { ImagePicker } from "expo";
 import { Button, Input, Image } from "react-native-elements";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
+import InputFixer from "../../../components/InputFixer";
+
 import styles from "./styles";
 
-const { State: TextInputState } = TextInput;
+// const { State: TextInputState } = TextInput;
 
 export default class SubirVideo extends React.Component {
   state = {
-    shift: new Animated.Value(0),
     videoIsChosen: 0,
-    asignatura: "undefined",
-    video: "undefined",
-    thumbnail: "undefined"
+    asignatura: undefined,
+    video: undefined,
+    thumbnail: "uri_nula"
   };
-
-  componentWillMount() {
-    this.keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      this.handleKeyboardDidShow
-    );
-    this.keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      this.handleKeyboardDidHide
-    );
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowSub.remove();
-    this.keyboardDidHideSub.remove();
-  }
 
   pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -52,8 +28,6 @@ export default class SubirVideo extends React.Component {
 
     if (!result.cancelled) {
       this.setState({ video: result.uri, videoIsChosen: 1 });
-      console.log("HELLO");
-      console.log(result.uri);
     }
   };
 
@@ -74,13 +48,13 @@ export default class SubirVideo extends React.Component {
   });
 
   render() {
-    const { shift } = this.state;
     const { thumbnail } = this.state;
     const { video } = this.state;
 
     return (
-      <Animated.ScrollView
-        style={[styles.container, { transform: [{ translateY: shift }] }]}
+      <InputFixer         
+        navigation={this.props.navigation}
+        ref={InputFixer => this.InputFixer = InputFixer}
       >
         <View style={styles.viewSelectVideo}>
           {this.state.videoIsChosen == 0 ? (
@@ -119,11 +93,17 @@ export default class SubirVideo extends React.Component {
         </View>
 
         <View style={styles.viewInput}>
-          <Input placeholder="Escriba un título..." label="Título" />
+          <Input
+            placeholder="Escriba un título..."
+            label="Título"
+            onFocus={() => this.InputFixer.onFocus()}
+          />
         </View>
 
         <View style={styles.viewInput}>
           <Input
+            onFocus={() => this.InputFixer.onFocus()}
+            onChangeText={() => this.InputFixer.onFocus()}
             placeholder="Escriba una descripción..."
             multiline={true}
             label="Descripción"
@@ -131,7 +111,11 @@ export default class SubirVideo extends React.Component {
         </View>
 
         <View style={styles.viewSelectThumbnail}>
-          <Button title="Elegir miniatura" onPress={this.pickThumbnail} />
+          <Button
+            title="Elegir miniatura"
+            onPress={this.pickThumbnail}
+            buttonStyle={styles.selectThumbnail}
+          />
           {thumbnail && (
             <Image source={{ uri: thumbnail }} style={styles.imageThumbnail} />
           )}
@@ -140,37 +124,7 @@ export default class SubirVideo extends React.Component {
         <View style={styles.uploadButtonView}>
           <Button buttonStyle={styles.uploadButton} title="Subir vídeo" />
         </View>
-      </Animated.ScrollView>
+      </InputFixer>
     );
   }
-
-  handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap = windowHeight - keyboardHeight - (fieldTop + fieldHeight);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(this.state.shift, {
-          toValue: gap,
-          duration: 200,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  handleKeyboardDidHide = () => {
-    Animated.timing(this.state.shift, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  };
 }

@@ -20,14 +20,14 @@ export default class Chat extends React.Component {
   constructor() {
     super();
     var datos = [
-      { texto: "PEEEEEEZ", tipo: "entrante" },
-      { texto: "PEEEEEEEEEEEEZ", tipo: "saliente" },
-      { texto: "PEEEEEEEEEEEEEEEEEEZ", tipo: "entrante" },
-      { texto: "PEEEEEEEEEEEEEEEEEEEEEEZ", tipo: "saliente" },
-      { texto: "PEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEZ", tipo: "entrante" },
+      { texto: "PEEEEEEZ", tipo: "entrante", fecha: "22/02/1998 18:50" },
+      { texto: "PEEEEEEEEEEEEZ", tipo: "saliente", fecha: "22/02/1998 18:52" },
+      { texto: "PEEEEEEEEEEEEEEEEEEZ", tipo: "entrante", fecha: "22/02/1998 9:50" },
+      { texto: "PEEEEEEEEEEEEEEEEEEEEEEZ", tipo: "saliente", fecha: "ayer 18:50" },
+      { texto: "PEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEZ", tipo: "entrante", fecha: "18:50" },
       {
         texto: "PEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEZ",
-        tipo: "saliente"
+        tipo: "saliente", fecha: "22:30"
       }
     ];
 
@@ -46,7 +46,10 @@ export default class Chat extends React.Component {
     headerTitle: (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("VerPerfil", { title: "Perfil de Pedro", perfilPropioSi: false })
+          navigation.navigate("VerPerfil", {
+            title: "Perfil de Pedro",
+            perfilPropioSi: false
+          })
         }
         activeOpacity={0.6}
       >
@@ -78,7 +81,11 @@ export default class Chat extends React.Component {
       tipo = "saliente";
     }
 
-    nuevoDatos = [...this.state.datos, { texto: this.state.text, tipo: tipo }];
+    var hours = new Date().getHours();
+    var mins  = new Date().getMinutes();
+    var date = "" + hours + ":" + mins;
+
+    nuevoDatos = [...this.state.datos, { texto: this.state.text, tipo: tipo, fecha:date }];
     this.setState({ datos: nuevoDatos });
     nuevoDs = this.state.dataSource.cloneWithRows(nuevoDatos);
     this.setState({ dataSource: nuevoDs });
@@ -86,39 +93,36 @@ export default class Chat extends React.Component {
   };
   render() {
     return (
-      <View style={styles.vista}>
-        <KeyboardAvoidingView
-          style={styles.vista}
-          behavior="padding"
-          enabled
-          keyboardVerticalOffset={headerHeight + 22}
-        >
-          <ListView
-            style={styles.lista}
-            keyboardShouldPersistTaps="never"
-            ref={ref => {
-              this.ListView_Ref = ref;
-            }}
-            dataSource={this.state.dataSource}
-            renderRow={rowData => (
-              <Mensaje tipo={rowData.tipo} mensaje={rowData.texto} />
-            )}
-            onContentSizeChange={() =>
-              this.ListView_Ref.scrollToEnd({ animated: true })
-            }
+      <KeyboardAvoidingView
+        style={styles.vista}
+        behavior="padding"
+        keyboardVerticalOffset={headerHeight}
+      >
+        <ListView
+          style={styles.lista}
+          keyboardShouldPersistTaps="never"
+          ref={ref => {
+            this.ListView_Ref = ref;
+          }}
+          dataSource={this.state.dataSource}
+          renderRow={rowData => (
+            <Mensaje tipo={rowData.tipo} mensaje={rowData.texto} fecha={rowData.fecha} />
+          )}
+          onContentSizeChange={() =>
+            this.ListView_Ref.scrollToEnd({ animated: true })
+          }
+        />
+        <View style={styles.entradaTexto}>
+          <TextInput
+            placeholder="Escribe un mensaje"
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+            multiline={true}
+            style={[styles.textInput, { maxHeight: 80 }]}
           />
-          <View style={styles.entradaTexto}>
-            <TextInput
-              placeholder="Escribe un mensaje"
-              onChangeText={text => this.setState({ text })}
-              value={this.state.text}
-              multiline={true}
-              style={[styles.textInput, { maxHeight: 80 }]}
-            />
-            {this.boton()}
-          </View>
-        </KeyboardAvoidingView>
-      </View>
+          {this.boton()}
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 }

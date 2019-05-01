@@ -25,7 +25,7 @@ export default StyleSheet.create({
 		paddingBottom: 25,
 	},
 	leftIconName: {
-		paddingRight: 15,
+		paddingRight: 10,
 		alignSelf: "flex-start",
 	},
 	leftIconDescr: {

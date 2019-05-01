@@ -8,19 +8,22 @@
   },
   "dependencies": {
     "expo": "^32.0.0",
-    "expo-video-player": "^1.2.0",
+    "querystring": "^0.2.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-dialog": "^5.6.0",
     "react-native-dialog-input": "^1.0.7",
     "react-native-elements": "^1.1.0",
-    "react-native-iphone-x-helper": "^1.2.0",
     "react-native-popup-menu": "^0.15.5",
     "react-native-slider": "^0.11.0",
     "react-native-vector-icons": "^6.4.2",
-    "react-navigation": "^3.5.1"
+    "react-navigation": "^3.5.1",
+    "swagger_unicast": "https://github.com/unizar-30226-2019-03/proyecto_software_cliente_api/releases/download/1.0.4/swagger_unicast-1.0.4.tgz"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-expo": "^5.0.0"
   },
   "private": true

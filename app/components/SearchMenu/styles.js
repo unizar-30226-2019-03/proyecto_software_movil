@@ -9,6 +9,10 @@ export default StyleSheet.create({
     fontSize: 20,
     marginLeft: 10
   },
+  appLogo: {
+    width: 20,
+    height: 20
+  },
   appIcon: {
     color: "#000",
     fontSize: 30,

@@ -4,7 +4,8 @@ import {
 	createStackNavigator,
 	createMaterialTopTabNavigator,
 	createBottomTabNavigator,
-	createAppContainer
+	createAppContainer,
+	createSwitchNavigator
 } from "react-navigation";
 
 import SearchingScreen from "../../screens/Searching";
@@ -34,12 +35,17 @@ import CuentaScreen from "../../screens/Cuenta";
 import SignInScreen from "../../screens/Login/SignIn";
 import SignUpOneScreen from "../../screens/Login/SignUp/SignUpOne";
 import SignUpTwoScreen from "../../screens/Login/SignUp/SignUpTwo";
+import HasOlvidadoContrasenyaScreen from "../../screens/Login/HasOlvidadoContrasenya";
+
+import CargaScreen from "../../screens/Carga";
 
 import SearchMenu from "../../components/SearchMenu";
 
 import EntypoIcons from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+
+import { Azul } from "../../constants";
 
 import { TopTabBarOptions } from "./styles";
 import styles from "./styles";
@@ -178,7 +184,7 @@ const DownMenu = createBottomTabNavigator(
 			header: null
 		},
 		tabBarOptions: {
-			activeTintColor: "tomato",
+			activeTintColor: Azul,
 			inactiveTintColor: "gray"
 		}
 	}
@@ -212,22 +218,34 @@ const NotLogged = createStackNavigator({
 		}
 	},
 	SignUpOne: SignUpOneScreen,
-	SignUpTwo: SignUpTwoScreen
+	SignUpTwo: SignUpTwoScreen,
+	HasOlvidadoContrasenya: HasOlvidadoContrasenyaScreen
 });
 
-const App = createStackNavigator({
-	NotLogged: {
-		screen: NotLogged,
-		navigationOptions: {
-			header: null
+export default createAppContainer(
+	createSwitchNavigator(
+		{
+			NotLogged: {
+				screen: NotLogged,
+				navigationOptions: {
+					header: null
+				}
+			},
+			Logged: {
+				screen: Logged,
+				navigationOptions: {
+					header: null
+				}
+			},
+			Carga: {
+				screen: CargaScreen,
+				navigationOptions: {
+					header: null
+				}
+			}
+		},
+		{
+			initialRouteName: "Carga"
 		}
-	},
-	Logged: {
-		screen: Logged,
-		navigationOptions: {
-			header: null
-		}
-	}
-});
-
-export default createAppContainer(App);
+	)
+);

@@ -1,42 +1,19 @@
 import React from "react";
-import {
-  View,
-  ActivityIndicator,
-  TextInput,
-  Animated,
-  Dimensions,
-  Keyboard,
-  UIManager
-} from "react-native";
+
+import { View } from "react-native";
+
 import { Input, Image, Button } from "react-native-elements";
 
 import { ImagePicker } from "expo";
 
-import styles from "./styles";
+import InputFixer from "../../../../components/InputFixer";
 
-const { State: TextInputState } = TextInput;
+import styles from "./styles";
 
 export default class SignUpOne extends React.Component {
   state = {
-    shift: new Animated.Value(0),
     image: "../../../../assets/icon.png"
   };
-
-  componentWillMount() {
-    this.keyboardDidShowSub = Keyboard.addListener(
-      "keyboardDidShow",
-      this.handleKeyboardDidShow
-    );
-    this.keyboardDidHideSub = Keyboard.addListener(
-      "keyboardDidHide",
-      this.handleKeyboardDidHide
-    );
-  }
-
-  componentWillUnmount() {
-    this.keyboardDidShowSub.remove();
-    this.keyboardDidHideSub.remove();
-  }
 
   static navigationOptions = ({ navigation }) => ({
     title: "Registrarse"
@@ -70,31 +47,43 @@ export default class SignUpOne extends React.Component {
   };
 
   render() {
-    const { shift } = this.state;
     let { image } = this.state;
-    var auxDescription = "ph";
 
     return (
-      <Animated.ScrollView
-        style={[styles.container, { transform: [{ translateY: shift }] }]}
+      <InputFixer
+        navigation={this.props.navigation}
+        ref={InputFixer =>
+          (this.InputFixer = InputFixer)
+        }
       >
         <View style={styles.logoView}>
           <Image
             source={require("../../../../assets/icon.png")}
             style={styles.appLogo}
-            PlaceholderContent={<ActivityIndicator />}
           />
         </View>
 
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Nombre de usuario*"
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
         </View>
+
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.InputFixer.onFocus()}
+            placeholder="Correo electrónico*"
+            leftIcon={{ type: "font-awesome", name: "at" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
+        </View>
+
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Contraseña*"
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
@@ -103,6 +92,7 @@ export default class SignUpOne extends React.Component {
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
+            onFocus={() => this.InputFixer.onFocus()}
             placeholder="Repita la contraseña*"
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
@@ -118,9 +108,28 @@ export default class SignUpOne extends React.Component {
             onPress={this.pickProfileImage}
           />
         </View>
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            onFocus={() => this.InputFixer.onFocus()}
+            placeholder="Nombre*"
+            leftIcon={{ type: "font-awesome", name: "id-card" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
+        </View>
+        <View style={styles.inputBoxSeparation}>
+          <Input
+            onFocus={() => this.InputFixer.onFocus()}
+            placeholder="Apellidos*"
+            leftIcon={{ type: "font-awesome", name: "id-card" }}
+            leftIconContainerStyle={styles.inputSeparation}
+          />
+        </View>
 
         <View style={styles.descriptionContainer}>
           <Input
+            onCharge
+            onFocus={() => this.InputFixer.onFocus()}
+            onChangeText={() => this.InputFixer.onFocus()}
             placeholder="Escriba su descripción..."
             leftIcon={{ type: "font-awesome", name: "info" }}
             leftIconContainerStyle={styles.inputSeparationInfo}
@@ -135,37 +144,8 @@ export default class SignUpOne extends React.Component {
             containerStyle={styles.nextButton}
           />
         </View>
-      </Animated.ScrollView>
+        <View style={{ height: 60 }} />
+      </InputFixer>
     );
   }
-
-  handleKeyboardDidShow = event => {
-    const { height: windowHeight } = Dimensions.get("window");
-    const keyboardHeight = event.endCoordinates.height;
-    const currentlyFocusedField = TextInputState.currentlyFocusedField();
-    UIManager.measure(
-      currentlyFocusedField,
-      (originX, originY, width, height, pageX, pageY) => {
-        const fieldHeight = height;
-        const fieldTop = pageY;
-        const gap = keyboardHeight - (fieldTop + fieldHeight + 100);
-        if (gap >= 0) {
-          return;
-        }
-        Animated.timing(this.state.shift, {
-          toValue: gap,
-          duration: 200,
-          useNativeDriver: true
-        }).start();
-      }
-    );
-  };
-
-  handleKeyboardDidHide = () => {
-    Animated.timing(this.state.shift, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: true
-    }).start();
-  };
 }

@@ -12,6 +12,7 @@ export default class Mensaje extends React.Component {
 				]}
 			>
 				<Text style={styles.texto}>{this.props.mensaje}</Text>
+				<Text style={styles.textoSmall}>{this.props.fecha}</Text>
 			</View>
 		);
 	}

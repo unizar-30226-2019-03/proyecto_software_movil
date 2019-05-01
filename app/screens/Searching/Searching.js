@@ -7,6 +7,8 @@ import {
 	TouchableOpacity
 } from "react-native";
 
+import { SearchBar } from "react-native-elements";
+
 import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 import ThumbnailAsignatura from "../../components/ThumbnailAsignatura";
 
@@ -19,39 +21,45 @@ export default class Searching extends React.Component {
 		super(props);
 
 		this.state = {
-			search: ""
+			searchText: ""
 		};
+	}
 
+	componentDidMount() {
 		this.changeSearchText = this.changeSearchText.bind(this);
 		this.props.navigation.setParams({
-			changeSearchText: this.changeSearchText
+			changeSearchText: this.changeSearchText,
+			searchText: this.state.searchText
 		});
 	}
 
 	static navigationOptions = ({ navigation }) => {
+		const { params = {} } = navigation.state;
 		return {
 			headerTitle: (
 				<View style={styles.headerContainer}>
-					<View style={styles.barraBusqueda}>
-						<TextInput
-							placeholder="Buscar..."
-							autoFocus
-							onChangeText={text =>
-								navigation.state.params.changeSearchText(text)
-							}
-							style={styles.inputSearch}
-						/>
-					</View>
+					<SearchBar
+						autoFocus
+						value={params.searchText}
+						placeholder="Buscar..."
+						inputContainerStyle={styles.searchBarIn}
+						searchIcon={false}
+						containerStyle={styles.searchBarOut}
+						onChangeText={text => params.changeSearchText(text)}
+					/>
 				</View>
 			)
 		};
 	};
 
-	changeSearchText(text) {
+	changeSearchText = value => {
 		this.setState({
-			search: text
+			searchText: value
 		});
-	}
+		this.props.navigation.setParams({
+			searchText: value
+		});
+	};
 
 	render() {
 		return (

@@ -1,6 +1,6 @@
-import { Platform } from "react-native";
-import { ifIphoneX } from "react-native-iphone-x-helper";
 import { Dimensions } from "react-native";
+import { Header } from 'react-navigation';
+import { StatusBar } from 'react-native';
 
 // Constantes globales
 export const ScreenWidth = Dimensions.get("window").width;
@@ -17,9 +17,6 @@ export const GrisChat = "#ECECEC";
 export const VerdeChat = "#DCF8C6";
 export const AzulNuevaLista = "#2E5FD4";
 export const GrisFondoBarraBusqueda = "#F4F4F4";
+export const Azul = "#235da9"
 
-export const isIOS = Platform.OS === "ios";
-
-export const statusBarHeight = isIOS ? ifIphoneX(44, 20) : 0;
-export const navBarHeight = isIOS ? 44 : 56;
-export const headerHeight = statusBarHeight + navBarHeight;
+export const headerHeight = Header.HEIGHT + StatusBar.currentHeight;
