@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text } from "react-native";
+import { View, Text, Animated } from "react-native";
 
 import { Input, Image, Button } from "react-native-elements";
 
@@ -47,6 +47,11 @@ export default class SignUpOne extends React.Component {
       this.setState({ image: result.uri, imageErr: false });
     }
   };
+
+  updateDescriptionAndFocus = (description) => {
+    this.setState({ description: description });
+    this.InputFixer.onFocus();
+  }
 
   comparePasswords = (pw, firstOrSecond) => {
     var pw1, pw2;
@@ -229,6 +234,7 @@ export default class SignUpOne extends React.Component {
         <View style={styles.inputBoxSeparation}>
           <Input
             onFocus={() => this.InputFixer.onFocus()}
+            onChangeText={name => this.setState({ name: name })}
             placeholder="Nombre*"
             errorMessage={
               this.state.nameLengthErr ? "El nombre no puede ser vacío" : null
@@ -240,6 +246,7 @@ export default class SignUpOne extends React.Component {
         <View style={styles.inputBoxSeparation}>
           <Input
             onFocus={() => this.InputFixer.onFocus()}
+            onChangeText={surname => this.setState({ surname: surname })}
             placeholder="Apellidos*"
             errorMessage={
               this.state.surnameLengthErr
@@ -255,7 +262,7 @@ export default class SignUpOne extends React.Component {
           <Input
             onCharge
             onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={() => this.InputFixer.onFocus()}
+            onChangeText={description => this.updateDescriptionAndFocus(description)}
             placeholder="Escriba su descripción..."
             errorMessage={
               this.state.descriptionLengthErr
