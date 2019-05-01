@@ -36,6 +36,13 @@ export default StyleSheet.create({
 		height: 85,
 		borderRadius: 85
 	},
+	imageErrText: {
+		color: "red",
+		borderWidth: 1,
+		borderColor: "red",
+		padding: 5,
+		borderRadius: 2,
+	},
 	profPicButton: {
 		width: 150
 	},
