@@ -1,24 +1,44 @@
 import React from "react";
-import { View, TouchableOpacity, ScrollView } from "react-native";
-import { Input } from "react-native-elements";
+
+import { View, ActivityIndicator, Alert } from "react-native";
+
+import { Input, Button } from "react-native-elements";
+
 import { ImagePicker } from "expo";
 
+import { Azul } from "../../constants";
+
 import styles from "./styles";
+
+import InputFixer from "../../components/InputFixer";
 import ImagenDePerfilConIcono from "../../components/ImagenDePerfilConIcono";
 
 export default class VerPerfil extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.getParam("title")
+  });
+
   state = {
-    perfilPropioSi: this.props.navigation.getParam("perfilPropioSi"),
     nombre: "Turismundo",
     apellidos: "Scott Williams",
     descripcion:
       "Profe tajo guay co\nen plan asi pim pam explicando sistemas empotrados\n\ny otras cosas youknow\njugador profesionaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaal de cricket",
     imagen:
-      "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+      "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
+    loading: true
   };
 
-  getPerfil = () => {
-    // IMPLEMENTACIÓN API COMPROBAR SI ERES TÚ O ES PERFIL AJENO: this.setState(perfilPropioSi: ...)
+  perfilPropioSi = this.props.navigation.getParam("perfilPropioSi");
+
+  componentWillMount = () => {
+    // api get datos
+    if (this.perfilPropioSi) {
+      this.oldNombre = this.state.nombre;
+      this.oldApellidos = this.state.apellidos;
+      this.oldDescripcion = this.state.descripcion;
+      this.oldImagen = this.state.imagen;
+    }
+    this.setState({ loading: false });
   };
 
   pickImage = async () => {
@@ -33,159 +53,131 @@ export default class VerPerfil extends React.Component {
     }
   };
 
-  static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam("title")
-  });
+  cancelar = () => {
+    this.setState({ 
+      nombre: this.oldNombre,
+      apellidos: this.oldApellidos,
+      descripcion: this.oldDescripcion,
+      imagen: this.oldImagen
+    })
+
+  }
+
+  actualizar = () => {
+    // api
+    this.props.navigation.goBack()
+  }
 
   render() {
+    let rightIcon = this.perfilPropioSi
+      ? { type: "font-awesome", name: "edit", color: "grey" }
+      : {};
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.viewProfPic}>
-          <ImagenDePerfilConIcono
-            source={this.state.imagen}
-            style={styles.profPic}
-            cambiarSi={!this.state.perfilPropioSi}
-            onPressIcono={this.pickImage}
-          />
-        </View>
-
-        {this.state.perfilPropioSi ? (
-          <View>
-            <TouchableOpacity
-              style={styles.viewNombre}
-              onPress={() =>
-                this.props.navigation.navigate("ModificarCampo", {
-                  title: "Escribe tu nombre", modificando: "nombre", texto: this.state.nombre, 
-                })
-              }
-            >
-              <Input
-                label="Nombre"
-                defaultValue={this.state.nombre}
-                leftIcon={{
-                  type: "font-awesome",
-                  name: "id-card",
-                  color: "dodgerblue"
-                }}
-                rightIcon={{
-                  type: "font-awesome",
-                  name: "edit",
-                  color: "grey"
-                }}
-                leftIconContainerStyle={styles.leftIconName}
-                rightIconContainerStyle={styles.rightIcon}
-                editable={false}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.viewNombre}
-              onPress={() =>
-                this.props.navigation.navigate("ModificarCampo", {
-                  title: "Escribe tus apellidos", modificando: "apellidos", texto: this.state.apellidos, 
-                })
-              }
-            >
-              <Input
-                label="Apellidos"
-                defaultValue={this.state.apellidos}
-                leftIcon={{
-                  type: "font-awesome",
-                  name: "id-card",
-                  color: "dodgerblue"
-                }}
-                rightIcon={{
-                  type: "font-awesome",
-                  name: "edit",
-                  color: "grey"
-                }}
-                leftIconContainerStyle={styles.leftIconName}
-                rightIconContainerStyle={styles.rightIcon}
-                editable={false}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.viewDescripcion}
-              onPress={() =>
-                this.props.navigation.navigate("ModificarCampo", {
-                  title: "Escribe tu descripción", modificando: "descripcion", texto: this.state.descripcion, 
-                })
-              }
-            >
-              <Input
-                label="Descripción"
-                defaultValue={this.state.descripcion}
-                leftIcon={{
-                  type: "font-awesome",
-                  name: "info",
-                  color: "dodgerblue"
-                }}
-                rightIcon={{
-                  type: "font-awesome",
-                  name: "edit",
-                  color: "grey"
-                }}
-                leftIconContainerStyle={styles.leftIconDescr}
-                rightIconContainerStyle={styles.rightIcon}
-                editable={false}
-                multiline={true}
-              />
-            </TouchableOpacity>
-          </View>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
         ) : (
-          <View>
-            <View
-              style={styles.viewNombre}
-            >
-              <Input
-                label="Nombre"
-                defaultValue={this.state.nombre}
-                leftIcon={{
-                  type: "font-awesome",
-                  name: "id-card",
-                  color: "dodgerblue"
-                }}
-                leftIconContainerStyle={styles.leftIconName}
-                editable={false}
+          <InputFixer
+            navigation={this.props.navigation}
+            ref={InputFixer => (this.InputFixer = InputFixer)}
+          >
+            <View style={styles.viewProfPic}>
+              <ImagenDePerfilConIcono
+                source={this.state.imagen}
+                style={styles.profPic}
+                cambiarSi={!this.perfilPropioSi}
+                onPressIcono={this.pickImage}
               />
             </View>
 
-            <View
-              style={styles.viewNombre}
-            >
+            <View style={styles.viewNombre}>
+              <Input
+                label="Nombre"
+                value={this.state.nombre}
+                leftIcon={{
+                  type: "font-awesome",
+                  name: "id-card",
+                  color: Azul
+                }}
+                onChangeText={text =>
+                  this.setState({ nombre: text })
+                }
+                onFocus={() => this.InputFixer.onFocus()}
+                rightIcon={rightIcon}
+                leftIconContainerStyle={styles.leftIconName}
+                rightIconContainerStyle={styles.rightIcon}
+                editable={this.perfilPropioSi}
+              />
+            </View>
+
+            <View style={styles.viewNombre}>
               <Input
                 label="Apellidos"
                 defaultValue={this.state.apellidos}
                 leftIcon={{
                   type: "font-awesome",
                   name: "id-card",
-                  color: "dodgerblue"
+                  color: Azul
                 }}
+                onChangeText={text =>
+                  this.setState({ apellidos: text })
+                }
+                onFocus={() => this.InputFixer.onFocus()}
+                rightIcon={rightIcon}
                 leftIconContainerStyle={styles.leftIconName}
-                editable={false}
+                rightIconContainerStyle={styles.rightIcon}
+                editable={this.perfilPropioSi}
               />
             </View>
 
-            <View
-              style={styles.viewDescripcion}
-            >
+            <View style={styles.viewDescripcion}>
               <Input
                 label="Descripción"
                 defaultValue={this.state.descripcion}
                 leftIcon={{
                   type: "font-awesome",
                   name: "info",
-                  color: "dodgerblue"
+                  color: Azul
                 }}
+                onFocus={() => this.InputFixer.onFocus()}
+                onChangeText={text =>
+                  this.setState({ descripcion: text }) ||
+                  this.InputFixer.onFocus()
+                }
+                rightIcon={rightIcon}
                 leftIconContainerStyle={styles.leftIconDescr}
-                editable={false}
+                rightIconContainerStyle={styles.rightIcon}
+                editable={this.perfilPropioSi}
                 multiline={true}
               />
             </View>
-          </View>
+            {this.perfilPropioSi ? (
+              <View style={styles.cancelarYActualizarView}>
+                <Button
+                  title={"CANCELAR"}
+                  onPress={() => this.cancelar()}
+                  containerStyle={styles.botonCancelar}
+                  titleStyle={styles.botonFont}
+                  buttonStyle={styles.buttonColor}
+                />
+                <Button
+                  title={"ACTUALIZAR"}
+                  onPress={() => this.actualizar()}
+                  containerStyle={styles.botonActualizar}
+                  titleStyle={styles.botonFont}
+                  buttonStyle={styles.buttonColor}
+                  buttonStyle={styles.buttonColor}
+                />
+              </View>
+            ) : null}
+          </InputFixer>
         )}
-      </ScrollView>
+      </View>
     );
   }
 }

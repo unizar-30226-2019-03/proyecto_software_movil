@@ -29,7 +29,6 @@ import ProfesoresTabScreen from "../../screens/Mensajes/ProfesoresTab";
 import ChatScreen from "../../screens/Chat";
 import VerPerfilScreen from "../../screens/VerPerfil";
 import ViendoVideoScreen from "../../screens/ViendoVideo";
-import ModificarCampoScreen from "../../screens/VerPerfil/ModificarCampo";
 import CuentaScreen from "../../screens/Cuenta";
 
 import SignInScreen from "../../screens/Login/SignIn";
@@ -206,7 +205,6 @@ const Logged = createStackNavigator({
 			header: null
 		}
 	},
-	ModificarCampo: ModificarCampoScreen,
 	Cuenta: CuentaScreen
 });
 
