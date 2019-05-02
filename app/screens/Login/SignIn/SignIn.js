@@ -30,7 +30,7 @@ export default class SignIn extends React.Component {
             showInputError: true
           });
         } else {
-          await signIn(data.token, this.props.navigation);
+          await signIn(data.token, data.id, this.props.navigation);
         }
       }
     );

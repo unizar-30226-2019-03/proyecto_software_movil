@@ -28,12 +28,14 @@ export default class AsignaturasTab extends React.Component {
     bearerAuth.accessToken = getUserToken();
 
     this.subjectApiInstance = new SubjectApi();
+
+    this.getData();
+
+    this.loading = false;
   }
 
   getData = () => {
     if (this.totalPages == undefined || this.offset < this.totalPages) {
-      console.log(this.offset)
-      console.log(this.totalPages)
       this.subjectApiInstance.getSubjects((error, data, response) => {
         if (!error) {
           this.offset = this.offset + 1;
@@ -45,11 +47,6 @@ export default class AsignaturasTab extends React.Component {
       });
     }
   }
-
-  componentWillMount = () => {
-    this.getData();
-    this.setState({ loading: false })
-  };
 
   onEndReached = () => {
     this.setState({ fetchingNewData: true })

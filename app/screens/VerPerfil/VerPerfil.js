@@ -8,38 +8,62 @@ import { ImagePicker } from "expo";
 
 import { Azul } from "../../constants";
 
+import { UserApi, ApiClient } from "swagger_unicast";
+
 import styles from "./styles";
 
 import InputFixer from "../../components/InputFixer";
 import ImagenDePerfilConIcono from "../../components/ImagenDePerfilConIcono";
 
+import { getUserId, getUserToken } from "../../config/Auth";
+
 export default class VerPerfil extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam("title")
+    title: navigation.getParam("userId") == getUserId() ? "Mi perfil" : "Perfil de " + navigation.getParam("name")
   });
 
-  state = {
-    nombre: "Turismundo",
-    apellidos: "Scott Williams",
-    descripcion:
-      "Profe tajo guay co\nen plan asi pim pam explicando sistemas empotrados\n\ny otras cosas youknow\njugador profesionaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaal de cricket",
-    imagen:
-      "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-    loading: true
-  };
+  constructor(props) {
+    super(props);
 
-  perfilPropioSi = this.props.navigation.getParam("perfilPropioSi");
+    this.state = {
+      nombre: "",
+      apellidos: "",
+      descripcion: "",
+      imagen: "",
+      loading: true
+    };
 
-  componentWillMount = () => {
-    // api get datos
-    if (this.perfilPropioSi) {
+    let defaultClient = ApiClient.instance;
+    let bearerAuth = defaultClient.authentications['bearerAuth'];
+    bearerAuth.accessToken = getUserToken()
+
+    this.apiInstance = new UserApi();
+
+    this.userId = this.props.navigation.getParam("userId");
+    this.isPerfilPropio = this.userId == getUserId();
+
+    // let id = this.userId;
+    // this.apiInstance.getUser(id, (error, data, response) => {
+    //   if (!error) {
+    //     console.log('API called successfully.');
+    //     console.log(data)
+    //   }
+    // });
+    
+    this.state.nombre = "Turismundo"
+    this.state.apellidos = "Scott Williams"
+    this.state.descripcion = "Profe tajo guay co\nen plan asi pim pam explicando sistemas empotrados\n\ny otras cosas youknow\njugador profesionaaaaa"
+    this.state.imagen = "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+
+    if (this.isPerfilPropio) {
       this.oldNombre = this.state.nombre;
       this.oldApellidos = this.state.apellidos;
       this.oldDescripcion = this.state.descripcion;
       this.oldImagen = this.state.imagen;
     }
-    this.setState({ loading: false });
-  };
+
+    this.state.loading = false;
+  }
 
   pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -54,22 +78,21 @@ export default class VerPerfil extends React.Component {
   };
 
   cancelar = () => {
-    this.setState({ 
+    this.setState({
       nombre: this.oldNombre,
       apellidos: this.oldApellidos,
       descripcion: this.oldDescripcion,
       imagen: this.oldImagen
-    })
-
-  }
+    });
+  };
 
   actualizar = () => {
     // api
-    this.props.navigation.goBack()
-  }
+    this.props.navigation.goBack();
+  };
 
   render() {
-    let rightIcon = this.perfilPropioSi
+    let rightIcon = this.isPerfilPropio
       ? { type: "font-awesome", name: "edit", color: "grey" }
       : {};
     return (
@@ -90,7 +113,7 @@ export default class VerPerfil extends React.Component {
               <ImagenDePerfilConIcono
                 source={this.state.imagen}
                 style={styles.profPic}
-                cambiarSi={!this.perfilPropioSi}
+                cambiarSi={!this.isPerfilPropio}
                 onPressIcono={this.pickImage}
               />
             </View>
@@ -104,14 +127,12 @@ export default class VerPerfil extends React.Component {
                   name: "id-card",
                   color: Azul
                 }}
-                onChangeText={text =>
-                  this.setState({ nombre: text })
-                }
+                onChangeText={text => this.setState({ nombre: text })}
                 onFocus={() => this.InputFixer.onFocus()}
                 rightIcon={rightIcon}
                 leftIconContainerStyle={styles.leftIconName}
                 rightIconContainerStyle={styles.rightIcon}
-                editable={this.perfilPropioSi}
+                editable={this.isPerfilPropio}
               />
             </View>
 
@@ -124,14 +145,12 @@ export default class VerPerfil extends React.Component {
                   name: "id-card",
                   color: Azul
                 }}
-                onChangeText={text =>
-                  this.setState({ apellidos: text })
-                }
+                onChangeText={text => this.setState({ apellidos: text })}
                 onFocus={() => this.InputFixer.onFocus()}
                 rightIcon={rightIcon}
                 leftIconContainerStyle={styles.leftIconName}
                 rightIconContainerStyle={styles.rightIcon}
-                editable={this.perfilPropioSi}
+                editable={this.isPerfilPropio}
               />
             </View>
 
@@ -152,11 +171,11 @@ export default class VerPerfil extends React.Component {
                 rightIcon={rightIcon}
                 leftIconContainerStyle={styles.leftIconDescr}
                 rightIconContainerStyle={styles.rightIcon}
-                editable={this.perfilPropioSi}
+                editable={this.isPerfilPropio}
                 multiline={true}
               />
             </View>
-            {this.perfilPropioSi ? (
+            {this.isPerfilPropio ? (
               <View style={styles.cancelarYActualizarView}>
                 <Button
                   title={"CANCELAR"}

@@ -14,6 +14,8 @@ import styles from "./styles";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Mensaje from "../../components/Mensaje";
 
+import { getUserId } from "../../config/Auth"; // QUITAR CUANDO SE INTEGRE ESTA PANTALLA
+
 import { headerHeight } from "../../constants";
 
 export default class Chat extends React.Component {
@@ -47,8 +49,8 @@ export default class Chat extends React.Component {
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("VerPerfil", {
-            title: "Perfil de Pedro",
-            perfilPropioSi: false
+            name: "Pedro",
+            userId: getUserId() // Cambiar cuando se integre esta pantalla 
           })
         }
         activeOpacity={0.6}
