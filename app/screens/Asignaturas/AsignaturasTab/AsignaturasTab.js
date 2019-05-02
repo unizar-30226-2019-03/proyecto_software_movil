@@ -20,7 +20,8 @@ export default class AsignaturasTab extends React.Component {
       refreshing: false,
     };
 
-    this.offset = 1;
+    this.offset = 0;
+    this.totalPages = undefined;
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -30,14 +31,19 @@ export default class AsignaturasTab extends React.Component {
   }
 
   getData = () => {
-    this.subjectApiInstance.getSubjects((error, data, response) => {
-      if (!error) {
-        this.offset = this.offset + 1;
-        this.setState({
-          data: [...this.state.data, ...data._embedded.subjects]
-        });
-      }
-    });
+    if (this.totalPages == undefined || this.offset < this.totalPages) {
+      console.log(this.offset)
+      console.log(this.totalPages)
+      this.subjectApiInstance.getSubjects((error, data, response) => {
+        if (!error) {
+          this.offset = this.offset + 1;
+          this.totalPages = data.page.totalPages;
+          this.setState({
+            data: [...this.state.data, ...data._embedded.subjects]
+          });
+        }
+      });
+    }
   }
 
   componentWillMount = () => {
@@ -52,7 +58,8 @@ export default class AsignaturasTab extends React.Component {
   }
 
   onRefresh = () => {
-    this.offset = 1;
+    this.offset = 0;
+    this.totalPages = undefined;
     this.setState({ refreshing: true, data:[] })
     this.getData();
     this.setState({ refreshing: false })
