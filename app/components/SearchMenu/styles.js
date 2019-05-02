@@ -2,21 +2,20 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
-    flexDirection: "row"
-  },
-  searchBarTitle: {
-    color: "#000",
-    fontSize: 20,
-    marginLeft: 10
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center"
   },
   appLogo: {
-    width: 20,
-    height: 20
+    width: 35,
+    height: 35,
+    marginLeft: 5
   },
-  appIcon: {
-    color: "#000",
-    fontSize: 30,
-    marginLeft: 15
+  appText: {
+    width: 99,
+    height: 30,
+    marginLeft: 5,
+    marginBottom: 10
   },
   userButton: {
     marginRight: 15

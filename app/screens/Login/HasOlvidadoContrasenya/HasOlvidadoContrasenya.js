@@ -12,6 +12,10 @@ export default class HasOlvidadoContrasenya extends React.Component {
     emailSent: false
   };
 
+  static navigationOptions = ({ navigation }) => ({
+    title: "Restaurar contraseña"
+  });
+
   toggleEmailSent = () => {
     this.setState({ emailSent: !this.state.emailSent });
   };

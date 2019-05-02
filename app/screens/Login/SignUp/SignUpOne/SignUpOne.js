@@ -22,6 +22,7 @@ export default class SignUpOne extends React.Component {
   pickProfileImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
+      mediaTypes: "Images",
       aspect: [4, 4]
     });
 
