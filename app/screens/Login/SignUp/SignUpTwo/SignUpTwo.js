@@ -54,6 +54,23 @@ export default class SignUpOne extends React.Component {
     this.keyboardDidHideSub.remove();
   }
 
+  tryRegister = async () => {
+    let apiInstance = new UserApi();
+    apiInstance.addUser(
+      this.state.username,
+      this.state.password,
+      async (error, data, response) => {
+        if (error) {
+          this.setState({
+            showInputError: true
+          });
+        } else {
+          await signIn(data.token, this.props.navigation);
+        }
+      }
+    );
+  };
+
   render() {
     const { shift } = this.state;
     const searchUni = this.state.searchUni;
