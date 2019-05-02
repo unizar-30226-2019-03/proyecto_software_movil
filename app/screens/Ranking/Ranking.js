@@ -39,7 +39,7 @@ export default class Ranking extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.viewFilter}>
+{/*        <View style={styles.viewFilter}>
           <Text style={styles.rankingTitle}>{this.state.filter}</Text>
           <SearchBar
             value={this.state.search}
@@ -73,7 +73,7 @@ export default class Ranking extends React.Component {
               ))}
             </MenuOptions>
           </Menu>
-        </View>
+        </View>*/}
 
         <ScrollView>
           <View style={styles.rankingPlace}>

@@ -57,6 +57,7 @@ export default class SignIn extends React.Component {
             onChangeText={text =>
               this.setState({ username: text, showInputError: false })
             }
+            autoCapitalize = 'none'
             onFocus={() => this.InputFixer.onFocus()}
             errorStyle={{ color: "red" }}
             errorMessage={

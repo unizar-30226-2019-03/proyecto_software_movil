@@ -25,8 +25,10 @@ const SearchMenuBar = ({ navigation }) => {
             source={require("../../assets/icon.png")}
             style={styles.appLogo}
           />
-          <Ionicons name="ios-apps" style={styles.appIcon} />
-          <Text style={styles.searchBarTitle}>UniCast</Text>
+          <Image
+            source={require("../../assets/unicast.png")}
+            style={styles.appText}
+          />
         </View>
       </TouchableOpacity>
     ),
