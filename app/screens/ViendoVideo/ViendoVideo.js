@@ -5,7 +5,9 @@ import {
   Animated,
   TouchableOpacity,
   Alert,
-  ListView
+  ListView,
+  KeyboardAvoidingView,
+  TextInput
 } from "react-native";
 
 import styles from "./styles";
@@ -16,6 +18,7 @@ import { SearchBar } from "react-native-elements";
 import Descripcion from "../../components/Descripcion";
 import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
 import Comentario from "../../components/Comentario";
+import { headerHeight } from "../../constants";
 
 export default class ViendoVideo extends React.Component {
   constructor() {
@@ -75,12 +78,17 @@ export default class ViendoVideo extends React.Component {
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
+    var vacio = [];
     this.state = {
+      comentarios: comentarios,
+      comentariosMostrar: vacio,
       seguida: false,
       texto: "Seguir asignatura",
       segundo: 0,
-      dataSource: ds.cloneWithRows(comentarios),
-      largo: false
+      dataSource: ds,
+      largo: false,
+      ultimoAñadido: -1,
+      text: ""
     };
   }
 
@@ -106,12 +114,41 @@ export default class ViendoVideo extends React.Component {
   }
   pasaSegundo() {
     this.setState({
-      largo: this.VideoFlechaRef.devuelveDuracion() / 3 > 0
+      largo: Math.floor(this.VideoFlechaRef.devuelveDuracion() / 3600) > 0
     });
     var nuevo = this.VideoFlechaRef.devuelveEstado();
     nuevo = Math.floor(nuevo / 1000 + 0.5);
     this.setState({ segundo: nuevo });
+    var añadir = this.state.comentariosMostrar;
+    var i = this.state.ultimoAñadido + 1;
+
+    if (i < this.state.comentarios.length) {
+      while (
+        i < this.state.comentarios.length &&
+        this.state.comentarios[i].tiempo <= nuevo
+      ) {
+        añadir = [...añadir, this.state.comentarios[i]];
+
+        i = i + 1;
+      }
+    }
+
+    var ds = this.state.dataSource;
+    this.setState({
+      comentariosMostrar: añadir,
+      ultimoAñadido: i - 1,
+      dataSource: ds.cloneWithRows(añadir)
+    });
   }
+  boton = () => {
+    if (this.state.text.length > 0) {
+      return (
+        <Text style={styles.enviar} onPress={() => this.comentar()}>
+          Comentar
+        </Text>
+      );
+    }
+  };
   render() {
     return (
       /*
@@ -132,7 +169,11 @@ export default class ViendoVideo extends React.Component {
           title="IR ASIGNATURA"
         /> */
       //QUITO TODO LO ANTERIOR?????????
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        keyboardVerticalOffset={headerHeight}
+      >
         <View style={styles.videoContainer}>
           <VideoConSinFlechaAtras
             flechaSi={true}
@@ -150,7 +191,11 @@ export default class ViendoVideo extends React.Component {
             }}
           />
         </View>
-        <ScrollView>
+        <ScrollView
+          ref={ref => {
+            this.ListView_Ref = ref;
+          }}
+        >
           <CuadroValorar navigation={this.props.navigation} />
           <View style={styles.dejarDeSeguir}>
             <TouchableOpacity
@@ -194,9 +239,9 @@ export default class ViendoVideo extends React.Component {
           <Descripcion navigation={this.props.navigation} />
 
           <ListView
-            ref={ref => {
-              this.ListView_Ref = ref;
-            }}
+            onContentSizeChange={() =>
+              this.ListView_Ref.scrollToEnd({ animated: true })
+            }
             dataSource={this.state.dataSource}
             renderRow={rowData => (
               <Comentario
@@ -208,7 +253,15 @@ export default class ViendoVideo extends React.Component {
             )}
           />
         </ScrollView>
-      </View>
+        <TextInput
+          placeholder="Escribe un mensaje"
+          onChangeText={text => this.setState({ text })}
+          value={this.state.text}
+          multiline={true}
+          style={[styles.textInput, { maxHeight: 80 }]}
+        />
+        {this.boton()}
+      </KeyboardAvoidingView>
     );
   }
 }
