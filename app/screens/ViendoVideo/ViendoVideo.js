@@ -8,6 +8,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { SearchBar } from "react-native-elements";
 import Descripcion from "../../components/Descripcion";
 import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
+import Comentario from "../../components/Comentario";
+
 export default class ViendoVideo extends React.Component {
   constructor() {
     super();
@@ -46,7 +48,8 @@ export default class ViendoVideo extends React.Component {
       <View style={styles.container}>
         <View style={styles.videoContainer}>
           <VideoConSinFlechaAtras
-            flechaSi={false}
+            flechaSi={true}
+            goBackDestination={""}
             navigation={this.props.navigation}
             source={
               "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
@@ -98,7 +101,36 @@ export default class ViendoVideo extends React.Component {
           </View>
           <Descripcion navigation={this.props.navigation} />
           <View style={{ borderWidth: 1 }}>
-            <Text>Prueba</Text>
+            <Comentario
+              nombreUsuario="JasenAsen"
+              cuerpoComentario="Saludos"
+              tiempo={15}
+              largo={false}
+            />
+            <Comentario
+              nombreUsuario="David el sabueso"
+              cuerpoComentario="Salutres"
+              tiempo={16}
+              largo={false}
+            />
+            <Comentario
+              nombreUsuario="Martititititi"
+              cuerpoComentario="Salucuatros"
+              tiempo={17}
+              largo={false}
+            />
+            <Comentario
+              nombreUsuario="Unai Anorrategui"
+              cuerpoComentario="Para cuatros los que vais a sacar todos, estais supensos"
+              tiempo={69}
+              largo={false}
+            />
+            <Comentario
+              nombreUsuario="Javier Resano"
+              cuerpoComentario="Como coordinador de la asignatura respeto la opinión de Unai"
+              tiempo={3600}
+              largo={false}
+            />
           </View>
         </ScrollView>
       </View>

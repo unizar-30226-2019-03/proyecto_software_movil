@@ -16,6 +16,7 @@ export default class Descripcion extends React.Component {
   _animatedOpacity = new Animated.Value(0);
   alternarDescripcion = () => {
     this._listaProfesores.scrollTo({ x: 0, y: 0, animated: true });
+    this._listaDescripcion.scrollTo({ x: 0, y: 0, animated: true });
 
     if (this.state.desplegado == false) {
       Animated.timing(this._animatedHeight, { toValue: 150 }).start();
@@ -46,7 +47,7 @@ export default class Descripcion extends React.Component {
             color={GrisClaro}
           />
         </View>
-        <Animated.ScrollView
+        <Animated.View
           style={[
             this.state.desplegado == false
               ? {
@@ -63,59 +64,65 @@ export default class Descripcion extends React.Component {
                 }
           ]}
         >
-          <View>
-            <Text style={styles.cuerpoDescripcion}>
-              Esto es la descripción de un vídeo en el que se explica como
-              escribir una descripción para un vídeo, lo primero obviamente será
-              grabar un vídeo que se pueda describir; no me seas tolai y me
-              hagas un vídeo friendo un huevo porque ahí poco se puede
-              describir, torpe, que es que eres torpe.
-            </Text>
-          </View>
-          <Text style={styles.profesoresTitulo}>
-            Profesores de la asignatura
-          </Text>
-          <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate("Chat", {
-                title: "Juancho Provisional"
-              })
-            }
+          <ScrollView
+            ref={ref => {
+              this._listaDescripcion = ref;
+            }}
           >
-            <ScrollView
-              style={styles.profesores}
-              horizontal={true}
-              ref={ref => {
-                this._listaProfesores = ref;
-              }}
+            <View>
+              <Text style={styles.cuerpoDescripcion}>
+                Esto es la descripción de un vídeo en el que se explica como
+                escribir una descripción para un vídeo, lo primero obviamente
+                será grabar un vídeo que se pueda describir; no me seas tolai y
+                me hagas un vídeo friendo un huevo porque ahí poco se puede
+                describir, torpe, que es que eres torpe.
+              </Text>
+            </View>
+            <Text style={styles.profesoresTitulo}>
+              Profesores de la asignatura
+            </Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("Chat", {
+                  title: "Juancho Provisional"
+                })
+              }
             >
-              <View style={styles.iconAndNameView}>
-                <Image
-                  source={require("../../../test/imagenes/perfil.jpg")}
-                  style={styles.userIcon}
-                  margin={20}
-                />
-                <Text style={styles.userName}>Recesvinto W.</Text>
-              </View>
-              <View style={styles.iconAndNameView}>
-                <Image
-                  source={require("../../../test/imagenes/perfil.jpg")}
-                  style={styles.userIcon}
-                  margin={20}
-                />
-                <Text style={styles.userName}>Recesvinto W.</Text>
-              </View>
-              <View style={styles.iconAndNameView}>
-                <Image
-                  source={require("../../../test/imagenes/perfil.jpg")}
-                  style={styles.userIcon}
-                  margin={20}
-                />
-                <Text style={styles.userName}>Recesvinto W.</Text>
-              </View>
-            </ScrollView>
-          </TouchableOpacity>
-        </Animated.ScrollView>
+              <ScrollView
+                style={styles.profesores}
+                horizontal={true}
+                ref={ref => {
+                  this._listaProfesores = ref;
+                }}
+              >
+                <View style={styles.iconAndNameView}>
+                  <Image
+                    source={require("../../../test/imagenes/perfil.jpg")}
+                    style={styles.userIcon}
+                    margin={20}
+                  />
+                  <Text style={styles.userName}>Recesvinto W.</Text>
+                </View>
+                <View style={styles.iconAndNameView}>
+                  <Image
+                    source={require("../../../test/imagenes/perfil.jpg")}
+                    style={styles.userIcon}
+                    margin={20}
+                  />
+                  <Text style={styles.userName}>Recesvinto W.</Text>
+                </View>
+                <View style={styles.iconAndNameView}>
+                  <Image
+                    source={require("../../../test/imagenes/perfil.jpg")}
+                    style={styles.userIcon}
+                    margin={20}
+                  />
+                  <Text style={styles.userName}>Recesvinto W.</Text>
+                </View>
+              </ScrollView>
+            </TouchableOpacity>
+          </ScrollView>
+        </Animated.View>
       </View>
     );
   }
