@@ -12,12 +12,23 @@ import styles from "./styles";
 // const { State: TextInputState } = TextInput;
 
 export default class SubirVideo extends React.Component {
-  state = {
-    videoIsChosen: 0,
-    asignatura: undefined,
-    video: undefined,
-    thumbnail: "uri_nula"
-  };
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      asignatura: undefined,
+      pickerData: ['wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa','dwadawdawdawdawdawdawdawdawdawdawddadawdawdawdawdadawdawdawdawdawdawdawdawdawdaawdawdab', 'dadawdawdac', 'dawdawdawd', 'dawdawdawe', 'dawdawdawe', 'dawdawdawe', 'dawdawdawe'],
+      video: undefined,
+      thumbnail: undefined,
+      titulo: "",
+      descripción: "",
+      noThumbnailErr: false,
+      tituloVacioErr: false,
+      noVideoErr: false
+    };
+
+    //api
+  }
 
   pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -27,7 +38,7 @@ export default class SubirVideo extends React.Component {
     });
 
     if (!result.cancelled) {
-      this.setState({ video: result.uri, videoIsChosen: 1 });
+      this.setState({ video: result.uri, noVideoErr: false });
     }
   };
 
@@ -39,7 +50,7 @@ export default class SubirVideo extends React.Component {
     });
 
     if (!result.cancelled) {
-      this.setState({ thumbnail: result.uri });
+      this.setState({ thumbnail: result.uri, noThumbnailErr: false });
     }
   };
 
@@ -47,17 +58,41 @@ export default class SubirVideo extends React.Component {
     title: "Subir vídeo"
   });
 
+  tryUpload = () => {
+    let someError = false;
+    if (!this.state.video) {
+      this.setState({ noVideoErr: true })
+      someError = true
+    }
+    if (this.state.titulo == "") {
+      this.setState({ tituloVacioErr: true })
+      someError = true
+    }
+    if (!this.state.thumbnail) {
+      this.setState({ noThumbnailErr: true })
+      someError = true
+    }
+    if (!this.state.video) {
+      someError = true
+    }
+
+    if (!someError) {
+      // api
+    }
+  }
+
   render() {
-    const { thumbnail } = this.state;
-    const { video } = this.state;
+    let pickerItems = this.state.pickerData.map( (s, i) => {
+        return <Picker.Item key={i} value={s} label={s} />
+    });
 
     return (
       <InputFixer         
         navigation={this.props.navigation}
         ref={InputFixer => this.InputFixer = InputFixer}
       >
-        <View style={styles.viewSelectVideo}>
-          {this.state.videoIsChosen == 0 ? (
+        <View style={[styles.viewSelectVideo, { borderColor: this.state.noVideoErr ? "red" : "grey"}]}>
+          {!this.state.video ? (
             <Button
               buttonStyle={styles.selectVideoButton}
               title="ELEGIR VÍDEO"
@@ -67,8 +102,8 @@ export default class SubirVideo extends React.Component {
             <VideoConSinFlechaAtras
               flechaSi={false}
               navigation={this.props.navigation}
-              source={video}
-              thumbnail={thumbnail}
+              source={this.state.video}
+              thumbnail={this.state.thumbnail}
               autoplay={false}
             />
           )}
@@ -77,18 +112,14 @@ export default class SubirVideo extends React.Component {
         <View style={styles.viewSelectAsign}>
           <Text style={styles.textAsignatura}>Asignatura:</Text>
           <Picker
-            mode="dropdown"
+            mode="dialog"
             selectedValue={this.state.asignatura}
             style={styles.pickerAsign}
-            onValueChange={(itemValue, itemIndex) =>
-              this.setState({ asignatura: itemValue })
+            onValueChange={(asignatura) =>
+              this.setState({ asignatura: asignatura })
             }
-          >
-            <Picker.Item label="Unizar - Bioinformática" value="1" />
-            <Picker.Item
-              label="UC3 - Laboratorio de sistemas de información"
-              value="2"
-            />
+          > 
+            {pickerItems}
           </Picker>
         </View>
 
@@ -97,13 +128,22 @@ export default class SubirVideo extends React.Component {
             placeholder="Escriba un título..."
             label="Título"
             onFocus={() => this.InputFixer.onFocus()}
+            onChangeText={text =>
+              this.setState({ titulo: text, tituloVacioErr: false })
+            }
+            errorStyle={{ color: "red" }}
+            errorMessage={
+              this.state.tituloVacioErr
+                ? "El título no puede ser vacío"
+                : null
+            }
           />
         </View>
 
         <View style={styles.viewInput}>
           <Input
             onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={() => this.InputFixer.onFocus()}
+            onChangeText={(text) => this.InputFixer.onFocus() || this.setState({ descripción: text })}
             placeholder="Escriba una descripción..."
             multiline={true}
             label="Descripción"
@@ -111,18 +151,21 @@ export default class SubirVideo extends React.Component {
         </View>
 
         <View style={styles.viewSelectThumbnail}>
+        {this.state.noThumbnailErr ? (
+          <Text style={styles.imageErrText}>Falta una miniatura</Text>
+        ) : (
+          <Image source={{ uri: this.state.thumbnail }} style={styles.imageThumbnail} />
+        )}
           <Button
             title="Elegir miniatura"
             onPress={this.pickThumbnail}
+            containerStyle={styles.selectImageButton}
             buttonStyle={styles.selectThumbnail}
           />
-          {thumbnail && (
-            <Image source={{ uri: thumbnail }} style={styles.imageThumbnail} />
-          )}
         </View>
 
         <View style={styles.uploadButtonView}>
-          <Button buttonStyle={styles.uploadButton} title="Subir vídeo" />
+          <Button buttonStyle={styles.uploadButton} title="Subir vídeo" onPress={() => this.tryUpload()}/>
         </View>
       </InputFixer>
     );
