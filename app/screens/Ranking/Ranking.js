@@ -1,152 +1,141 @@
 import React from "react";
-import { Text, View, Button, ScrollView, TouchableOpacity } from "react-native";
-import { ListItem, Icon, SearchBar } from "react-native-elements";
+import { Text, View, Button, FlatList, TouchableOpacity } from "react-native";
+import { Icon } from "react-native-elements";
 
-import { Menu, MenuOptions, MenuTrigger } from "react-native-popup-menu";
+import LoadingFooter from "../../components/LoadingFooter";
 
 import styles from "./styles";
 import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
 
 export default class Ranking extends React.Component {
-  state = {
-    filter: "Por universidad",
-    search: ""
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: [
+        { temp: "temp" },
+        { temp: "temp" },
+        { temp: "temp" },
+        { temp: "temp" },
+        { temp: "temp" }
+      ],
+      loading: true,
+      fetchingNewData: false,
+      refreshing: false
+    };
+
+    this.offset = 0;
+    this.totalPages = undefined;
+
+    // let defaultClient = ApiClient.instance;
+    // let bearerAuth = defaultClient.authentications["bearerAuth"];
+    // bearerAuth.accessToken = getUserToken();
+
+    // this.videoApiInstance = new VideoApi();
+
+    // this.getData();
+    this.state.loading = false;
+  }
+
+  getData = () => {
+    // if (this.totalPages == undefined || this.offset < this.totalPages) {
+    //   let opts = {
+    //     page: this.offset
+    //   };
+    //   this.videoApiInstance.getVideos((error, data, response) => {
+    //     if (!error) {
+    //       this.offset = this.offset + 1;
+    //       this.totalPages = data.page.totalPages;
+    //       this.setState({
+    //         data: [...this.state.data, ...data._embedded.videos],
+    //         loading: false,
+    //         fetchingNewData: false,
+    //         refreshing: false
+    //       });
+    //     }
+    //   });
+    // }
   };
 
-  enableFilter(name) {
-    this.setState({ filter: name });
-  }
+  onEndReached = () => {
+    this.setState({ fetchingNewData: true });
+    this.getData();
+  };
 
-  handleSearch(text) {
-    this.setState({ search:text });
-    if (text != "") {
-      //buscar en la API
+  onRefresh = () => {
+    this.offset = 0;
+    this.totalPages = undefined;
+    this.setState({
+      refreshing: true,
+      data: [],
+      fetchingNewData: false,
+      loading: false
+    });
+    this.getData();
+  };
+
+  icon = index => {
+    let color = "white";
+    let hidden = false;
+
+    if (index == 0) {
+      color = "gold";
+    } else if (index == 1) {
+      color = "silver";
+    } else if (index == 2) {
+      color = "brown";
+    } else {
+      hidden = true;
     }
-  }
-
-  render() {
-    const optionList = [
-      {
-        name: "Por comunidad"
-      },
-      {
-        name: "Por universidad"
-      },
-      {
-        name: "Por profesor"
-      }
-    ];
 
     return (
-      <View style={styles.container}>
-{/*        <View style={styles.viewFilter}>
-          <Text style={styles.rankingTitle}>{this.state.filter}</Text>
-          <SearchBar
-            value={this.state.search}
-            onChangeText={(text) => this.handleSearch(text)}
-            lightTheme={true}
-            containerStyle={styles.searchBarContainer}
-            inputContainerStyle={styles.searchBar}
-            round={true}
-          />
-          <Menu style={styles.dropDownMenuContainer}>
-            <MenuTrigger>
-              <Icon name="filter" type="font-awesome" size={30} color="grey" />
-            </MenuTrigger>
-            <MenuOptions>
-              {optionList.map((item, i) => (
-                <ListItem
-                  key={i}
-                  title={item.name}
-                  titleStyle={[
-                    {
-                      fontWeight:
-                        item.name == this.state.filter ? "bold" : "normal"
-                    }
-                  ]}
-                  leftIcon={{
-                    type: "entypo",
-                    name: item.name == this.state.filter ? "check" : undefined
-                  }}
-                  onPress={() => this.enableFilter(item.name)}
-                />
-              ))}
-            </MenuOptions>
-          </Menu>
-        </View>*/}
+      <View style={hidden ? styles.hidden : null}>
+        <Icon name="trophy" type="font-awesome" color={color} />
+      </View>
+    );
+  };
 
-        <ScrollView>
-          <View style={styles.rankingPlace}>
-            <Text style={styles.rankNumber}>1.</Text>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Asignatura", {
-                  title: "UPM - Proyecto software"
-                })
-              }
-            >
-              <IconoAsignaturaUniversidad
-                name="Multiprocesadores"
-                image={require("../../../test/imagenes/perfil_uni.jpg")}
-              />
-            </TouchableOpacity>
-            <Icon name="trophy" type="font-awesome" color="gold" />
-            <Text style={styles.rankScore}>99.98%</Text>
-          </View>
-          <View style={styles.rankingPlace}>
-            <Text style={styles.rankNumber}>2.</Text>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Asignatura", {
-                  title: "UPM - Proyecto software"
-                })
-              }
-            >
-              <IconoAsignaturaUniversidad
-                name="Multiprocesadores"
-                image={require("../../../test/imagenes/perfil_uni.jpg")}
-              />
-            </TouchableOpacity>
-            <Icon name="trophy" type="font-awesome" color="silver" />
-            <Text style={styles.rankScore}>99.93%</Text>
-          </View>
-          <View style={styles.rankingPlace}>
-            <Text style={styles.rankNumber}>3.</Text>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Asignatura", {
-                  title: "UPM - Proyecto software"
-                })
-              }
-            >
-              <IconoAsignaturaUniversidad
-                name="Multiprocesadores"
-                image={require("../../../test/imagenes/perfil_uni.jpg")}
-              />
-            </TouchableOpacity>
-            <Icon name="trophy" type="font-awesome" color="brown" />
-            <Text style={styles.rankScore}>98.10%</Text>
-          </View>
-          <View style={styles.rankingPlace}>
-            <Text style={styles.rankNumber}>4.</Text>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Asignatura", {
-                  title: "UPM - Proyecto software"
-                })
-              }
-            >
-              <IconoAsignaturaUniversidad
-                name="Multiprocesadores"
-                image={require("../../../test/imagenes/perfil_uni.jpg")}
-              />
-            </TouchableOpacity>
-            <View style={styles.hidden}>
-              <Icon name="trophy" type="font-awesome" />
-            </View>
-            <Text style={styles.rankScore}>85.77%</Text>
-          </View>
-        </ScrollView>
+  render() {
+    return (
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <FlatList
+            data={this.state.data}
+            refreshing={this.state.refreshing}
+            onEndReached={() => this.onEndReached()}
+            onRefresh={() => this.onRefresh()}
+            renderItem={({ item, index }) => (
+              <View style={styles.rankingPlace}>
+                <Text style={styles.rankNumber}>1.</Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate("Asignatura", {
+                      title: "UPM - Proyecto software"
+                    })
+                  }
+                >
+                  <IconoAsignaturaUniversidad
+                    name="Multiprocesadores"
+                    image={require("../../../test/imagenes/perfil_uni.jpg")}
+                  />
+                </TouchableOpacity>
+                {this.icon(index)}
+                <Text style={styles.rankScore}>99.98%</Text>
+              </View>
+            )}
+            ListFooterComponent={LoadingFooter({
+              show: this.state.fetchingNewData
+            })}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        )}
       </View>
     );
   }

@@ -1,13 +1,15 @@
 import React from "react";
+
 import { View, FlatList, ActivityIndicator } from "react-native";
 
 import { SubjectApi, ApiClient } from "swagger_unicast";
 
 import { getUserToken } from "../../../config/Auth";
 
-import styles from "./styles";
-
 import ThumbnailAsignatura from "../../../components/ThumbnailAsignatura";
+import LoadingFooter from "../../../components/LoadingFooter";
+
+import styles from "./styles";
 
 export default class AsignaturasTab extends React.Component {
   constructor(props) {
@@ -17,7 +19,7 @@ export default class AsignaturasTab extends React.Component {
       data: [],
       loading: true,
       fetchingNewData: false,
-      refreshing: false,
+      refreshing: false
     };
 
     this.offset = 0;
@@ -30,51 +32,53 @@ export default class AsignaturasTab extends React.Component {
     this.subjectApiInstance = new SubjectApi();
 
     this.getData();
-
-    this.loading = false;
   }
 
   getData = () => {
     if (this.totalPages == undefined || this.offset < this.totalPages) {
+      let opts = {
+        page: this.offset
+      };
       this.subjectApiInstance.getSubjects((error, data, response) => {
         if (!error) {
           this.offset = this.offset + 1;
           this.totalPages = data.page.totalPages;
           this.setState({
-            data: [...this.state.data, ...data._embedded.subjects]
+            data: [...this.state.data, ...data._embedded.subjects],
+            loading: false,
+            fetchingNewData: false,
+            refreshing: false
           });
         }
       });
     }
-  }
+  };
 
   onEndReached = () => {
-    this.setState({ fetchingNewData: true })
+    this.setState({ fetchingNewData: true });
     this.getData();
-    this.setState({ fetchingNewData: false })  
-  }
+  };
 
   onRefresh = () => {
     this.offset = 0;
     this.totalPages = undefined;
-    this.setState({ refreshing: true, data:[] })
+    this.setState({
+      refreshing: true,
+      data: [],
+      fetchingNewData: false,
+      loading: false
+    });
     this.getData();
-    this.setState({ refreshing: false })
-  }
-
-  renderFooter() {
-    return (
-      <View style={styles.footer}>
-        {this.state.fetchingNewData ? (
-          <ActivityIndicator size="large" style={{ marginBottom: 15 }} />
-        ) : null}
-      </View>
-    );
-  }
+  };
 
   render() {
     return (
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
@@ -90,7 +94,9 @@ export default class AsignaturasTab extends React.Component {
                 name={item.name}
               />
             )}
-            ListFooterComponent={this.renderFooter.bind(this)}
+            ListFooterComponent={LoadingFooter({
+              show: this.state.fetchingNewData
+            })}
             keyExtractor={(item, index) => index.toString()}
           />
         )}

@@ -13,15 +13,20 @@ import InputFixer from "../../../components/InputFixer";
 import styles from "./styles";
 
 export default class SignIn extends React.Component {
-  state = {
-    username: "",
-    password: "",
-    showInputError: false
-  };
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      username: "",
+      password: "",
+      showInputError: false
+    };
+
+    this.apiInstance = new UserApi();
+  } 
 
   tryLogin = async () => {
-    let apiInstance = new UserApi();
-    apiInstance.authUser(
+    this.apiInstance.authUser(
       this.state.username,
       this.state.password,
       async (error, data, response) => {
