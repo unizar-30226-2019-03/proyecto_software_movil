@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Animated, TouchableOpacity } from "react-native";
+import { Text, View, Animated, TouchableOpacity, Alert } from "react-native";
 
 import styles from "./styles";
 import VideoConSinFlechaAtras from "../../components/VideoConSinFlechaAtras";
@@ -15,8 +15,12 @@ export default class ViendoVideo extends React.Component {
     super();
     this.state = {
       seguida: false,
-      texto: "Seguir asignatura"
+      texto: "Seguir asignatura",
+      segundo: 0
     };
+  }
+  componentDidMount() {
+    this.interval = setInterval(() => this.pasaSegundo(), 1000);
   }
   cambiarSeguir() {
     if (this.state.seguida == true) {
@@ -24,6 +28,12 @@ export default class ViendoVideo extends React.Component {
     } else {
       this.setState({ seguida: true, texto: "Dejar de seguir" });
     }
+  }
+  pasaSegundo() {
+    //var posicion = estado["positionMillis"];
+    // Alert.alert(JSON.stringify(estado));
+    var nuevo = this.VideoFlechaRef.devuelveEstado();
+    this.setState({ segundo: nuevo });
   }
   render() {
     return (
@@ -58,6 +68,9 @@ export default class ViendoVideo extends React.Component {
               "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
             }
             autoplay={true}
+            ref={ref => {
+              this.VideoFlechaRef = ref;
+            }}
           />
         </View>
         <ScrollView>
@@ -100,6 +113,7 @@ export default class ViendoVideo extends React.Component {
             </TouchableOpacity>
           </View>
           <Descripcion navigation={this.props.navigation} />
+          <Text style={{ fontSize: 30 }}>{this.state.segundo}</Text>
           <View style={{ borderWidth: 1 }}>
             <Comentario
               nombreUsuario="JasenAsen"

@@ -22,7 +22,8 @@ import styles from "./styles";
 export default class VideoConSinFlechaAtras extends React.Component {
   state = {
     pantallaCompleta: false,
-    orientationChangeSecondCall: false // onFullscreenUpdate llama dos veces seguidas.
+    orientationChangeSecondCall: false, // onFullscreenUpdate llama dos veces seguidas.
+    posicion: 0
   };
 
   orientationChange() {
@@ -41,7 +42,13 @@ export default class VideoConSinFlechaAtras extends React.Component {
       });
     }
   }
-
+  devuelveEstado() {
+    return this.state.posicion;
+  }
+  cambio(nuevo) {
+    let posicion = nuevo.positionMillis;
+    this.setState({ posicion: posicion });
+  }
   render() {
     const maxWidth =
       this.props.width == undefined ? ScreenWidth : videoProps.width;
@@ -61,6 +68,9 @@ export default class VideoConSinFlechaAtras extends React.Component {
     return (
       <View style={{ backgroundColor: "black" }}>
         <Video
+          ref={ref => {
+            this.Video_ref = ref;
+          }}
           posterSource={{ uri: this.props.thumbnail }}
           source={{ uri: this.props.source }}
           rate={1.0}
@@ -70,6 +80,8 @@ export default class VideoConSinFlechaAtras extends React.Component {
           useNativeControls={true}
           style={{ width: videoWidth, height: videoHeight }}
           onFullscreenUpdate={() => this.orientationChange()}
+          progressUpdateIntervalMillis={1000}
+          onPlaybackStatusUpdate={tiempo => this.cambio(tiempo)}
         />
         {this.props.flechaSi == true ? (
           <TouchableOpacity
