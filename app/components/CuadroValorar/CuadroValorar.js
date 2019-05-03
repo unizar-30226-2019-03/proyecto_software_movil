@@ -75,6 +75,7 @@ export default class CuadroValorar extends React.Component {
                   style={styles.RatingApartado}
                   type="star"
                   ratingCount={5}
+                  fractions={0}
                 />
               </View>
               <View style={styles.apartado}>
@@ -84,11 +85,17 @@ export default class CuadroValorar extends React.Component {
                   style={styles.RatingApartado}
                   type="star"
                   ratingCount={5}
+                  fractions={0}
                 />
               </View>
               <View style={styles.apartado}>
                 <Text style={styles.textoApartado}>Adecuación</Text>
-                <Rating type="star" ratingCount={5} imageSize={35} />
+                <Rating
+                  type="star"
+                  ratingCount={5}
+                  imageSize={35}
+                  fractions={0}
+                />
               </View>
               <View style={styles.apartado}>
                 <Text style={styles.textoApartado}>Amenidad</Text>
@@ -97,6 +104,7 @@ export default class CuadroValorar extends React.Component {
                   style={styles.RatingApartado}
                   type="star"
                   ratingCount={5}
+                  fractions={0}
                 />
               </View>
 

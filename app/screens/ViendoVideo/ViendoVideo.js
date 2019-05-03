@@ -47,8 +47,8 @@ export default class ViendoVideo extends React.Component {
           />
         </View>
         <ScrollView>
-          <CuadroValorar />
-          <Descripcion />
+          <CuadroValorar navigation={this.props.navigation} />
+          <Descripcion navigation={this.props.navigation} />
           <View style={{ borderWidth: 1 }}>
             <Text>Prueba</Text>
           </View>

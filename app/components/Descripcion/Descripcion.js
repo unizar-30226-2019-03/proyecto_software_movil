@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Animated } from "react-native";
+import { Text, View, Animated, TouchableOpacity, Image } from "react-native";
 import styles from "./styles";
 import { ScrollView } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
@@ -14,6 +14,8 @@ export default class Descripcion extends React.Component {
   }
   _animatedHeight = new Animated.Value(0);
   alternarDescripcion = () => {
+    this._listaProfesores.scrollTo({ x: 0, y: 0, animated: true });
+
     if (this.state.desplegado == false) {
       Animated.timing(this._animatedHeight, { toValue: 150 }).start();
       this.setState({ desplegado: true });
@@ -47,9 +49,14 @@ export default class Descripcion extends React.Component {
               ? {
                   height: this._animatedHeight,
                   padding: 5,
-                  borderWidth: 0
+                  borderWidth: 0,
+                  opacity: 0
                 }
-              : { height: this._animatedHeight, padding: 5, borderWidth: 1 }
+              : {
+                  height: this._animatedHeight,
+                  padding: 5,
+                  borderBottomWidth: 1
+                }
           ]}
         >
           <View>
@@ -61,6 +68,49 @@ export default class Descripcion extends React.Component {
               describir, torpe, que es que eres torpe.
             </Text>
           </View>
+          <Text style={styles.profesoresTitulo}>
+            Profesores de la asignatura
+          </Text>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate("Chat", {
+                title: "Juancho Provisional"
+              })
+            }
+          >
+            <ScrollView
+              style={styles.profesores}
+              horizontal={true}
+              ref={ref => {
+                this._listaProfesores = ref;
+              }}
+            >
+              <View style={styles.iconAndNameView}>
+                <Image
+                  source={require("../../../test/imagenes/perfil.jpg")}
+                  style={styles.userIcon}
+                  margin={20}
+                />
+                <Text style={styles.userName}>Recesvinto W.</Text>
+              </View>
+              <View style={styles.iconAndNameView}>
+                <Image
+                  source={require("../../../test/imagenes/perfil.jpg")}
+                  style={styles.userIcon}
+                  margin={20}
+                />
+                <Text style={styles.userName}>Recesvinto W.</Text>
+              </View>
+              <View style={styles.iconAndNameView}>
+                <Image
+                  source={require("../../../test/imagenes/perfil.jpg")}
+                  style={styles.userIcon}
+                  margin={20}
+                />
+                <Text style={styles.userName}>Recesvinto W.</Text>
+              </View>
+            </ScrollView>
+          </TouchableOpacity>
         </Animated.ScrollView>
       </View>
     );
