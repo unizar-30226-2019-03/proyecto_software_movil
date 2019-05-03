@@ -1,23 +1,17 @@
 import React from "react";
-import { Text, View, Animated, Button } from "react-native";
+import { Text, View, Animated } from "react-native";
 
 import styles from "./styles";
 import VideoConSinFlechaAtras from "../../components/VideoConSinFlechaAtras";
 import CuadroValorar from "../../components/CuadroValorar";
 import { ScrollView } from "react-native-gesture-handler";
+import { SearchBar } from "react-native-elements";
+import Descripcion from "../../components/Descripcion";
 export default class ViendoVideo extends React.Component {
   constructor() {
     super();
-    this.state = {
-      descripcion: true
-    };
   }
 
-  _animatedHeight = new Animated.Value(0);
-
-  mostrarDescripcion = () => {
-    Animated.timing(this._animatedHeight, { toValue: 80 }).start();
-  };
   render() {
     return (
       /*
@@ -52,7 +46,13 @@ export default class ViendoVideo extends React.Component {
             autoplay={true}
           />
         </View>
-        <CuadroValorar />
+        <ScrollView>
+          <CuadroValorar />
+          <Descripcion />
+          <View style={{ borderWidth: 1 }}>
+            <Text>Prueba</Text>
+          </View>
+        </ScrollView>
       </View>
     );
   }

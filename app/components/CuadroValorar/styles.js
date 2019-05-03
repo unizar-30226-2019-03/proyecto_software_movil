@@ -13,7 +13,7 @@ export default StyleSheet.create({
   dejarSeguir: {
     flex: 0.2,
     borderWidth: 1,
-    marginTop: "20%"
+    marginTop: "10%"
   },
   titulo: {
     flexDirection: "row"
@@ -34,9 +34,11 @@ export default StyleSheet.create({
   apartados: {
     backgroundColor: "white",
     width: windowWidth,
-    height: windowHeight * 0.7,
+    maxHeight: 500,
+    height: "80%",
+
     alignSelf: "center",
-    marginVertical: 100,
+    marginVertical: "10%",
     borderRadius: 30,
     alignItems: "center",
     padding: 5
@@ -46,7 +48,7 @@ export default StyleSheet.create({
     width: windowWidth / 2,
     flexDirection: "column",
     flex: 1,
-    padding: 5,
+
     alignItems: "center",
     marginHorizontal: "10%"
   },
@@ -59,7 +61,7 @@ export default StyleSheet.create({
   valorarTexto: {
     borderBottomWidth: 4,
     marginVertical: 10,
-    fontSize: 20,
+    fontSize: 25,
     padding: 10,
     borderRadius: 50,
     alignItems: "center",
@@ -68,7 +70,7 @@ export default StyleSheet.create({
   cancelarTexto: {
     borderBottomWidth: 4,
     marginVertical: 10,
-    fontSize: 15,
+    fontSize: 20,
     padding: 10,
     borderRadius: 50,
     alignSelf: "center",
