@@ -7,14 +7,9 @@ export default StyleSheet.create({
     borderWidth: 2
   },
   valorar: {
-    flex: 0.2,
-    borderWidth: 1
+    height: 100
   },
-  dejarSeguir: {
-    flex: 0.2,
-    borderWidth: 1,
-    marginTop: "10%"
-  },
+
   titulo: {
     flexDirection: "row"
   },

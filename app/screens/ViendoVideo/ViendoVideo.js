@@ -211,12 +211,10 @@ export default class ViendoVideo extends React.Component {
             }}
           />
         </View>
-        <ScrollView
-          ref={ref => {
-            this.ListView_Ref = ref;
-          }}
-        >
-          <CuadroValorar navigation={this.props.navigation} />
+        <View style={{ flex: 1 }}>
+          <View style={{ height: 105 }}>
+            <CuadroValorar navigation={this.props.navigation} />
+          </View>
           <View style={styles.dejarDeSeguir}>
             <TouchableOpacity
               onPress={() =>
@@ -257,31 +255,37 @@ export default class ViendoVideo extends React.Component {
             </TouchableOpacity>
           </View>
           <Descripcion navigation={this.props.navigation} />
-
-          <ListView
-            onContentSizeChange={() =>
-              this.ListView_Ref.scrollToEnd({ animated: true })
-            }
-            dataSource={this.state.dataSource}
-            renderRow={rowData => (
-              <Comentario
-                nombreUsuario={rowData.nombreUsuario}
-                cuerpoComentario={rowData.cuerpoComentario}
-                tiempo={rowData.tiempo}
-                largo={this.state.largo}
+          <View style={{ flex: 1 }}>
+            <View style={{ maxHeight: 300 }}>
+              <ListView
+                ref={ref => {
+                  this.ListView_Ref = ref;
+                }}
+                onContentSizeChange={() =>
+                  this.ListView_Ref.scrollToEnd({ animated: true })
+                }
+                dataSource={this.state.dataSource}
+                renderRow={rowData => (
+                  <Comentario
+                    nombreUsuario={rowData.nombreUsuario}
+                    cuerpoComentario={rowData.cuerpoComentario}
+                    tiempo={rowData.tiempo}
+                    largo={this.state.largo}
+                  />
+                )}
               />
-            )}
-          />
-        </ScrollView>
-        <View style={styles.entradaTexto}>
-          <TextInput
-            placeholder="Escribe un Comentario"
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
-            multiline={true}
-            style={[styles.textInput, { maxHeight: 80 }]}
-          />
-          {this.boton()}
+            </View>
+          </View>
+          <View style={styles.entradaTexto}>
+            <TextInput
+              placeholder="Escribe un Comentario"
+              onChangeText={text => this.setState({ text })}
+              value={this.state.text}
+              multiline={true}
+              style={[styles.textInput, { maxHeight: 80 }]}
+            />
+            {this.boton()}
+          </View>
         </View>
       </KeyboardAvoidingView>
     );
