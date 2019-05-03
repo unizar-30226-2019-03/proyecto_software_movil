@@ -1,5 +1,12 @@
 import React from "react";
-import { Text, View, Animated, TouchableOpacity, Alert } from "react-native";
+import {
+  Text,
+  View,
+  Animated,
+  TouchableOpacity,
+  Alert,
+  ListView
+} from "react-native";
 
 import styles from "./styles";
 import VideoConSinFlechaAtras from "../../components/VideoConSinFlechaAtras";
@@ -13,26 +20,96 @@ import Comentario from "../../components/Comentario";
 export default class ViendoVideo extends React.Component {
   constructor() {
     super();
+    var comentarios = [
+      {
+        nombreUsuario: "JasenAsen",
+        tiempo: 1,
+        cuerpoComentario: "Saludos"
+      },
+      {
+        nombreUsuario: "Dobby",
+        tiempo: 3,
+        cuerpoComentario: "Salutres"
+      },
+      {
+        nombreUsuario: "Martititi",
+        tiempo: 5,
+        cuerpoComentario: "Salucuatro"
+      },
+      {
+        nombreUsuario: "Lorien",
+        tiempo: 5,
+        cuerpoComentario: "Salucinco"
+      },
+      {
+        nombreUsuario: "Aisac",
+        tiempo: 7,
+        cuerpoComentario: "Saluseis"
+      },
+      {
+        nombreUsuario: "Reichel",
+        tiempo: 8,
+        cuerpoComentario: "Salusiete"
+      },
+      {
+        nombreUsuario: "Paula",
+        tiempo: 10,
+        cuerpoComentario: "Saluocho"
+      },
+      {
+        nombreUsuario: "Rubén",
+        tiempo: 11,
+        cuerpoComentario: "Salunueve"
+      },
+      {
+        nombreUsuario: "José",
+        tiempo: 14,
+        cuerpoComentario: "Saludiez"
+      },
+      {
+        nombreUsuario: "CabezaHuevo",
+        tiempo: 16,
+        cuerpoComentario: "He de comunicaros a todos que estais suspendidos"
+      }
+    ];
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
     this.state = {
       seguida: false,
       texto: "Seguir asignatura",
-      segundo: 0
+      segundo: 0,
+      dataSource: ds.cloneWithRows(comentarios),
+      largo: false
     };
   }
+
   componentDidMount() {
     this.interval = setInterval(() => this.pasaSegundo(), 1000);
   }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   cambiarSeguir() {
     if (this.state.seguida == true) {
-      this.setState({ seguida: false, texto: "Seguir asignatura" });
+      this.setState({
+        seguida: false,
+        texto: "Seguir asignatura"
+      });
     } else {
-      this.setState({ seguida: true, texto: "Dejar de seguir" });
+      this.setState({
+        seguida: true,
+        texto: "Dejar de seguir"
+      });
     }
   }
   pasaSegundo() {
-    //var posicion = estado["positionMillis"];
-    // Alert.alert(JSON.stringify(estado));
+    this.setState({
+      largo: this.VideoFlechaRef.devuelveDuracion() / 3 > 0
+    });
     var nuevo = this.VideoFlechaRef.devuelveEstado();
+    nuevo = Math.floor(nuevo / 1000 + 0.5);
     this.setState({ segundo: nuevo });
   }
   render() {
@@ -86,7 +163,9 @@ export default class ViendoVideo extends React.Component {
               style={styles.asignaturaContainer}
             >
               <IconoAsignaturaUniversidad
-                style={{ alignSelf: "flex-start" }}
+                style={{
+                  alignSelf: "flex-start"
+                }}
                 navigation={this.props.navigation}
                 name="Proyecto Software"
                 image={require("../../../test/imagenes/perfil_uni.jpg")}
@@ -113,39 +192,21 @@ export default class ViendoVideo extends React.Component {
             </TouchableOpacity>
           </View>
           <Descripcion navigation={this.props.navigation} />
-          <Text style={{ fontSize: 30 }}>{this.state.segundo}</Text>
-          <View style={{ borderWidth: 1 }}>
-            <Comentario
-              nombreUsuario="JasenAsen"
-              cuerpoComentario="Saludos"
-              tiempo={15}
-              largo={false}
-            />
-            <Comentario
-              nombreUsuario="David el sabueso"
-              cuerpoComentario="Salutres"
-              tiempo={16}
-              largo={false}
-            />
-            <Comentario
-              nombreUsuario="Martititititi"
-              cuerpoComentario="Salucuatros"
-              tiempo={17}
-              largo={false}
-            />
-            <Comentario
-              nombreUsuario="Unai Anorrategui"
-              cuerpoComentario="Para cuatros los que vais a sacar todos, estais supensos"
-              tiempo={69}
-              largo={false}
-            />
-            <Comentario
-              nombreUsuario="Javier Resano"
-              cuerpoComentario="Como coordinador de la asignatura respeto la opinión de Unai"
-              tiempo={3600}
-              largo={false}
-            />
-          </View>
+
+          <ListView
+            ref={ref => {
+              this.ListView_Ref = ref;
+            }}
+            dataSource={this.state.dataSource}
+            renderRow={rowData => (
+              <Comentario
+                nombreUsuario={rowData.nombreUsuario}
+                cuerpoComentario={rowData.cuerpoComentario}
+                tiempo={rowData.tiempo}
+                largo={this.state.largo}
+              />
+            )}
+          />
         </ScrollView>
       </View>
     );

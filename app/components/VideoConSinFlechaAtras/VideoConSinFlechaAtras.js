@@ -23,7 +23,8 @@ export default class VideoConSinFlechaAtras extends React.Component {
   state = {
     pantallaCompleta: false,
     orientationChangeSecondCall: false, // onFullscreenUpdate llama dos veces seguidas.
-    posicion: 0
+    posicion: 0,
+    duracion: 0
   };
 
   orientationChange() {
@@ -45,9 +46,13 @@ export default class VideoConSinFlechaAtras extends React.Component {
   devuelveEstado() {
     return this.state.posicion;
   }
+  devuelveDuracion() {
+    return this.state.duracion;
+  }
   cambio(nuevo) {
     let posicion = nuevo.positionMillis;
-    this.setState({ posicion: posicion });
+    let duracion = Math.floor(nuevo.durationMillis / 1000 + 0.5);
+    this.setState({ posicion: posicion, duracion: duracion });
   }
   render() {
     const maxWidth =
@@ -78,6 +83,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
           muted={false}
           resizeMode="contain"
           useNativeControls={true}
+          shouldPlay={this.props.autoplay}
           style={{ width: videoWidth, height: videoHeight }}
           onFullscreenUpdate={() => this.orientationChange()}
           progressUpdateIntervalMillis={1000}
