@@ -230,6 +230,7 @@ export default class SignUpOne extends React.Component {
             title="Seleccionar foto"
             containerStyle={styles.profPicButton}
             onPress={this.pickProfileImage}
+            buttonStyle={styles.buttonColor}
           />
         </View>
         <View style={styles.inputBoxSeparation}>
@@ -281,6 +282,7 @@ export default class SignUpOne extends React.Component {
             onPress={() => this.handleNext()}
             title="Siguiente"
             containerStyle={styles.nextButton}
+            buttonStyle={styles.buttonColor}
           />
         </View>
         <View style={{ height: 60 }} />

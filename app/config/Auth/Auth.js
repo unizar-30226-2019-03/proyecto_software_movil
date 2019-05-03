@@ -3,22 +3,37 @@ import React from "react";
 import { AsyncStorage } from "react-native";
 
 let userToken = undefined;
+let userId = undefined;
 
 export async function signOut(navigation) {
 	await AsyncStorage.clear();
 	userToken = undefined;
+	userId = undefined;
 	navigation.navigate("NotLogged");
 }
 
-export async function signIn(token, navigation) {
-	await AsyncStorage.setItem("userToken", token);
+export async function signIn(token, userId, navigation) {
+	await AsyncStorage.multiSet([["userToken", token], ["userId", userId.toString()]], null);
 	userToken = token;
+	userId = userId;
 	navigation.navigate("Logged");
 }
 
 export async function isSignedIn(navigation) {
-	userToken = await AsyncStorage.getItem("userToken");
+	await AsyncStorage.multiGet(["userToken", "userId"]).then(response => {
+		userToken = response[0][1];
+		userId = response[1][1];
+	});
+
 	navigation.navigate(userToken ? "Logged" : "NotLogged");
+}
+
+export function getUserId() {
+	return userId;
+}
+
+export function isProfesor() {
+	return true;
 }
 
 export function getUserToken() {

@@ -1,6 +1,15 @@
 import React from "react";
-import { Text, TouchableOpacity, ScrollView, View } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  View
+} from "react-native";
+
 import { Image } from "react-native-elements";
+
+import LoadingFooter from "../../../components/LoadingFooter";
 
 import styles from "./styles";
 
@@ -8,181 +17,110 @@ const samplePic =
   "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80";
 
 export default class ProfesorTab extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: [{ temp: "temp" }],
+      loading: true,
+      fetchingNewData: false,
+      refreshing: false
+    };
+
+    this.offset = 0;
+    this.totalPages = undefined;
+
+    // let defaultClient = ApiClient.instance;
+    // let bearerAuth = defaultClient.authentications["bearerAuth"];
+    // bearerAuth.accessToken = getUserToken();
+
+    // this.videoApiInstance = new VideoApi();
+
+    // this.getData();
+    this.state.loading = false;
+  }
+
+  getData = () => {
+    // if (this.totalPages == undefined || this.offset < this.totalPages) {
+    //   let opts = {
+    //     page: this.offset
+    //   };
+    //   this.videoApiInstance.getVideos((error, data, response) => {
+    //     if (!error) {
+    //       this.offset = this.offset + 1;
+    //       this.totalPages = data.page.totalPages;
+    //       this.setState({
+    //         data: [...this.state.data, ...data._embedded.videos],
+    //         loading: false,
+    //         fetchingNewData: false,
+    //         refreshing: false
+    //       });
+    //     }
+    //   });
+    // }
+  };
+
+  onEndReached = () => {
+    this.setState({ fetchingNewData: true });
+    this.getData();
+  };
+
+  onRefresh = () => {
+    this.offset = 0;
+    this.totalPages = undefined;
+    this.setState({
+      refreshing: true,
+      data: [],
+      fetchingNewData: false,
+      loading: false
+    });
+    this.getData();
+  };
+
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Matilde P."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Luis Fonsi
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Proyecto Software, Matemáticas III, Procesadores comerciales,
-              Robótica
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Teodorico"
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Gesaleico Leovigildo López
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Laboratorio de sistema de la información, Centros de datos
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Laura T."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Inés R.
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Redes de computadores, Sistemas operativos
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Laura T."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Inés R.
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Redes de computadores, Sistemas operativos
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Laura T."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Inés R.
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Redes de computadores, Sistemas operativos
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Laura T."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Inés R.
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Redes de computadores, Sistemas operativos
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Laura T."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Inés R.
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Redes de computadores, Sistemas operativos
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Laura T."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Inés R.
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Redes de computadores, Sistemas operativos
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.chatContainer}
-          onPress={() =>
-            this.props.navigation.navigate("Chat", {
-              title: "Laura T."
-            })
-          }
-        >
-          <Image source={{ uri: samplePic }} style={styles.profilePic} />
-          <View style={styles.nameAndMsgContainer}>
-            <Text numberOfLines={1} style={styles.nameText}>
-              Inés R.
-            </Text>
-            <Text numberOfLines={1} style={styles.msgText}>
-              Redes de computadores, Sistemas operativos
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <FlatList
+            data={this.state.data}
+            refreshing={this.state.refreshing}
+            onEndReached={() => this.onEndReached()}
+            onRefresh={() => this.onRefresh()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.chatContainer}
+                onPress={() =>
+                  this.props.navigation.navigate("Chat", {
+                    title: "Matilde P."
+                  })
+                }
+              >
+                <Image source={{ uri: samplePic }} style={styles.profilePic} />
+                <View style={styles.nameAndMsgContainer}>
+                  <Text numberOfLines={1} style={styles.nameText}>
+                    Luis Fonsi
+                  </Text>
+                  <Text numberOfLines={1} style={styles.msgText}>
+                    Proyecto Software, Matemáticas III, Procesadores
+                    comerciales, Robótica
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+            ListFooterComponent={LoadingFooter({
+              show: this.state.fetchingNewData
+            })}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        )}
+      </View>
     );
   }
 }

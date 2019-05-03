@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, View, Button, ScrollView } from "react-native";
+import { Text, View, Button, ActivityIndicator, FlatList } from "react-native";
+
+import LoadingFooter from "../../../components/LoadingFooter";
 
 import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 
@@ -10,91 +12,98 @@ export default class ListaVideos extends React.Component {
 		title: navigation.getParam("title")
 	});
 
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			data: [{ temp: "temp" }],
+			loading: true,
+			fetchingNewData: false,
+			refreshing: false
+		};
+
+		this.offset = 0;
+		this.totalPages = undefined;
+
+		// let defaultClient = ApiClient.instance;
+		// let bearerAuth = defaultClient.authentications["bearerAuth"];
+		// bearerAuth.accessToken = getUserToken();
+
+		// this.videoApiInstance = new VideoApi();
+
+		// this.getData();
+		this.state.loading = false;
+	}
+
+	getData = () => {
+		// if (this.totalPages == undefined || this.offset < this.totalPages) {
+		//   let opts = {
+		//     page: this.offset
+		//   };
+		//   this.videoApiInstance.getVideos((error, data, response) => {
+		//     if (!error) {
+		//       this.offset = this.offset + 1;
+		//       this.totalPages = data.page.totalPages;
+		//       this.setState({
+		//         data: [...this.state.data, ...data._embedded.videos],
+		//         loading: false,
+		//         fetchingNewData: false,
+		//         refreshing: false
+		//       });
+		//     }
+		//   });
+		// }
+	};
+
+	onEndReached = () => {
+		this.setState({ fetchingNewData: true });
+		this.getData();
+	};
+
+	onRefresh = () => {
+		this.offset = 0;
+		this.totalPages = undefined;
+		this.setState({
+			refreshing: true,
+			data: [],
+			fetchingNewData: false,
+			loading: false
+		});
+		this.getData();
+	};
+
 	render() {
 		return (
-			<View style={styles.container}>
-				<ScrollView>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="70%"
-						duracion="1:10"
-						title="Nombre bastante largo para ser un nombre de un video de prueba"
-						info="Hece 3 meses"
+			<View
+				style={[
+					styles.container,
+					{ justifyContent: this.state.loading ? "center" : "flex-start" }
+				]}
+			>
+				{this.state.loading ? (
+					<ActivityIndicator size="large" />
+				) : (
+					<FlatList
+						data={this.state.data}
+						refreshing={this.state.refreshing}
+						onEndReached={() => this.onEndReached()}
+						onRefresh={() => this.onRefresh()}
+						renderItem={({ item }) => (
+							<HalfScreenThumbnail
+								navigation={this.props.navigation}
+								image={require("../../../../test/imagenes/imagen.jpg")}
+								likes="70%"
+								duracion="1:10"
+								title="Nombre bastante largo para ser un nombre de un video de prueba"
+								info="Hece 3 meses"
+							/>
+						)}
+						ListFooterComponent={LoadingFooter({
+							show: this.state.fetchingNewData
+						})}
+						keyExtractor={(item, index) => index.toString()}
 					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="10%"
-						duracion="1:10"
-						title="Nombre corto"
-						info="Hece 2 días"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-					<HalfScreenThumbnail
-						navigation={this.props.navigation}
-						image={require("../../../../test/imagenes/imagen.jpg")}
-						likes="55%"
-						duracion="1:10"
-						title="Nombre de bastante normal"
-						info="Hece 10 años"
-					/>
-				</ScrollView>
+				)}
 			</View>
 		);
 	}

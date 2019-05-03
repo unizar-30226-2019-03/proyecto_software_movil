@@ -1,8 +1,25 @@
 import { StyleSheet } from "react-native";
 
+import { Azul } from "../../constants";
+
 export default StyleSheet.create({
 	container: {
 		flex: 1
+	},
+	cancelarYActualizarView: {
+		flexDirection: "row",
+		justifyContent: 'flex-end',
+		marginTop: 10,
+		marginBottom: 15,
+	},
+	botonActualizar: {
+		marginRight: 10,
+	},
+	botonCancelar: {
+		marginRight: 15
+	},
+	botonFont: {
+		fontSize: 15
 	},
 	viewProfPic: {
 		paddingVertical: 25,
@@ -35,5 +52,8 @@ export default StyleSheet.create({
 	rightIcon: {
 		paddingRight: 17,
 		alignSelf: "flex-end",
+	},
+	buttonColor: {
+		backgroundColor: Azul
 	}
 });

@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
 
+import { Azul } from "../../constants";
+
 export default StyleSheet.create({
   viewIcon: {
     position: "absolute",
@@ -7,9 +9,10 @@ export default StyleSheet.create({
     right: 5,
     width: 60,
     height: 60,
-    backgroundColor: "dodgerblue",
+    backgroundColor: Azul,
     borderRadius: 90,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    color: Azul
   }
 });

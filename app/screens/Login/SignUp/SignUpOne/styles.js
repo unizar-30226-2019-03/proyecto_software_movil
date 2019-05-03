@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
 
+import { Azul } from "../../../../constants";
+
 export default StyleSheet.create({
 	container: {
 		flex: 1
@@ -56,6 +58,9 @@ export default StyleSheet.create({
 		paddingBottom: 20,
 	},
 	nextButton: {
-		width: 120
+		width: 120,
+	},
+	buttonColor: {
+		backgroundColor: Azul
 	}
 });

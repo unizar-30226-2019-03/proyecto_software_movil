@@ -8,7 +8,6 @@ export default StyleSheet.create({
   },
   viewSelectVideo: {
     borderWidth: 2,
-    borderColor: "grey",
     borderStyle: "dashed",
     borderRadius: 4,
     width: ScreenWidth,
@@ -30,10 +29,10 @@ export default StyleSheet.create({
     alignItems: "center"
   },
   textAsignatura: {
-    fontSize: 18
+    fontSize: 18,
+    marginBottom: 2
   },
   pickerAsign: {
-    height: 50,
     width: 200,
     color: Azul
   },
@@ -42,18 +41,25 @@ export default StyleSheet.create({
     paddingHorizontal: 8
   },
   viewSelectThumbnail: {
+    paddingHorizontal: 50,
     flexDirection: "row",
-    justifyContent: "space-evenly",
     alignItems: "center",
-    paddingTop: 18
+    justifyContent: "space-between",
+    paddingBottom: 10,
+    marginTop: 40,
+    height: 70,
   },
   selectThumbnail: {
     backgroundColor: Azul
   },
+  selectImageButton: {
+    width: 150
+  },
   imageThumbnail: {
     aspectRatio: 16 / 9,
     height: 70,
-    borderRadius: 3
+    borderRadius: 3,
+    marginRight: 30
   },
   uploadButtonView: {
     paddingTop: 20,
@@ -65,5 +71,13 @@ export default StyleSheet.create({
     marginBottom: 7,
     width: 120,
     backgroundColor: Azul
+  },
+  imageErrText: {
+    color: "red",
+    padding: 5,
+    borderWidth: 1,
+    borderColor: "red",
+    marginRight: 24.5,
+    borderRadius: 3
   }
 });
