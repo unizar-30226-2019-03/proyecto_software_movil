@@ -88,7 +88,8 @@ export default class ViendoVideo extends React.Component {
       dataSource: ds,
       largo: false,
       ultimoAñadido: -1,
-      text: ""
+      text: "",
+      nombreUsuario: "AnaBanana"
     };
   }
 
@@ -140,6 +141,25 @@ export default class ViendoVideo extends React.Component {
       dataSource: ds.cloneWithRows(añadir)
     });
   }
+
+  comentar = () => {
+    var añadidos = this.state.comentariosMostrar;
+    var ds = this.state.dataSource;
+    añadidos = [
+      ...añadidos,
+      {
+        cuerpoComentario: this.state.text,
+        tiempo: this.state.segundo,
+        nombreUsuario: this.state.nombreUsuario
+      }
+    ];
+
+    this.setState({
+      text: "",
+      dataSource: ds.cloneWithRows(añadidos),
+      comentariosMostrar: añadidos
+    });
+  };
   boton = () => {
     if (this.state.text.length > 0) {
       return (
@@ -172,7 +192,7 @@ export default class ViendoVideo extends React.Component {
       <KeyboardAvoidingView
         style={styles.container}
         behavior="padding"
-        keyboardVerticalOffset={headerHeight}
+        keyboardVerticalOffset={headerHeight - 80}
       >
         <View style={styles.videoContainer}>
           <VideoConSinFlechaAtras
@@ -253,14 +273,16 @@ export default class ViendoVideo extends React.Component {
             )}
           />
         </ScrollView>
-        <TextInput
-          placeholder="Escribe un mensaje"
-          onChangeText={text => this.setState({ text })}
-          value={this.state.text}
-          multiline={true}
-          style={[styles.textInput, { maxHeight: 80 }]}
-        />
-        {this.boton()}
+        <View style={styles.entradaTexto}>
+          <TextInput
+            placeholder="Escribe un Comentario"
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+            multiline={true}
+            style={[styles.textInput, { maxHeight: 80 }]}
+          />
+          {this.boton()}
+        </View>
       </KeyboardAvoidingView>
     );
   }

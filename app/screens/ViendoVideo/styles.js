@@ -45,5 +45,26 @@ export default StyleSheet.create({
   },
   textoSeguir: {
     fontSize: 20
+  },
+  textInput: {
+    flex: 4,
+    marginLeft: 20,
+    marginRight: 5
+  },
+  enviar: {
+    fontSize: 16,
+    alignSelf: "center",
+    marginHorizontal: 4,
+    color: GrisClaro
+  },
+  entradaTexto: {
+    borderWidth: 1,
+    borderRadius: 25,
+    marginHorizontal: 7,
+    borderColor: GrisClaro,
+    padding: 5,
+    marginBottom: 7,
+    flexDirection: "row",
+    justifyContent: "center"
   }
 });
