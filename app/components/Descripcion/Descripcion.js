@@ -13,14 +13,17 @@ export default class Descripcion extends React.Component {
     };
   }
   _animatedHeight = new Animated.Value(0);
+  _animatedOpacity = new Animated.Value(0);
   alternarDescripcion = () => {
     this._listaProfesores.scrollTo({ x: 0, y: 0, animated: true });
 
     if (this.state.desplegado == false) {
       Animated.timing(this._animatedHeight, { toValue: 150 }).start();
+      Animated.timing(this._animatedOpacity, { toValue: 1 }).start();
       this.setState({ desplegado: true });
     } else {
       Animated.timing(this._animatedHeight, { toValue: 0 }).start();
+      Animated.timing(this._animatedOpacity, { toValue: 0 }).start();
       this.setState({ desplegado: false });
     }
   };
@@ -50,12 +53,13 @@ export default class Descripcion extends React.Component {
                   height: this._animatedHeight,
                   padding: 5,
                   borderWidth: 0,
-                  opacity: 0
+                  opacity: this._animatedOpacity
                 }
               : {
                   height: this._animatedHeight,
                   padding: 5,
-                  borderBottomWidth: 1
+                  borderBottomWidth: 1,
+                  opacity: this._animatedOpacity
                 }
           ]}
         >

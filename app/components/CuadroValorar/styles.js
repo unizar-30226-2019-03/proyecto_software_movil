@@ -80,7 +80,7 @@ export default StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     borderColor: "rgba(52,52,52,0.15)",
-    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 10,
     marginHorizontal: 3,
     flexDirection: "row",
