@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, TouchableOpacity, ActivityIndicator, Image } from "react-native";
 import { Text, Icon } from "react-native-elements";
 
 import { signOut, getUserId, getUserToken } from "../../config/Auth";
@@ -27,20 +27,17 @@ export default class Cuenta extends React.Component {
 
 		this.apiInstance = new UserApi();
 
-		// let id = getUserId();
-		// this.apiInstance.getUser(id, (error, data, response) => {
-		// 	console.log(data);
-		// 	if (!error) {
-		// 		// this.imagenPerfil = "daw"
-		// 	}
-		// });
-
-		this.state.imagenPerfil = "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
-
-		this.state.loading = false;
+		let id = getUserId();
+		this.apiInstance.getUser(id, null, (error, data, response) => {
+			if (!error) {
+				this.state.imagenPerfil = data.photo;
+				this.setState({ imagenPerfil: data.photo, loading: false });
+			}
+		});
 	}
 
 	render() {
+		console.log(this.state.imagenPerfil);
 		return (
 			<View
 				style={[
@@ -48,42 +45,45 @@ export default class Cuenta extends React.Component {
 					{ justifyContent: this.state.loading ? "center" : "flex-start" }
 				]}
 			>
-			{this.state.loading ? (
-			  <ActivityIndicator size="large" />
-			) : (
-			<View>
-				<View style={styles.userView}>
-					<Image
-						source={{uri: this.state.imagenPerfil}}
-						style={styles.userIcon}
-						margin={20}
-					/>
-					<Text style={styles.userName}>NOMBRE</Text>
-				</View>
-				
-				<TouchableOpacity
-					style={styles.boton}
-					activeOpacity={1}
-					onPress={() =>
-						this.props.navigation.navigate("VerPerfil", { userId: getUserId() })
-					}
-				>
-					<Icon name="account-box" size={30} marginLeft={20} />
+				{this.state.loading ? (
+					<ActivityIndicator size="large" />
+				) : (
+					<View>
+						<View style={styles.userView}>
+							<Image
+								key={this.state.imagenPerfil}
+								source={{ uri: this.state.imagenPerfil }}
+								style={styles.userIcon}
+								margin={20}
+							/>
+							<Text style={styles.userName}>NOMBRE</Text>
+						</View>
 
-					<Text style={styles.titulo}>IR A MI PERFIL</Text>
-				</TouchableOpacity>
+						<TouchableOpacity
+							style={styles.boton}
+							activeOpacity={1}
+							onPress={() =>
+								this.props.navigation.navigate("VerPerfil", {
+									userId: getUserId()
+								})
+							}
+						>
+							<Icon name="account-box" size={30} marginLeft={20} />
 
-				<TouchableOpacity
-					style={styles.boton}
-					activeOpacity={1}
-					onPress={() => signOut(this.props.navigation)}
-				>
-					<Icon name="arrow-forward" size={30} marginLeft={20} />
+							<Text style={styles.titulo}>IR A MI PERFIL</Text>
+						</TouchableOpacity>
 
-					<Text style={styles.titulo}>CERRAR SESIÓN</Text>
-				</TouchableOpacity>
-				</View>
-			)}
+						<TouchableOpacity
+							style={styles.boton}
+							activeOpacity={1}
+							onPress={() => signOut(this.props.navigation)}
+						>
+							<Icon name="arrow-forward" size={30} marginLeft={20} />
+
+							<Text style={styles.titulo}>CERRAR SESIÓN</Text>
+						</TouchableOpacity>
+					</View>
+				)}
 			</View>
 		);
 	}

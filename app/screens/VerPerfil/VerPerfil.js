@@ -19,7 +19,10 @@ import { getUserId, getUserToken } from "../../config/Auth";
 
 export default class VerPerfil extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam("userId") == getUserId() ? "Mi perfil" : "Perfil de " + navigation.getParam("name")
+    title:
+      navigation.getParam("userId") == getUserId()
+        ? "Mi perfil"
+        : "Perfil de " + navigation.getParam("name")
   });
 
   constructor(props) {
@@ -34,35 +37,32 @@ export default class VerPerfil extends React.Component {
     };
 
     let defaultClient = ApiClient.instance;
-    let bearerAuth = defaultClient.authentications['bearerAuth'];
-    bearerAuth.accessToken = getUserToken()
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = getUserToken();
 
     this.apiInstance = new UserApi();
 
     this.userId = this.props.navigation.getParam("userId");
     this.isPerfilPropio = this.userId == getUserId();
 
-    // let id = this.userId;
-    // this.apiInstance.getUser(id, (error, data, response) => {
-    //   if (!error) {
-    //     console.log('API called successfully.');
-    //     console.log(data)
-    //   }
-    // });
-    
-    this.state.nombre = "Turismundo"
-    this.state.apellidos = "Scott Williams"
-    this.state.descripcion = "Profe tajo guay co\nen plan asi pim pam explicando sistemas empotrados\n\ny otras cosas youknow\njugador profesionaaaaa"
-    this.state.imagen = "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
-
-    if (this.isPerfilPropio) {
-      this.oldNombre = this.state.nombre;
-      this.oldApellidos = this.state.apellidos;
-      this.oldDescripcion = this.state.descripcion;
-      this.oldImagen = this.state.imagen;
-    }
-
-    this.state.loading = false;
+    let id = this.userId;
+    this.apiInstance.getUser(id, null, (error, data, response) => {
+      if (!error) {
+        this.setState({
+          imagen: data.photo,
+          nombre: data.name,
+          descripcion: data.description,
+          apellidos: data.surnames,
+          loading: false
+        });
+        if (this.isPerfilPropio) {
+          this.oldNombre = this.state.nombre;
+          this.oldApellidos = this.state.apellidos;
+          this.oldDescripcion = this.state.descripcion;
+          this.oldImagen = this.state.imagen;
+        }
+      }
+    });
   }
 
   pickImage = async () => {
@@ -87,8 +87,29 @@ export default class VerPerfil extends React.Component {
   };
 
   actualizar = () => {
-    // api
-    this.props.navigation.goBack();
+    let opts = {
+      description: this.state.descripcion,
+      photo: this.state.imagen,
+      name: this.state.nombre,
+      surnames: this.state.apellidos
+    };
+    this.apiInstance.updateUser(opts, (error, data, response) => {
+      if (error) {
+        Alert.alert(
+          "Error!",
+          "Error al intentar actualizar tu información, vuelve a intentarlo",
+          [{ text: "Vale" }],
+          { cancelable: false }
+        );
+      } else {
+        Alert.alert(
+          "Bien!",
+          "Tu información ha sido actualizada con éxito",
+          [{ text: "Vale" }],
+          { cancelable: false }
+        );
+      }
+    });
   };
 
   render() {
