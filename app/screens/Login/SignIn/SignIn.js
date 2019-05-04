@@ -14,7 +14,7 @@ import styles from "./styles";
 
 export default class SignIn extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       username: "",
@@ -23,7 +23,7 @@ export default class SignIn extends React.Component {
     };
 
     this.apiInstance = new UserApi();
-  } 
+  }
 
   tryLogin = async () => {
     this.apiInstance.authUser(
@@ -42,11 +42,10 @@ export default class SignIn extends React.Component {
   };
 
   render() {
-
     return (
       <InputFixer
         navigation={this.props.navigation}
-        ref={InputFixer => this.InputFixer = InputFixer}
+        ref={InputFixer => (this.InputFixer = InputFixer)}
       >
         <View style={styles.logoView}>
           <Image
@@ -62,7 +61,7 @@ export default class SignIn extends React.Component {
             onChangeText={text =>
               this.setState({ username: text, showInputError: false })
             }
-            autoCapitalize = 'none'
+            autoCapitalize="none"
             onFocus={() => this.InputFixer.onFocus()}
             errorStyle={{ color: "red" }}
             errorMessage={

@@ -25,7 +25,7 @@ export default class AsignaturasTab extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = getUserToken();
 
-    console.log(getUserToken())
+    console.log(getUserToken());
 
     this.apiInstance = new UserApi();
 
