@@ -1,8 +1,13 @@
 import React from "react";
-import { Text, View, Picker } from "react-native";
+import { Text, View, Picker, ActivityIndicator, Alert } from "react-native";
 
 import { ImagePicker } from "expo";
+
 import { Button, Input, Image } from "react-native-elements";
+
+import { VideoApi, UserApi, ApiClient } from "swagger_unicast";
+
+import { getUserToken, getUserId } from "../../../config/Auth";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
 import InputFixer from "../../../components/InputFixer";
@@ -12,22 +17,48 @@ import styles from "./styles";
 // const { State: TextInputState } = TextInput;
 
 export default class SubirVideo extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: "Subir vídeo"
+  });
+
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       asignatura: undefined,
-      pickerData: ['wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa', 'wdadawdawdawdaa','dwadawdawdawdawdawdawdawdawdawdawddadawdawdawdawdadawdawdawdawdawdawdawdawdawdaawdawdab', 'dadawdawdac', 'dawdawdawd', 'dawdawdawe', 'dawdawdawe', 'dawdawdawe', 'dawdawdawe'],
+      pickerData: [],
       video: undefined,
       thumbnail: undefined,
       titulo: "",
       descripción: "",
       noThumbnailErr: false,
       tituloVacioErr: false,
-      noVideoErr: false
+      noVideoErr: false,
+      noAsignaturaErr: false,
+      loading: true
     };
 
-    //api
+    let defaultClient = ApiClient.instance;
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = getUserToken();
+
+    this.userApiInstance = new UserApi();
+    this.videoApiInstance = new VideoApi();
+
+    let id = getUserId();
+    this.userApiInstance.getSubjectsOfUser(
+      id,
+      null,
+      (error, data, response) => {
+        if (!error) {
+          this.setState({
+            pickerData: [...this.state.pickerData, ...data._embedded.subjects],
+            asignatura: data._embedded.subjects[0].id,
+            loading: false
+          });
+        }
+      }
+    );
   }
 
   pickVideo = async () => {
@@ -54,120 +85,185 @@ export default class SubirVideo extends React.Component {
     }
   };
 
-  static navigationOptions = ({ navigation }) => ({
-    title: "Subir vídeo"
-  });
-
   tryUpload = () => {
     let someError = false;
     if (!this.state.video) {
-      this.setState({ noVideoErr: true })
-      someError = true
+      this.setState({ noVideoErr: true });
+      someError = true;
     }
     if (this.state.titulo == "") {
-      this.setState({ tituloVacioErr: true })
-      someError = true
+      this.setState({ tituloVacioErr: true });
+      someError = true;
     }
     if (!this.state.thumbnail) {
-      this.setState({ noThumbnailErr: true })
-      someError = true
+      this.setState({ noThumbnailErr: true });
+      someError = true;
     }
-    if (!this.state.video) {
-      someError = true
+    if (!this.state.asignatura) {
+      this.setState({ noAsignaturaErr: true });
+      someError = true;
     }
 
     if (!someError) {
-      // api
+      let file = this.state.video;
+      let thumbnail = this.state.thumbnail;
+      let title = this.state.titulo;
+      let description = this.state.descripción;
+      let subjectId = this.state.asignatura;
+      this.videoApiInstance.addVideo(
+        file,
+        thumbnail,
+        title,
+        description,
+        subjectId,
+        (error, data, response) => {
+          if (error) {
+            console.log(error);
+            console.log(data);
+            console.log(JSON.stringify(response));
+            Alert.alert(
+              "Error!",
+              "Error al subir el vídeo, vuelve a intentarlo",
+              [{ text: "Vale" }],
+              { cancelable: false }
+            );
+          } else {
+            Alert.alert(
+              "Bien!",
+              "El vídeo ha sido subido con éxito",
+              [{ text: "Vale", onPress: () => this.props.navigation.goBack() }],
+              { cancelable: false }
+            );
+          }
+        }
+      );
     }
-  }
+  };
 
   render() {
-    let pickerItems = this.state.pickerData.map( (s, i) => {
-        return <Picker.Item key={i} value={s} label={s} />
+    let pickerItems = this.state.pickerData.map((s, i) => {
+      return <Picker.Item key={i} value={s.id} label={s.name} />;
     });
 
+    console.log(this.state.asignatura);
+
     return (
-      <InputFixer         
-        navigation={this.props.navigation}
-        ref={InputFixer => this.InputFixer = InputFixer}
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
       >
-        <View style={[styles.viewSelectVideo, { borderColor: this.state.noVideoErr ? "red" : "grey"}]}>
-          {!this.state.video ? (
-            <Button
-              buttonStyle={styles.selectVideoButton}
-              title="ELEGIR VÍDEO"
-              onPress={this.pickVideo}
-            />
-          ) : (
-            <VideoConSinFlechaAtras
-              flechaSi={false}
-              navigation={this.props.navigation}
-              source={this.state.video}
-              thumbnail={this.state.thumbnail}
-              autoplay={false}
-            />
-          )}
-        </View>
-
-        <View style={styles.viewSelectAsign}>
-          <Text style={styles.textAsignatura}>Asignatura:</Text>
-          <Picker
-            mode="dialog"
-            selectedValue={this.state.asignatura}
-            style={styles.pickerAsign}
-            onValueChange={(asignatura) =>
-              this.setState({ asignatura: asignatura })
-            }
-          > 
-            {pickerItems}
-          </Picker>
-        </View>
-
-        <View style={styles.viewInput}>
-          <Input
-            placeholder="Escriba un título..."
-            label="Título"
-            onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={text =>
-              this.setState({ titulo: text, tituloVacioErr: false })
-            }
-            errorStyle={{ color: "red" }}
-            errorMessage={
-              this.state.tituloVacioErr
-                ? "El título no puede ser vacío"
-                : null
-            }
-          />
-        </View>
-
-        <View style={styles.viewInput}>
-          <Input
-            onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={(text) => this.InputFixer.onFocus() || this.setState({ descripción: text })}
-            placeholder="Escriba una descripción..."
-            multiline={true}
-            label="Descripción"
-          />
-        </View>
-
-        <View style={styles.viewSelectThumbnail}>
-        {this.state.noThumbnailErr ? (
-          <Text style={styles.imageErrText}>Falta una miniatura</Text>
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
         ) : (
-          <Image source={{ uri: this.state.thumbnail }} style={styles.imageThumbnail} />
-        )}
-          <Button
-            title="Elegir miniatura"
-            onPress={this.pickThumbnail}
-            containerStyle={styles.selectImageButton}
-            buttonStyle={styles.selectThumbnail}
-          />
-        </View>
+          <InputFixer
+            navigation={this.props.navigation}
+            ref={InputFixer => (this.InputFixer = InputFixer)}
+          >
+            <View
+              style={[
+                styles.viewSelectVideo,
+                { borderColor: this.state.noVideoErr ? "red" : "grey" }
+              ]}
+            >
+              {!this.state.video ? (
+                <Button
+                  buttonStyle={styles.selectVideoButton}
+                  title="ELEGIR VÍDEO"
+                  onPress={this.pickVideo}
+                />
+              ) : (
+                <VideoConSinFlechaAtras
+                  flechaSi={false}
+                  navigation={this.props.navigation}
+                  source={this.state.video}
+                  thumbnail={this.state.thumbnail}
+                  autoplay={false}
+                />
+              )}
+            </View>
 
-        <View style={styles.uploadButtonView}>
-          <Button buttonStyle={styles.uploadButton} title="Subir vídeo" onPress={() => this.tryUpload()}/>
-        </View>
-      </InputFixer>
+            <View style={styles.viewSelectAsign}>
+              <Text
+                style={[
+                  styles.textAsignatura,
+                  { color: this.state.noAsignaturaErr ? "red" : "black" }
+                ]}
+              >
+                Asignatura:
+              </Text>
+              <Picker
+                mode="dialog"
+                selectedValue={this.state.asignatura}
+                style={styles.pickerAsign}
+                onValueChange={value =>
+                  this.setState({
+                    asignatura: value
+                  })
+                }
+              >
+                {pickerItems}
+              </Picker>
+            </View>
+
+            <View style={styles.viewInput}>
+              <Input
+                placeholder="Escriba un título..."
+                label="Título"
+                onFocus={() => this.InputFixer.onFocus()}
+                onChangeText={text =>
+                  this.setState({ titulo: text, tituloVacioErr: false })
+                }
+                errorStyle={{ color: "red" }}
+                errorMessage={
+                  this.state.tituloVacioErr
+                    ? "El título no puede ser vacío"
+                    : null
+                }
+              />
+            </View>
+
+            <View style={styles.viewInput}>
+              <Input
+                onFocus={() => this.InputFixer.onFocus()}
+                onChangeText={text =>
+                  this.InputFixer.onFocus() ||
+                  this.setState({ descripción: text })
+                }
+                placeholder="Escriba una descripción..."
+                multiline={true}
+                label="Descripción"
+              />
+            </View>
+
+            <View style={styles.viewSelectThumbnail}>
+              {this.state.noThumbnailErr ? (
+                <Text style={styles.imageErrText}>Falta una miniatura</Text>
+              ) : (
+                <Image
+                  source={{ uri: this.state.thumbnail }}
+                  style={styles.imageThumbnail}
+                />
+              )}
+              <Button
+                title="Elegir miniatura"
+                onPress={this.pickThumbnail}
+                containerStyle={styles.selectImageButton}
+                buttonStyle={styles.selectThumbnail}
+              />
+            </View>
+
+            <View style={styles.uploadButtonView}>
+              <Button
+                buttonStyle={styles.uploadButton}
+                title="Subir vídeo"
+                onPress={() => this.tryUpload()}
+              />
+            </View>
+          </InputFixer>
+        )}
+      </View>
     );
   }
 }
