@@ -12,10 +12,11 @@ export async function signOut(navigation) {
 	navigation.navigate("NotLogged");
 }
 
-export async function signIn(token, userId, navigation) {
-	await AsyncStorage.multiSet([["userToken", token], ["userId", userId.toString()]], null);
+export async function signIn(token, id, navigation) {
+	await AsyncStorage.multiSet([["userToken", token], ["userId", id.toString()]], null);
 	userToken = token;
-	userId = userId;
+	console.log(userToken)
+	userId = id;
 	navigation.navigate("Logged");
 }
 
