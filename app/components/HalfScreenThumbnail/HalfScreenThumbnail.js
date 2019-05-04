@@ -35,6 +35,14 @@ export default class HalfScreenThumbnail extends React.Component {
 	};
 
 	render() {
+		let eliminarText;
+		if (this.props.tipoLista == "Historial") {
+			eliminarText = "Eliminar del historial";
+		} else if (this.props.tipoLista == "Mis vídeos") {
+			eliminarText = "Eliminar vídeo";
+		} else if (this.props.tipoLista == "Mis listas") {
+			eliminarText = "Eliminar lista";
+		}
 		return (
 			<View style={styles.container}>
 				<TouchableOpacity
@@ -71,12 +79,6 @@ export default class HalfScreenThumbnail extends React.Component {
 					style={styles.dropDownMenuContainer}
 					opened={this.state.popUpVisible}
 					onBackdropPress={() => this.setState({ popUpVisible: false })}
-					onSelect={() =>
-						this.setState({
-							popUpVisible: false,
-							anyadirAListaVisible: true
-						})
-					}
 				>
 					<MenuTrigger onPress={() => this.setState({ popUpVisible: true })}>
 						<SimpleLineIcons
@@ -85,25 +87,36 @@ export default class HalfScreenThumbnail extends React.Component {
 						/>
 					</MenuTrigger>
 					<MenuOptions>
-						<MenuOption>
-							<Text style={styles.popUpMenuText}>
-								Opcion muy muy muy muy muy larga
-							</Text>
+						<MenuOption
+							onSelect={() =>
+								this.setState({
+									popUpVisible: false
+								}) ||
+								this.props.deleteCallback(this.props.index, this.props.videoId)
+							}
+						>
+							<Text style={styles.popUpMenuText}>{eliminarText}</Text>
 						</MenuOption>
-						<MenuOption onSelect={this.showAnyadirALista}>
-							<Text style={styles.popUpMenuText}>Anyadir a lista</Text>
-						</MenuOption>
-						<MenuOption>
-							<Text style={styles.popUpMenuText}>Opcion 3</Text>
-						</MenuOption>
-						<MenuOption>
-							<Text style={styles.popUpMenuText}>Opcion 4</Text>
-						</MenuOption>
+						{this.props.tipoLista != "Mis listas" ? (
+							<MenuOption
+								onSelect={() =>
+									this.setState({
+										popUpVisible: false,
+										anyadirAListaVisible: true
+									})
+								}
+							>
+								<Text style={styles.popUpMenuText}>
+									Añadir a lista de reproducción
+								</Text>
+							</MenuOption>
+						) : null}
 					</MenuOptions>
 				</Menu>
 				<AnyadirALista
 					visible={this.state.anyadirAListaVisible}
 					hide={this.hideAnyadirALista}
+					videoId={this.props.videoId}
 				/>
 			</View>
 		);

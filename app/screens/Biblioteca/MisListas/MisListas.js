@@ -94,6 +94,7 @@ export default class MisListas extends React.Component {
 								image={require("../../../../test/imagenes/imagen.jpg")}
 								title="Nombre bastante largo para ser un nombre de una lista de prueba"
 								info="0 vídeos"
+								tipoLista={"Mis listas"}
 							/>
 						)}
 						ListFooterComponent={LoadingFooter({

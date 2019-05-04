@@ -2,6 +2,8 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text, Icon } from "react-native-elements";
 
+import { isProfesor } from "../../config/Auth";
+
 import styles from "./styles";
 
 export default class Biblioteca extends React.Component {
@@ -22,19 +24,21 @@ export default class Biblioteca extends React.Component {
 					<Text style={styles.titulo}>HISTORIAL</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity
-					style={styles.boton}
-					activeOpacity={1}
-					onPress={() =>
-						this.props.navigation.navigate("ListaVideos", {
-							title: "Mis vídeos"
-						})
-					}
-				>
-					<Icon name="play-circle-outline" size={30} marginLeft={20} />
+				{isProfesor() ? (
+					<TouchableOpacity
+						style={styles.boton}
+						activeOpacity={1}
+						onPress={() =>
+							this.props.navigation.navigate("ListaVideos", {
+								title: "Mis vídeos"
+							})
+						}
+					>
+						<Icon name="play-circle-outline" size={30} marginLeft={20} />
 
-					<Text style={styles.titulo}>MIS VÍDEOS</Text>
-				</TouchableOpacity>
+						<Text style={styles.titulo}>MIS VÍDEOS</Text>
+					</TouchableOpacity>
+				) : null}
 
 				<TouchableOpacity
 					style={styles.boton}
@@ -46,14 +50,16 @@ export default class Biblioteca extends React.Component {
 					<Text style={styles.titulo}>MIS LISTAS</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity
-					style={styles.boton}
-					activeOpacity={1}
-					onPress={() => this.props.navigation.navigate("SubirVideo")}
-				>
-					<Icon name="videocam" size={30} marginLeft={20} />
-					<Text style={styles.titulo}>SUBIR VÍDEO</Text>
-				</TouchableOpacity>
+				{isProfesor() ? (
+					<TouchableOpacity
+						style={styles.boton}
+						activeOpacity={1}
+						onPress={() => this.props.navigation.navigate("SubirVideo")}
+					>
+						<Icon name="videocam" size={30} marginLeft={20} />
+						<Text style={styles.titulo}>SUBIR VÍDEO</Text>
+					</TouchableOpacity>
+				) : null}
 			</View>
 		);
 	}

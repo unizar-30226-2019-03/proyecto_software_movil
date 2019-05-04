@@ -18,7 +18,6 @@ export async function signIn(token, id, navigation) {
 		null
 	);
 	userToken = token;
-	console.log(userToken);
 	userId = id;
 	navigation.navigate("Logged");
 }
