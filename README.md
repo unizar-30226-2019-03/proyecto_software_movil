@@ -31,7 +31,7 @@ Una vez se ha pusheado el cambio de package.json, ejecutar `./utilities.sh -u` p
 
 1. Ir a `https://swagger.io/tools/swagger-ui/` y pulsar sobre **Live Demo**.
 2. Cambiar la url de https a http.
-3. Poner `https://raw.githubusercontent.com/unizar-30226-2019-03/proyecto_software_backend/master/api-spec.yml` en la barra de explorar.
+3. Poner `https://raw.githubusercontent.com/unizar-30226-2019-03/proyecto_software_backend/master/api_docs/api-spec.yml` en la barra de explorar.
 4. Ahora se puede ver la documentacion de la api (ejemplos de respuesta de métodos, parámetros de funciones etc) y ejecutar métodos en la api directamente en el buscador (añadir nuevos usuarios, asignaturas etc.)
 
 ## Clone
