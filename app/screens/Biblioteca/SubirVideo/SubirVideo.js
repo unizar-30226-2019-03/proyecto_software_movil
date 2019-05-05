@@ -6,7 +6,7 @@ import { ImagePicker, FileSystem } from "expo";
 import { Button, Input, Image } from "react-native-elements";
 
 import { VideoApi, UserApi, ApiClient } from "swagger_unicast";
-import { Buffer } from "buffer";
+
 import { getUserToken, getUserId } from "../../../config/Auth";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
@@ -35,7 +35,8 @@ export default class SubirVideo extends React.Component {
       tituloVacioErr: false,
       noVideoErr: false,
       noAsignaturaErr: false,
-      loading: true
+      loading: true,
+      subiendoVideo: false
     };
 
     let defaultClient = ApiClient.instance;
@@ -60,8 +61,6 @@ export default class SubirVideo extends React.Component {
             pickerData: [...this.state.pickerData, ...data._embedded.subjects],
             loading: false
           });
-
-          console.log(data._embedded.subjects[0]);
 
           if (this.state.pickerData && this.state.pickerData.length > 0) {
             this.setState({
@@ -93,7 +92,6 @@ export default class SubirVideo extends React.Component {
     });
 
     if (!result.cancelled) {
-      console.log(result);
       this.setState({ thumbnail: result.uri, noThumbnailErr: false });
     }
   };
@@ -118,57 +116,63 @@ export default class SubirVideo extends React.Component {
     }
 
     if (!someError) {
-      const data = new FormData();
-
-      data.append("title", this.state.titulo);
-      data.append("description", this.state.descripción);
-      data.append("subject_id", this.state.asignatura);
-      data.append("file", {
-        uri: this.state.video,
-        type: "video/mp4",
-        name: this.state.video.substring(
-          this.state.video.lastIndexOf("/") + 1,
-          this.state.video.length
-        )
-      });
-      data.append("thumbnail", {
-        uri: this.state.thumbnail,
-        type: "image/jpeg",
-        name: this.state.thumbnail.substring(
-          this.state.thumbnail.lastIndexOf("/") + 1,
-          this.state.thumbnail.length
-        )
-      });
-
-      fetch(
-        "http://ec2-35-181-26-7.eu-west-3.compute.amazonaws.com:8080/api/upload/video",
-        {
-          method: "post",
-          headers: {
-            Authorization: "Bearer " + getUserToken()
-          },
-          body: data
-        }
-      )
-        .then(response => response.json())
-        .then(responseJson => {
-          console.log(responseJson);
-          Alert.alert(
-            "Bien!",
-            "El vídeo ha sido subido con éxito",
-            [{ text: "Vale", onPress: () => this.props.navigation.goBack() }],
-            { cancelable: false }
-          );
-        })
-        .catch(error => {
-          console.log(responseJson);
-          Alert.alert(
-            "Error!",
-            "Error al subir el vídeo, vuelve a intentarlo",
-            [{ text: "Vale" }],
-            { cancelable: false }
-          );
+      if (!this.state.subiendoVideo) {
+        this.setState({
+          subiendoVideo: true
         });
+
+        const file = {
+          uri: this.state.video,
+          name: this.state.video.substring(
+            this.state.video.lastIndexOf("/") + 1,
+            this.state.video.length
+          ),
+          type: "video/mp4"
+        };
+        const thumbnail = {
+          uri: this.state.thumbnail,
+          name: this.state.thumbnail.substring(
+            this.state.thumbnail.lastIndexOf("/") + 1,
+            this.state.thumbnail.length
+          ),
+          type: "imagen/png"
+        };
+        let title = this.state.titulo;
+        let description = this.state.descripción;
+        let subjectId = this.state.asignatura;
+        this.videoApiInstance.addVideo(
+          file,
+          thumbnail,
+          title,
+          description,
+          subjectId,
+          (error, data, response) => {
+            if (error) {
+              Alert.alert(
+                "Error!",
+                "Error al subir el vídeo, vuelve a intentarlo",
+                [{ text: "Vale" }],
+                { cancelable: false }
+              );
+              this.setState({
+                subiendoVideo: false
+              });
+            } else {
+              Alert.alert(
+                "Bien!",
+                "El vídeo ha sido subido con éxito",
+                [
+                  {
+                    text: "Vale",
+                    onPress: () => this.props.navigation.goBack()
+                  }
+                ],
+                { cancelable: false }
+              );
+            }
+          }
+        );
+      }
     }
   };
 
