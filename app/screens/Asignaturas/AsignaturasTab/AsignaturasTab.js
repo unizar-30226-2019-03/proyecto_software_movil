@@ -34,7 +34,12 @@ export default class AsignaturasTab extends React.Component {
 
   getData = () => {
     let id = getUserId();
-    this.apiInstance.getSubjectsOfUser(id, null, (error, data, response) => {
+    let opts = {
+      cacheControl: "no-cache, no-store, must-revalidate",
+      pragma: "no-cache",
+      expires: 0
+    };
+    this.apiInstance.getSubjectsOfUser(id, opts, (error, data, response) => {
       if (!error) {
         this.setState({
           data: [...this.state.data, ...data._embedded.subjects],

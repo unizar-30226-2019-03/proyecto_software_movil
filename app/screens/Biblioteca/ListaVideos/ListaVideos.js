@@ -54,7 +54,12 @@ export default class ListaVideos extends React.Component {
 
 	getVideosOfUser = () => {
 		let id = getUserId();
-		this.apiInstance.getVideosOfUser(id, null, (error, data, response) => {
+		let opts = {
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: 0
+		};
+		this.apiInstance.getVideosOfUser(id, opts, (error, data, response) => {
 			if (!error) {
 				this.setState({
 					data: [...this.state.data, ...data._embedded.videos],
@@ -67,14 +72,18 @@ export default class ListaVideos extends React.Component {
 
 	getHistorial = () => {
 		let id = getUserId();
-		this.apiInstance.getDisplaysByUser(id, null, (error, data, response) => {
+		let opts = {
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: 0
+		};
+		this.apiInstance.getDisplaysByUser(id, opts, (error, data, response) => {
 			if (!error) {
 				this.setState({
 					data: [...this.state.data, ...data._embedded.displays],
 					loading: false,
 					refreshing: false
 				});
-
 			}
 		});
 	};
@@ -115,9 +124,9 @@ export default class ListaVideos extends React.Component {
 	};
 
 	render() {
-		console.log(this.state.loading)
+		console.log(this.state.loading);
 
-		console.log(this.state.data)
+		console.log(this.state.data);
 		return (
 			<View
 				style={[
@@ -135,11 +144,28 @@ export default class ListaVideos extends React.Component {
 						renderItem={({ item, index }) => (
 							<HalfScreenThumbnail
 								navigation={this.props.navigation}
-								image={{uri: this.tipoLista == "Mis vídeos" ? item.thumbnailUrl : "item.video.thumbnailUrl" }}
-								likes={this.tipoLista == "Mis vídeos" ? item.score : "item.video.score"}
+								image={{
+									uri:
+										this.tipoLista == "Mis vídeos"
+											? item.thumbnailUrl
+											: "item.video.thumbnailUrl"
+								}}
+								likes={
+									this.tipoLista == "Mis vídeos"
+										? item.score
+										: "item.video.score"
+								}
 								duracion="1:10"
-								title={this.tipoLista == "Mis vídeos" ? item.title : "item.video.title"}
-								info={this.tipoLista == "Mis vídeos" ? timeStampToFormat(item.timestamp) : "timeStampToFormat(item.video.timestamp)"}
+								title={
+									this.tipoLista == "Mis vídeos"
+										? item.title
+										: "item.video.title"
+								}
+								info={
+									this.tipoLista == "Mis vídeos"
+										? timeStampToFormat(item.timestamp)
+										: "timeStampToFormat(item.video.timestamp)"
+								}
 								videoId={this.tipoLista == "Mis vídeos" ? item.id : "item.id"}
 								tipoLista={this.tipoLista}
 								index={index}

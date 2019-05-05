@@ -28,7 +28,12 @@ export default class Cuenta extends React.Component {
 		this.apiInstance = new UserApi();
 
 		let id = getUserId();
-		this.apiInstance.getUser(id, null, (error, data, response) => {
+		let opts = {
+		  cacheControl: "no-cache, no-store, must-revalidate",
+		  pragma: "no-cache",
+		  expires: 0
+		};
+		this.apiInstance.getUser(id, opts, (error, data, response) => {
 			if (!error) {
 				this.state.imagenPerfil = data.photo;
 				this.setState({ imagenPerfil: data.photo, loading: false });

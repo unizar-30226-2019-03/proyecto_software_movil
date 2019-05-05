@@ -46,9 +46,14 @@ export default class SubirVideo extends React.Component {
     this.videoApiInstance = new VideoApi();
 
     let id = getUserId();
+    let opts = {
+      cacheControl: "no-cache, no-store, must-revalidate",
+      pragma: "no-cache",
+      expires: 0
+    };
     this.userApiInstance.getSubjectsOfUser(
       id,
-      null,
+      opts,
       (error, data, response) => {
         if (!error) {
           this.setState({

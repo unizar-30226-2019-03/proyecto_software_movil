@@ -37,8 +37,12 @@ export default class VideosTab extends React.Component {
 	getData = () => {
 		// if (this.totalPages == undefined || this.offset < this.totalPages) {
 		//   let opts = {
-		//     page: this.offset
+		//     page: this.offset,
+		//     cacheControl: "no-cache, no-store, must-revalidate",
+    //     pragma: "no-cache",
+    //     expires: 0
 		//   };
+		//   
 		//   this.videoApiInstance.getVideos((error, data, response) => {
 		//     if (!error) {
 		//       this.offset = this.offset + 1;

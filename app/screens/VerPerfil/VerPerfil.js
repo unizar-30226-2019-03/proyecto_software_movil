@@ -46,7 +46,12 @@ export default class VerPerfil extends React.Component {
     this.isPerfilPropio = this.userId == getUserId();
 
     let id = this.userId;
-    this.apiInstance.getUser(id, null, (error, data, response) => {
+    let opts = {
+      cacheControl: "no-cache, no-store, must-revalidate",
+      pragma: "no-cache",
+      expires: 0
+    };
+    this.apiInstance.getUser(id, opts, (error, data, response) => {
       if (!error) {
         this.setState({
           imagen: data.photo,
