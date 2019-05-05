@@ -1,12 +1,12 @@
 import React from "react";
 import { Text, View, Picker, ActivityIndicator, Alert } from "react-native";
 
-import { ImagePicker } from "expo";
+import { ImagePicker, FileSystem } from "expo";
 
 import { Button, Input, Image } from "react-native-elements";
 
 import { VideoApi, UserApi, ApiClient } from "swagger_unicast";
-
+import { Buffer } from "buffer";
 import { getUserToken, getUserId } from "../../../config/Auth";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
@@ -61,9 +61,11 @@ export default class SubirVideo extends React.Component {
             loading: false
           });
 
+          console.log(data._embedded.subjects[0]);
+
           if (this.state.pickerData && this.state.pickerData.length > 0) {
             this.setState({
-              asignatura: data._embedded.subjects[0]
+              asignatura: data._embedded.subjects[0].id
             });
           }
         }
@@ -91,11 +93,12 @@ export default class SubirVideo extends React.Component {
     });
 
     if (!result.cancelled) {
+      console.log(result);
       this.setState({ thumbnail: result.uri, noThumbnailErr: false });
     }
   };
 
-  tryUpload = () => {
+  tryUpload = async () => {
     let someError = false;
     if (!this.state.video) {
       this.setState({ noVideoErr: true });
@@ -115,38 +118,57 @@ export default class SubirVideo extends React.Component {
     }
 
     if (!someError) {
-      let file = this.state.video;
-      let thumbnail = this.state.thumbnail;
-      let title = this.state.titulo;
-      let description = this.state.descripción;
-      let subjectId = this.state.asignatura;
-      this.videoApiInstance.addVideo(
-        file,
-        thumbnail,
-        title,
-        description,
-        subjectId,
-        (error, data, response) => {
-          if (error) {
-            console.log(error);
-            console.log(data);
-            console.log(JSON.stringify(response));
-            Alert.alert(
-              "Error!",
-              "Error al subir el vídeo, vuelve a intentarlo",
-              [{ text: "Vale" }],
-              { cancelable: false }
-            );
-          } else {
-            Alert.alert(
-              "Bien!",
-              "El vídeo ha sido subido con éxito",
-              [{ text: "Vale", onPress: () => this.props.navigation.goBack() }],
-              { cancelable: false }
-            );
-          }
+      const data = new FormData();
+
+      data.append("title", this.state.titulo);
+      data.append("description", this.state.descripción);
+      data.append("subject_id", this.state.asignatura);
+      data.append("file", {
+        uri: this.state.video,
+        type: "video/mp4",
+        name: this.state.video.substring(
+          this.state.video.lastIndexOf("/") + 1,
+          this.state.video.length
+        )
+      });
+      data.append("thumbnail", {
+        uri: this.state.thumbnail,
+        type: "image/jpeg",
+        name: this.state.thumbnail.substring(
+          this.state.thumbnail.lastIndexOf("/") + 1,
+          this.state.thumbnail.length
+        )
+      });
+
+      fetch(
+        "http://ec2-35-181-26-7.eu-west-3.compute.amazonaws.com:8080/api/upload/video",
+        {
+          method: "post",
+          headers: {
+            Authorization: "Bearer " + getUserToken()
+          },
+          body: data
         }
-      );
+      )
+        .then(response => response.json())
+        .then(responseJson => {
+          console.log(responseJson);
+          Alert.alert(
+            "Bien!",
+            "El vídeo ha sido subido con éxito",
+            [{ text: "Vale", onPress: () => this.props.navigation.goBack() }],
+            { cancelable: false }
+          );
+        })
+        .catch(error => {
+          console.log(responseJson);
+          Alert.alert(
+            "Error!",
+            "Error al subir el vídeo, vuelve a intentarlo",
+            [{ text: "Vale" }],
+            { cancelable: false }
+          );
+        });
     }
   };
 
@@ -154,8 +176,6 @@ export default class SubirVideo extends React.Component {
     let pickerItems = this.state.pickerData.map((s, i) => {
       return <Picker.Item key={i} value={s.id} label={s.name} />;
     });
-
-    console.log(this.state.asignatura);
 
     return (
       <View

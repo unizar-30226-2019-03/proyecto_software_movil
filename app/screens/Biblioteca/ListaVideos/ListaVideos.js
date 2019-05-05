@@ -7,7 +7,7 @@ import { getUserToken, getUserId } from "../../../config/Auth";
 
 import { UserApi, DisplayApi, ApiClient } from "swagger_unicast";
 
-import timeStampToFormat from "../../../components/TimeStampToFormat";
+import { timeStampToFormat } from "../../../components/Time";
 
 import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 
@@ -75,7 +75,8 @@ export default class ListaVideos extends React.Component {
 		let opts = {
 			cacheControl: "no-cache, no-store, must-revalidate",
 			pragma: "no-cache",
-			expires: 0
+			expires: 0,
+			projection: "displayWithVideo"
 		};
 		this.apiInstance.getDisplaysByUser(id, opts, (error, data, response) => {
 			if (!error) {
@@ -148,23 +149,23 @@ export default class ListaVideos extends React.Component {
 									uri:
 										this.tipoLista == "Mis vídeos"
 											? item.thumbnailUrl
-											: "item.video.thumbnailUrl"
+											: item.video.thumbnailUrl
 								}}
 								likes={
 									this.tipoLista == "Mis vídeos"
 										? item.score
-										: "item.video.score"
+										: item.video.score
 								}
 								duracion="1:10"
 								title={
 									this.tipoLista == "Mis vídeos"
 										? item.title
-										: "item.video.title"
+										: item.video.title
 								}
 								info={
 									this.tipoLista == "Mis vídeos"
 										? timeStampToFormat(item.timestamp)
-										: "timeStampToFormat(item.video.timestamp)"
+										: timeStampToFormat(item.video.timestamp)
 								}
 								videoId={this.tipoLista == "Mis vídeos" ? item.id : "item.id"}
 								tipoLista={this.tipoLista}
