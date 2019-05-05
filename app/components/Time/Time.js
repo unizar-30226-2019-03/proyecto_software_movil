@@ -1,7 +1,7 @@
 import React from "react";
 
 export const timeStampToFormat = (timestamp) => {
-	console.log(timestamp)
+	// console.log(timestamp)
 	return "Hace 2 dias"
 }
 

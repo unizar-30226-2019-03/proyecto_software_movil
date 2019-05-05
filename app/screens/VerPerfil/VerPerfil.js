@@ -33,7 +33,8 @@ export default class VerPerfil extends React.Component {
       apellidos: "",
       descripcion: "",
       imagen: "",
-      loading: true
+      loading: true,
+      actualizandoDatos: false
     };
 
     let defaultClient = ApiClient.instance;
@@ -71,50 +72,62 @@ export default class VerPerfil extends React.Component {
   }
 
   pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      mediaTypes: "Images",
-      aspect: [4, 4]
-    });
+    if (!this.state.actualizandoDatos) {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        mediaTypes: "Images",
+        aspect: [4, 4]
+      });
 
-    if (!result.cancelled) {
-      this.setState({ imagen: result.uri });
+      if (!result.cancelled) {
+        this.setState({ imagen: result.uri });
+      }
     }
   };
 
   cancelar = () => {
-    this.setState({
-      nombre: this.oldNombre,
-      apellidos: this.oldApellidos,
-      descripcion: this.oldDescripcion,
-      imagen: this.oldImagen
-    });
+    if (!this.state.actualizandoDatos) {
+      this.setState({
+        nombre: this.oldNombre,
+        apellidos: this.oldApellidos,
+        descripcion: this.oldDescripcion,
+        imagen: this.oldImagen
+      });
+    }
   };
 
   actualizar = () => {
-    let opts = {
-      description: this.state.descripcion,
-      photo: this.state.imagen,
-      name: this.state.nombre,
-      surnames: this.state.apellidos
-    };
-    this.apiInstance.updateUser(opts, (error, data, response) => {
-      if (error) {
-        Alert.alert(
-          "Error!",
-          "Error al intentar actualizar tu información, vuelve a intentarlo",
-          [{ text: "Vale" }],
-          { cancelable: false }
-        );
-      } else {
-        Alert.alert(
-          "Bien!",
-          "Tu información ha sido actualizada con éxito",
-          [{ text: "Vale" }],
-          { cancelable: false }
-        );
-      }
-    });
+    if (!this.state.actualizandoDatos) {
+      this.setState({
+        actualizandoDatos: true
+      });
+      let opts = {
+        description: this.state.descripcion,
+        photo: this.state.imagen,
+        name: this.state.nombre,
+        surnames: this.state.apellidos
+      };
+      this.apiInstance.updateUser(opts, (error, data, response) => {
+        if (error) {
+          Alert.alert(
+            "Error!",
+            "Error al intentar actualizar tu información, vuelve a intentarlo",
+            [{ text: "Vale" }],
+            { cancelable: false }
+          );
+        } else {
+          Alert.alert(
+            "Bien!",
+            "Tu información ha sido actualizada con éxito",
+            [{ text: "Vale" }],
+            { cancelable: false }
+          );
+        }
+        this.setState({
+          actualizandoDatos: false
+        });
+      });
+    }
   };
 
   render() {
