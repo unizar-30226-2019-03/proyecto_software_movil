@@ -56,14 +56,17 @@ export default class HalfScreenThumbnail extends React.Component {
 							style={styles.videoThumbnailContainer}
 						>
 							<View style={styles.duracionYLikesContainer}>
-								<Text
-									style={[
-										styles.likes,
-										{ color: this.props.likes > "49%" ? VerdeClaro : RojoClaro }
-									]}
-								>
-									{this.props.likes}
-								</Text>
+								{this.props.likes != null ?
+									(<Text
+										style={[
+											styles.likes,
+											{ color: this.props.likes > "49%" ? VerdeClaro : RojoClaro }
+										]}
+									>
+										{this.props.likes}
+									</Text>) : null
+
+								}
 								<Text style={styles.duracion}>{this.props.duracion}</Text>
 							</View>
 						</ImageBackground>

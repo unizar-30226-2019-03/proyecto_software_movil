@@ -29,14 +29,16 @@ const FullScreenThumbnail = props => {
 					style={styles.videoThumbnailContainer}
 				>
 					<View style={styles.duracionYLikesContainer}>
-						<Text
-							style={[
-								styles.likes,
-								{ color: props.likes > "49%" ? VerdeClaro : RojoClaro }
-							]}
-						>
-							{props.likes}
-						</Text>
+						{props.likes != null ? (
+							<Text
+								style={[
+									styles.likes,
+									{ color: props.likes > "49%" ? VerdeClaro : RojoClaro }
+								]}
+							>
+								{props.likes}
+							</Text>
+						) : null}
 						<Text style={styles.duracion}>{props.duracion}</Text>
 					</View>
 				</ImageBackground>
