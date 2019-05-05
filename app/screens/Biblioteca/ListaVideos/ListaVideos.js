@@ -24,6 +24,7 @@ export default class ListaVideos extends React.Component {
 		this.state = {
 			data: [],
 			loading: true,
+			currentDate: null,
 			refreshing: false
 		};
 
@@ -40,7 +41,6 @@ export default class ListaVideos extends React.Component {
 		} else if (this.tipoLista == "Historial") {
 			this.apiInstance = new DisplayApi();
 		}
-
 		this.getData();
 	}
 
@@ -63,6 +63,7 @@ export default class ListaVideos extends React.Component {
 			if (!error) {
 				this.setState({
 					data: [...this.state.data, ...data._embedded.videos],
+					currentDate: ApiClient.parseDate(response.headers.date),
 					loading: false,
 					refreshing: false
 				});
@@ -76,12 +77,14 @@ export default class ListaVideos extends React.Component {
 			cacheControl: "no-cache, no-store, must-revalidate",
 			pragma: "no-cache",
 			expires: 0,
-			projection: "displayWithVideo"
+			projection: "displayWithVideo",
+			sort: ['timestamp', 'desc']
 		};
 		this.apiInstance.getDisplaysByUser(id, opts, (error, data, response) => {
 			if (!error) {
 				this.setState({
 					data: [...this.state.data, ...data._embedded.displays],
+					currentDate: ApiClient.parseDate(response.headers.date),
 					loading: false,
 					refreshing: false
 				});
@@ -164,8 +167,8 @@ export default class ListaVideos extends React.Component {
 								}
 								info={
 									this.tipoLista == "Mis vídeos"
-										? timeStampToFormat(item.timestamp)
-										: timeStampToFormat(item.video.timestamp)
+										? timeStampToFormat(item.timestamp, this.state.currentDate)
+										: timeStampToFormat(item.video.timestamp, this.state.currentDate)
 								}
 								videoId={this.tipoLista == "Mis vídeos" ? item.id : "item.id"}
 								tipoLista={this.tipoLista}
