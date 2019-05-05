@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Picker, ActivityIndicator, Alert } from "react-native";
 
-import { ImagePicker, FileSystem } from "expo";
+import { ImagePicker } from "expo";
 
 import { Button, Input, Image } from "react-native-elements";
 
