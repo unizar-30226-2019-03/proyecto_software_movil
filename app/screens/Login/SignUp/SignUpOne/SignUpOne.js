@@ -1,36 +1,144 @@
 import React from "react";
 
-import { View, Text, Animated } from "react-native";
+import {
+  View,
+  Text,
+  Animated,
+  Picker,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert
+} from "react-native";
 
-import { Input, Image, Button } from "react-native-elements";
+import { Input, Image, Button, Overlay } from "react-native-elements";
 
 import { ImagePicker } from "expo";
 
+import { UniversityApi, DegreeApi, UserApi } from "swagger_unicast";
+
 import InputFixer from "../../../../components/InputFixer";
+
+import LoadingFooter from "../../../../components/LoadingFooter";
 
 import styles from "./styles";
 
 const imageErrText = "Falta una\nimagen de perfil";
 
 export default class SignUpOne extends React.Component {
-  state = {
-    shift: new Animated.Value(0),
-    username: "",
-    email: "",
-    password: "",
-    passwordCheck: "",
-    image: undefined,
-    name: "",
-    surname: "",
-    description: "",
-    passwordsMatch: true,
-    usernameLengthErr: false,
-    emailErr: false,
-    passwordLengthErr: false,
-    imageErr: false,
-    nameLengthErr: false,
-    surnameLengthErr: false,
-    descriptionLengthErr: false
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      openUniModal: false,
+      openDegModal: false,
+      onUniEndReachedManaged: false,
+      onDegEndReachedManaged: false,
+      uniData: [{}],
+      degData: [{}],
+      loadingUni: true,
+      loadingDeg: true,
+      fetchingNewUniData: false,
+      fetchingNewDegData: false,
+
+      username: "asd",
+      email: "asd@asd.com",
+      password: "asd",
+      passwordCheck: "asd",
+      image: undefined,
+      name: "asd",
+      surname: "asd",
+      universityName: "Seleccione una...",
+      universityId: 1,
+      degreeName: "Seleccione uno...",
+      degreeId: 1,
+      description: "asd",
+      passwordsMatch: true,
+      usernameLengthErr: false,
+      emailErr: false,
+      passwordLengthErr: false,
+      imageErr: false,
+      universityErr: false,
+      degreeErr: false,
+      nameLengthErr: false,
+      surnameLengthErr: false,
+      descriptionLengthErr: false
+    };
+
+    this.universityApiInstance = new UniversityApi();
+    this.degreeApiInstance = new DegreeApi();
+
+    this.uniOffset = 0;
+    this.degOffset = 0;
+    this.totalUniPages = undefined;
+    this.totalDegPages = undefined;
+  }
+
+  getUniData = () => {
+    if (
+      (this.totalUniPages == undefined ||
+        this.uniOffset < this.totalUniPages) &&
+      !this.state.onUniEndReachedManaged
+    ) {
+      console.log("BEGIN tup ", this.totalUniPages, " uo ", this.uniOffset);
+      let opts = {
+        page: this.uniOffset
+      };
+      this.universityApiInstance.getUniversities(
+        opts,
+        (error, data, response) => {
+          if (!error) {
+            this.uniOffset = this.uniOffset + 1;
+            console.log("tp ", data.page.totalPages);
+            this.totalUniPages = data.page.totalPages;
+            this.setState({
+              uniData: [...this.state.uniData, ...data._embedded.universities],
+              loadingUni: false,
+              fetchingNewUniData: false,
+              onUniEndReachedManaged: false
+            });
+          }
+        }
+      );
+    } else {
+      this.setState({ loadingUni: false, fetchingNewUniData: false });
+    }
+  };
+
+  getDegData = () => {
+    if (
+      (this.totalDegPages == undefined ||
+        this.degOffset < this.totalDegPages) &&
+      !this.state.onDegEndReachedManaged
+    ) {
+      let opts = {
+        page: this.degOffset
+      };
+      this.degreeApiInstance.getDegrees(opts, (error, data, response) => {
+        if (!error) {
+          this.degOffset = this.degOffset + 1;
+          this.totalDegPages = data.page.totalPages;
+          this.setState({
+            degData: [...this.state.degData, ...data._embedded.degrees],
+            loadingDeg: false,
+            fetchingNewDegData: false,
+            onDegEndReachedManaged: false
+          });
+        }
+      });
+    } else {
+      this.setState({ loadingDeg: false, fetchingNewDegData: false });
+    }
+  };
+
+  onEndReached = universitiesOrDegrees => {
+    if (universitiesOrDegrees == "uni") {
+      this.setState({ fetchingNewUniData: true, onUniEndReachedManaged: true });
+      this.getUniData();
+    } else {
+      this.setState({ fetchingNewDegData: true, onDegEndReachedManaged: true });
+      this.getDegData();
+    }
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -49,10 +157,10 @@ export default class SignUpOne extends React.Component {
     }
   };
 
-  updateDescriptionAndFocus = (description) => {
+  updateDescriptionAndFocus = description => {
     this.setState({ description: description });
     this.InputFixer.onFocus();
-  }
+  };
 
   comparePasswords = (pw, firstOrSecond) => {
     var pw1, pw2;
@@ -127,6 +235,20 @@ export default class SignUpOne extends React.Component {
       this.setState({ surnameLengthErr: false });
     }
 
+    if (this.state.universityId == undefined) {
+      this.setState({ universityErr: true });
+      ok = false;
+    } else {
+      this.setState({ universityErr: false });
+    }
+
+    if (this.state.degreeId == undefined) {
+      this.setState({ degreeErr: true });
+      ok = false;
+    } else {
+      this.setState({ degreeErr: false });
+    }
+
     if (this.state.description == "") {
       this.setState({ descriptionLengthErr: true });
       ok = false;
@@ -135,25 +257,71 @@ export default class SignUpOne extends React.Component {
     }
 
     if (ok) {
-      this.props.navigation.navigate("SignUpTwo", {
-        username: this.state.username,
-        email: this.state.email,
-        password: this.state.password,
-        image: this.state.image,
-        name: this.state.name,
-        surname: this.state.surname,
-        description: this.state.description
-      });
+      this.tryRegister();
     }
+  };
+
+  showConnectionErrorAlert = () => {
+    Alert.alert(
+      'Error en el registro',
+      'Posiblemente se deba a un error de conexión',
+      [
+        {
+          text: 'Cerrar',
+          style: 'cancel',
+        }
+      ],
+    );
+  }
+
+  showSuccessfulRegister = () => {
+    Alert.alert(
+      '¡Registro completado!',
+      'Ya puede usar la aplicación introduciendo sus datos',
+      [
+        {
+          text: 'OK',
+        }
+      ],
+    );
+  }
+
+  tryRegister = () => {
+    let apiInstance = new UserApi();
+    console.log("username ",this.state.username);
+    console.log("pw ",this.state.password);
+    console.log("name ",this.state.name);
+    console.log("surname ",this.state.surname);
+    console.log("email ",this.state.email);
+    console.log("descr ",this.state.description);
+    console.log("univer ",this.state.universityId);
+    console.log("degre ",this.state.degreeId);
+    console.log("image ",this.state.image);
+    apiInstance.addUser(
+      this.state.username,
+      this.state.password,
+      this.state.name,
+      this.state.surname,
+      this.state.email,
+      this.state.description,
+      this.state.universityId,
+      this.state.degreeId,
+      this.state.image,
+      (error, data, response) => {
+        if (error) {
+          this.showConnectionErrorAlert();
+        } else {
+          this.showSuccessfulRegister();
+        }
+      }
+    );
   };
 
   render() {
     return (
       <InputFixer
         navigation={this.props.navigation}
-        ref={InputFixer =>
-          (this.InputFixer = InputFixer)
-        }
+        ref={InputFixer => (this.InputFixer = InputFixer)}
       >
         <View style={styles.logoView}>
           <Image
@@ -260,11 +428,115 @@ export default class SignUpOne extends React.Component {
           />
         </View>
 
+        <View style={styles.viewSelectAsign}>
+          <Text
+            style={
+              this.state.universityErr
+                ? styles.textAsignaturaErr
+                : styles.textAsignatura
+            }
+          >
+            Universidad:
+          </Text>
+
+          <Text
+            style={styles.collegeName}
+            onPress={() => this.setState({ openUniModal: true })}
+          >
+            {this.state.universityName}
+          </Text>
+
+          <Overlay
+            isVisible={this.state.openUniModal}
+            overlayStyle={styles.overlayStyle}
+            animationType="fade"
+            onBackdropPress={() => this.setState({ openUniModal: false })}
+          >
+            <View style={styles.listElements}>
+              <FlatList
+                data={this.state.uniData}
+                onEndReached={() => this.onEndReached("uni")}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.listRow}
+                    onPress={() =>
+                      this.setState({
+                        universityName: item.name,
+                        universityId: item.id,
+                        openUniModal: false
+                      })
+                    }
+                  >
+                    <Text style={styles.rowText}>{item.name}</Text>
+                  </TouchableOpacity>
+                )}
+                ListFooterComponent={LoadingFooter({
+                  show: this.state.fetchingNewUniData
+                })}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          </Overlay>
+        </View>
+
+        <View style={styles.viewSelectAsign}>
+          <Text
+            style={
+              this.state.degreeErr
+                ? styles.textAsignaturaErr
+                : styles.textAsignatura
+            }
+          >
+            Estudios:
+          </Text>
+
+          <Text
+            style={styles.collegeName}
+            onPress={() => this.setState({ openDegModal: true })}
+          >
+            {this.state.degreeName}
+          </Text>
+
+          <Overlay
+            isVisible={this.state.openDegModal}
+            overlayStyle={styles.overlayStyle}
+            animationType="fade"
+            onBackdropPress={() => this.setState({ openDegModal: false })}
+          >
+            <View style={styles.listElements}>
+              <FlatList
+                data={this.state.degData}
+                onEndReached={() => this.onEndReached("deg")}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.listRow}
+                    onPress={() =>
+                      this.setState({
+                        degreeName: item.name,
+                        degreeId: item.id,
+                        openDegModal: false
+                      })
+                    }
+                  >
+                    <Text style={styles.rowText}>{item.name}</Text>
+                  </TouchableOpacity>
+                )}
+                ListFooterComponent={LoadingFooter({
+                  show: this.state.fetchingNewDegData
+                })}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          </Overlay>
+        </View>
+
         <View style={styles.descriptionContainer}>
           <Input
             onCharge
             onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={description => this.updateDescriptionAndFocus(description)}
+            onChangeText={description =>
+              this.updateDescriptionAndFocus(description)
+            }
             placeholder="Escriba su descripción..."
             errorMessage={
               this.state.descriptionLengthErr
@@ -280,7 +552,13 @@ export default class SignUpOne extends React.Component {
         <View style={styles.viewNextButton}>
           <Button
             onPress={() => this.handleNext()}
-            title="Siguiente"
+            title="Registrarse"
+            icon={{
+              type: "font-awesome",
+              name: "check-circle",
+              color: "white"
+            }}
+            titleStyle={styles.nextText}
             containerStyle={styles.nextButton}
             buttonStyle={styles.buttonColor}
           />

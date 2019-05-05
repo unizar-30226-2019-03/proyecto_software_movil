@@ -17,9 +17,13 @@ const { State: TextInputState } = TextInput;
 export default class SignUpOne extends React.Component {
   state = {
     shift: new Animated.Value(0),
-    searchUni: "",
-    searchCarrera: "",
-    searchAsign: ""
+    username: this.navigation.getParam("username"),
+    email: this.navigation.getParam("email"),
+    password: this.navigation.getParam("password"),
+    image: this.navigation.getParam("image"),
+    name: this.navigation.getParam("name"),
+    surname: this.navigation.getParam("surname"),
+    description: this.navigation.getParam("description"),
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -59,6 +63,7 @@ export default class SignUpOne extends React.Component {
     apiInstance.addUser(
       this.state.username,
       this.state.password,
+      this.state.email,
       async (error, data, response) => {
         if (error) {
           this.setState({
@@ -73,10 +78,6 @@ export default class SignUpOne extends React.Component {
 
   render() {
     const { shift } = this.state;
-    const searchUni = this.state.searchUni;
-    const searchCarrera = this.state.searchCarrera;
-    const searchAsign = this.state.searchAsign;
-
     return (
       <Animated.ScrollView
         style={[styles.container, { transform: [{ translateY: shift }] }]}
@@ -94,24 +95,6 @@ export default class SignUpOne extends React.Component {
             placeholder="¿En qué universidad estudias?"
             onChangeText={this.updateSearchUni}
             value={searchUni}
-            platform="android"
-            inputStyle={styles.placeholderText}
-          />
-        </View>
-        <View style={styles.inputBoxSeparation}>
-          <SearchBar
-            placeholder="¿Qué estudias?"
-            onChangeText={(text) => this.updateSearchCarrera}
-            value={searchCarrera}
-            platform="android"
-            inputStyle={styles.placeholderText}
-          />
-        </View>
-        <View style={styles.inputBoxSeparation}>
-          <SearchBar
-            placeholder="¿Qué asignaturas te interesan?"
-            onChangeText={this.updateSearchAsign}
-            value={searchAsign}
             platform="android"
             inputStyle={styles.placeholderText}
           />

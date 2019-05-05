@@ -35,6 +35,8 @@ export default class SignIn extends React.Component {
             showInputError: true
           });
         } else {
+          console.log("que vieneeeeeeeeeeeeeeeeeeeeeeeeeeeee:")
+          console.log(data.token);
           await signIn(data.token, data.id, this.props.navigation);
         }
       }
