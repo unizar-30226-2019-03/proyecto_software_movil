@@ -101,9 +101,17 @@ export default class VerPerfil extends React.Component {
       this.setState({
         actualizandoDatos: true
       });
+
       let opts = {
         description: this.state.descripcion,
-        photo: this.state.imagen,
+        photo: {
+          uri: this.state.imagen,
+          name: this.state.imagen.substring(
+            this.state.imagen.lastIndexOf("/") + 1,
+            this.state.imagen.length
+          ),
+          type: "imagen/png"
+        },
         name: this.state.nombre,
         surnames: this.state.apellidos
       };

@@ -26,23 +26,47 @@ export default class Cuenta extends React.Component {
 		bearerAuth.accessToken = getUserToken();
 
 		this.apiInstance = new UserApi();
+	}
 
+	componentWillMount = () => {
+		this.focusListener = this.props.navigation.addListener(
+			"didFocus",
+			this.handleDidFocus
+		);
+		this.blurListener = this.props.navigation.addListener(
+			"didBlur",
+			this.handleDidBlur
+		);
+	};
+
+	componentWillUnmount = () => {
+		this.focusListener.remove();
+		this.blurListener.remove();
+	};
+
+	resume = () => {
 		let id = getUserId();
 		let opts = {
-		  cacheControl: "no-cache, no-store, must-revalidate",
-		  pragma: "no-cache",
-		  expires: 0
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: 0
 		};
 		this.apiInstance.getUser(id, opts, (error, data, response) => {
 			if (!error) {
-				this.state.imagenPerfil = data.photo;
 				this.setState({ imagenPerfil: data.photo, loading: false });
 			}
 		});
-	}
+	};
+
+	handleDidFocus = () => {
+		this.resume();
+	};
+
+	handleDidBlur = () => {
+		this.setState({ loading: true });
+	};
 
 	render() {
-		console.log(this.state.imagenPerfil);
 		return (
 			<View
 				style={[
