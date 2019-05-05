@@ -24,7 +24,6 @@ export async function signIn(token, id, navigation) {
 }
 
 export async function isSignedIn(navigation) {
-	await AsyncStorage.clear();
 	await AsyncStorage.multiGet(["userToken", "userId"]).then(response => {
 		userToken = response[0][1];
 		userId = response[1][1];
