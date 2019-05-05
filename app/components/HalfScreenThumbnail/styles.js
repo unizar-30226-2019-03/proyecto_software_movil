@@ -32,7 +32,7 @@ export default StyleSheet.create({
   duracionYLikesContainer: {
     flexDirection: "row",
     marginTop: "auto",
-    marginBottom: 4
+    marginBottom: 4,
   },
   dropDownMenuContainer: {
     marginRight: 10,
@@ -56,13 +56,15 @@ export default StyleSheet.create({
     backgroundColor: "black",
     borderRadius: 5,
     marginLeft: "auto",
-    marginRight: 5
+    marginRight: 5,
+    paddingHorizontal: 5
   },
   likes: {
     fontSize: 15,
     backgroundColor: "black",
     borderRadius: 5,
-    marginLeft: 5
+    marginLeft: 5,
+    paddingHorizontal: 5
   },
   popUpMenuText: {
     fontSize: 17

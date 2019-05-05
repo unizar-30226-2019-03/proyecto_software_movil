@@ -58,7 +58,7 @@ export default class SubirVideo extends React.Component {
 
           if (this.state.pickerData && this.state.pickerData.length > 0) {
             this.setState({
-              asignatura: this.state.data[0]
+              asignatura: data._embedded.subjects[0]
             });
           }
         }

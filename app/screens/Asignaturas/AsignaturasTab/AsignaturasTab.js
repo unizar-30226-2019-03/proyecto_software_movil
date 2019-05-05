@@ -46,12 +46,14 @@ export default class AsignaturasTab extends React.Component {
   };
 
   onRefresh = () => {
-    this.setState({
-      refreshing: true,
-      data: [],
-      loading: false
-    });
-    this.getData();
+    if (!this.state.refreshing) {
+      this.setState({
+        refreshing: true,
+        data: [],
+        loading: false
+      });
+      this.getData();
+    }
   };
 
   render() {

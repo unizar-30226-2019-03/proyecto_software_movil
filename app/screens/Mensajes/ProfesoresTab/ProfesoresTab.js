@@ -61,20 +61,24 @@ export default class ProfesorTab extends React.Component {
   };
 
   onEndReached = () => {
-    this.setState({ fetchingNewData: true });
-    this.getData();
+    if (!this.state.fetchingNewData && !this.state.refreshing) {
+      this.setState({ fetchingNewData: true });
+      this.getData();
+    }
   };
 
   onRefresh = () => {
-    this.offset = 0;
-    this.totalPages = undefined;
-    this.setState({
-      refreshing: true,
-      data: [],
-      fetchingNewData: false,
-      loading: false
-    });
-    this.getData();
+    if (!this.state.fetchingNewData && !this.state.refreshing) {
+      this.offset = 0;
+      this.totalPages = undefined;
+      this.setState({
+        refreshing: true,
+        data: [],
+        fetchingNewData: false,
+        loading: false
+      });
+      this.getData();
+    }
   };
 
   render() {

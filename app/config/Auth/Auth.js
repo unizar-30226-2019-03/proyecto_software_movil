@@ -5,6 +5,7 @@ import { AsyncStorage } from "react-native";
 let userToken = undefined;
 let userId = undefined;
 
+
 export async function signOut(navigation) {
 	await AsyncStorage.clear();
 	userToken = undefined;
@@ -23,11 +24,14 @@ export async function signIn(token, id, navigation) {
 }
 
 export async function isSignedIn(navigation) {
+	await AsyncStorage.clear();
 	await AsyncStorage.multiGet(["userToken", "userId"]).then(response => {
 		userToken = response[0][1];
 		userId = response[1][1];
 	});
 
+	console.log(userToken)
+	console.log(userId)
 	navigation.navigate(userToken ? "Logged" : "NotLogged");
 }
 
