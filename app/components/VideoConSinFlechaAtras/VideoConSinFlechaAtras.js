@@ -33,27 +33,34 @@ export default class VideoConSinFlechaAtras extends React.Component {
         orientationChangeSecondCall: false,
         pantallaCompleta: !this.state.pantallaCompleta
       });
-
+    
+      console.log(ScreenOrientation.Orientation.PORTRAIT)
+      console.log(ScreenOrientation.Orientation.LANDSCAPE)
       this.state.pantallaCompleta
         ? ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT)
         : ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE);
+
     } else {
       this.setState({
         orientationChangeSecondCall: true
       });
     }
   }
+
   devuelveEstado() {
     return this.state.posicion;
   }
+
   devuelveDuracion() {
     return this.state.duracion;
   }
+
   cambio(nuevo) {
     let posicion = nuevo.positionMillis;
     let duracion = Math.floor(nuevo.durationMillis / 1000 + 0.5);
     this.setState({ posicion: posicion, duracion: duracion });
   }
+
   render() {
     const maxWidth =
       this.props.width == undefined ? ScreenWidth : videoProps.width;

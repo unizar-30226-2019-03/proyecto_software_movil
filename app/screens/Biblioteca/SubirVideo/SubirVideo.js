@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Picker, ActivityIndicator, Alert } from "react-native";
+import { Text, View, Picker, ActivityIndicator } from "react-native";
 
 import { ImagePicker } from "expo";
 
@@ -11,6 +11,8 @@ import { getUserToken, getUserId } from "../../../config/Auth";
 
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
 import InputFixer from "../../../components/InputFixer";
+import LoadingModal from "../../../components/LoadingModal";
+import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 
 import styles from "./styles";
 
@@ -28,7 +30,7 @@ export default class SubirVideo extends React.Component {
       asignatura: undefined,
       pickerData: [],
       video: undefined,
-      thumbnail: undefined,
+      thumbnail: "nula",
       titulo: "",
       descripción: "",
       noThumbnailErr: false,
@@ -46,6 +48,10 @@ export default class SubirVideo extends React.Component {
     this.userApiInstance = new UserApi();
     this.videoApiInstance = new VideoApi();
 
+    this.getAsignaturas();
+  }
+
+  getAsignaturas = () => {
     let id = getUserId();
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
@@ -56,7 +62,9 @@ export default class SubirVideo extends React.Component {
       id,
       opts,
       (error, data, response) => {
-        if (!error) {
+        if (error) {
+          HaOcurridoUnError(this.getAsignaturas);
+        } else {
           this.setState({
             pickerData: [...this.state.pickerData, ...data._embedded.subjects],
             loading: false
@@ -70,7 +78,7 @@ export default class SubirVideo extends React.Component {
         }
       }
     );
-  }
+  };
 
   pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -148,15 +156,15 @@ export default class SubirVideo extends React.Component {
           subjectId,
           (error, data, response) => {
             if (error) {
+              this.setState({
+                subiendoVideo: false
+              });
               Alert.alert(
                 "Error!",
                 "Error al subir el vídeo, vuelve a intentarlo",
                 [{ text: "Vale" }],
                 { cancelable: false }
               );
-              this.setState({
-                subiendoVideo: false
-              });
             } else {
               Alert.alert(
                 "Bien!",
@@ -298,6 +306,7 @@ export default class SubirVideo extends React.Component {
             </View>
           </InputFixer>
         )}
+        <LoadingModal visible={this.state.subiendoVideo} />
       </View>
     );
   }

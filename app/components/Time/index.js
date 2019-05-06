@@ -1,3 +1,3 @@
-import { timeStampToFormat } from "./Time";
+import { timeStampToFormat, secToDuration } from "./Time";
 
-export { timeStampToFormat };
+export { timeStampToFormat, secToDuration };

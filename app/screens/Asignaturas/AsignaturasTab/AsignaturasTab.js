@@ -8,6 +8,7 @@ import { getUserToken, getUserId } from "../../../config/Auth";
 
 import ThumbnailAsignatura from "../../../components/ThumbnailAsignatura";
 import LoadingFooter from "../../../components/LoadingFooter";
+import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 
 import styles from "./styles";
 
@@ -25,8 +26,6 @@ export default class AsignaturasTab extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = getUserToken();
 
-    console.log(getUserToken());
-
     this.apiInstance = new UserApi();
 
     this.getData();
@@ -40,7 +39,9 @@ export default class AsignaturasTab extends React.Component {
       expires: 0
     };
     this.apiInstance.getSubjectsOfUser(id, opts, (error, data, response) => {
-      if (!error) {
+      if (error) {
+        HaOcurridoUnError(this.getData);
+      } else {
         this.setState({
           data: [...this.state.data, ...data._embedded.subjects],
           loading: false,

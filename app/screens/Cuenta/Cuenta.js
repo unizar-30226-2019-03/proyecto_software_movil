@@ -68,51 +68,47 @@ export default class Cuenta extends React.Component {
 
 	render() {
 		return (
-			<View
-				style={[
-					styles.container,
-					{ justifyContent: this.state.loading ? "center" : "flex-start" }
-				]}
-			>
-				{this.state.loading ? (
-					<ActivityIndicator size="large" />
-				) : (
-					<View>
-						<View style={styles.userView}>
+			<View style={styles.container}>
+				<View>
+					<View style={styles.userView}>
+						{this.state.loading ? (
+							<View style={[styles.userIcon, { justifyContent: "center" }]}>
+								<ActivityIndicator size="large" />
+							</View>
+						) : (
 							<Image
 								key={this.state.imagenPerfil}
 								source={{ uri: this.state.imagenPerfil }}
 								style={styles.userIcon}
-								margin={20}
 							/>
-							<Text style={styles.userName}>NOMBRE</Text>
-						</View>
-
-						<TouchableOpacity
-							style={styles.boton}
-							activeOpacity={1}
-							onPress={() =>
-								this.props.navigation.navigate("VerPerfil", {
-									userId: getUserId()
-								})
-							}
-						>
-							<Icon name="account-box" size={30} marginLeft={20} />
-
-							<Text style={styles.titulo}>IR A MI PERFIL</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={styles.boton}
-							activeOpacity={1}
-							onPress={() => signOut(this.props.navigation)}
-						>
-							<Icon name="arrow-forward" size={30} marginLeft={20} />
-
-							<Text style={styles.titulo}>CERRAR SESIÓN</Text>
-						</TouchableOpacity>
+						)}
+						<Text style={styles.userName}>NOMBRE</Text>
 					</View>
-				)}
+
+					<TouchableOpacity
+						style={styles.boton}
+						activeOpacity={1}
+						onPress={() =>
+							this.props.navigation.navigate("VerPerfil", {
+								userId: getUserId()
+							})
+						}
+					>
+						<Icon name="account-box" size={30} marginLeft={20} />
+
+						<Text style={styles.titulo}>IR A MI PERFIL</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={styles.boton}
+						activeOpacity={1}
+						onPress={() => signOut(this.props.navigation)}
+					>
+						<Icon name="arrow-forward" size={30} marginLeft={20} />
+
+						<Text style={styles.titulo}>CERRAR SESIÓN</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		);
 	}

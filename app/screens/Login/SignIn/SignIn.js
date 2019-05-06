@@ -9,6 +9,7 @@ import { UserApi } from "swagger_unicast";
 import { signIn } from "../../../config/Auth";
 
 import InputFixer from "../../../components/InputFixer";
+import LoadingModal from "../../../components/LoadingModal";
 
 import styles from "./styles";
 
@@ -19,28 +20,33 @@ export default class SignIn extends React.Component {
     this.state = {
       username: "",
       password: "",
-      showInputError: false
+      showInputError: false,
+      loginIn: false
     };
 
     this.apiInstance = new UserApi();
   }
 
   tryLogin = async () => {
-    this.apiInstance.authUser(
-      this.state.username,
-      this.state.password,
-      async (error, data, response) => {
-        if (error) {
-          this.setState({
-            showInputError: true
-          });
-        } else {
-          console.log("que vieneeeeeeeeeeeeeeeeeeeeeeeeeeeee:")
-          console.log(data.token);
-          await signIn(data.token, data.id, this.props.navigation);
+    if (!this.state.loginIn) {
+      this.setState({
+        loginIn: true
+      });
+      this.apiInstance.authUser(
+        this.state.username,
+        this.state.password,
+        async (error, data, response) => {
+          if (error) {
+            this.setState({
+              showInputError: true,
+              loginIn: false
+            });
+          } else {
+            await signIn(data.token, data.id, this.props.navigation);
+          }
         }
-      }
-    );
+      );
+    }
   };
 
   render() {
@@ -113,6 +119,7 @@ export default class SignIn extends React.Component {
           title="REGISTRARSE"
           type="outline"
         />
+        <LoadingModal visible={this.state.loginIn}/>
       </InputFixer>
     );
   }

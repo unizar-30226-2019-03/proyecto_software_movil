@@ -60,10 +60,10 @@ export default class HalfScreenThumbnail extends React.Component {
 									(<Text
 										style={[
 											styles.likes,
-											{ color: this.props.likes > "49%" ? VerdeClaro : RojoClaro }
+											{ color: this.props.likes * 20 > 49 ? VerdeClaro : RojoClaro }
 										]}
 									>
-										{this.props.likes}
+										{this.props.likes * 20}
 									</Text>) : null
 
 								}

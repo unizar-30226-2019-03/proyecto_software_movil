@@ -126,6 +126,7 @@ export default class InputFixer extends React.Component {
 					ref={scrollView => (this.scrollView = scrollView)}
 					onScroll={this.handleScroll}
 					onUpdate={this.hola}
+					keyboardShouldPersistTaps={'handled'}
 				>
 					{this.props.children}
 					

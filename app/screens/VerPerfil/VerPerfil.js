@@ -14,6 +14,8 @@ import styles from "./styles";
 
 import InputFixer from "../../components/InputFixer";
 import ImagenDePerfilConIcono from "../../components/ImagenDePerfilConIcono";
+import HaOcurridoUnError from "../../components/HaOcurridoUnError";
+import LoadingModal from "../../components/LoadingModal";
 
 import { getUserId, getUserToken } from "../../config/Auth";
 
@@ -46,6 +48,10 @@ export default class VerPerfil extends React.Component {
     this.userId = this.props.navigation.getParam("userId");
     this.isPerfilPropio = this.userId == getUserId();
 
+    this.getData();
+  }
+
+  getData = () => {
     let id = this.userId;
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
@@ -53,7 +59,9 @@ export default class VerPerfil extends React.Component {
       expires: 0
     };
     this.apiInstance.getUser(id, opts, (error, data, response) => {
-      if (!error) {
+      if (error) {
+        HaOcurridoUnError(this.getData);
+      } else {
         this.setState({
           imagen: data.photo,
           nombre: data.name,
@@ -69,7 +77,7 @@ export default class VerPerfil extends React.Component {
         }
       }
     });
-  }
+  };
 
   pickImage = async () => {
     if (!this.state.actualizandoDatos) {
@@ -243,6 +251,7 @@ export default class VerPerfil extends React.Component {
             ) : null}
           </InputFixer>
         )}
+        <LoadingModal visible={this.state.actualizandoDatos} />
       </View>
     );
   }

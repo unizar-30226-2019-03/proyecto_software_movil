@@ -10,13 +10,12 @@ export default StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "flex-start"
-		
 	},
 	userIcon: {
 		width: 80,
 		height: 80,
-		alignSelf: "flex-start",
 		borderRadius: 50,
+		margin:20
 	},
 	boton: {
 		backgroundColor: 'white',
