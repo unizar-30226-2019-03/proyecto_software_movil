@@ -37,13 +37,17 @@ export const timeStampToFormat = (timestamp, currentTime) => {
 	return "Ahora mismo"
 }
 
-export const secFromBegToDuration = (secFromBeg) => {
-	// const time = secFromBeg
+export const secToDuration = (secs) => {
+	let hours = Math.floor(secs / 3600);
+	secs = secs - hours * 3600; 
+	let minutes = Math.floor(secs / 60);
+	let seconds = secs - minutes * 60;
 
-	// let hours = time / 3600
-	// let minutes = time / 60
-	// let seconds = 0
+	let cero = "00"
+	let hoursStr = hoursStr = hours > 0 ? cero.substring(0, cero.length - hours.toString().length) + hours.toString() + ":" : ""
+	let minutesStr = cero.substring(0, cero.length - minutes.toString().length) + minutes.toString() + ":"
+	let secondsStr = cero.substring(0, cero.length - seconds.toString().length) + seconds.toString()
 
-
+	return hoursStr + minutesStr + secondsStr
 }
 
