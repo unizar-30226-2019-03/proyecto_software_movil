@@ -1,8 +1,6 @@
 import React from "react";
 import { Text, View, Button, ActivityIndicator, FlatList, Alert } from "react-native";
 
-import LoadingFooter from "../../../components/LoadingFooter";
-
 import { getUserToken, getUserId } from "../../../config/Auth";
 
 import { VideoApi, DisplayApi, ApiClient } from "swagger_unicast";
