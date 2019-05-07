@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Picker, ActivityIndicator } from "react-native";
+import { Text, View, Picker, ActivityIndicator, Alert } from "react-native";
 
 import { ImagePicker } from "expo";
 
@@ -58,26 +58,22 @@ export default class SubirVideo extends React.Component {
       pragma: "no-cache",
       expires: 0
     };
-    this.userApiInstance.getSubjectsOfUser(
-      id,
-      opts,
-      (error, data, response) => {
-        if (error) {
-          HaOcurridoUnError(this.getAsignaturas);
-        } else {
-          this.setState({
-            pickerData: [...this.state.pickerData, ...data._embedded.subjects],
-            loading: false
-          });
+    this.userApiInstance.getSubjectsOfUser(id, opts, (error, data, response) => {
+      if (error) {
+        HaOcurridoUnError(this.getAsignaturas);
+      } else {
+        this.setState({
+          pickerData: [...this.state.pickerData, ...data._embedded.subjects],
+          loading: false
+        });
 
-          if (this.state.pickerData && this.state.pickerData.length > 0) {
-            this.setState({
-              asignatura: data._embedded.subjects[0].id
-            });
-          }
+        if (this.state.pickerData && this.state.pickerData.length > 0) {
+          this.setState({
+            asignatura: data._embedded.subjects[0].id
+          });
         }
       }
-    );
+    });
   };
 
   pickVideo = async () => {
@@ -131,55 +127,37 @@ export default class SubirVideo extends React.Component {
 
         const file = {
           uri: this.state.video,
-          name: this.state.video.substring(
-            this.state.video.lastIndexOf("/") + 1,
-            this.state.video.length
-          ),
+          name: this.state.video.substring(this.state.video.lastIndexOf("/") + 1, this.state.video.length),
           type: "video/mp4"
         };
         const thumbnail = {
           uri: this.state.thumbnail,
-          name: this.state.thumbnail.substring(
-            this.state.thumbnail.lastIndexOf("/") + 1,
-            this.state.thumbnail.length
-          ),
+          name: this.state.thumbnail.substring(this.state.thumbnail.lastIndexOf("/") + 1, this.state.thumbnail.length),
           type: "imagen/png"
         };
         let title = this.state.titulo;
         let description = this.state.descripción;
         let subjectId = this.state.asignatura;
-        this.videoApiInstance.addVideo(
-          file,
-          thumbnail,
-          title,
-          description,
-          subjectId,
-          (error, data, response) => {
-            if (error) {
-              this.setState({
-                subiendoVideo: false
-              });
-              Alert.alert(
-                "Error!",
-                "Error al subir el vídeo, vuelve a intentarlo",
-                [{ text: "Vale" }],
-                { cancelable: false }
-              );
-            } else {
-              Alert.alert(
-                "Bien!",
-                "El vídeo ha sido subido con éxito",
-                [
-                  {
-                    text: "Vale",
-                    onPress: () => this.props.navigation.goBack()
-                  }
-                ],
-                { cancelable: false }
-              );
-            }
+        this.videoApiInstance.addVideo(file, thumbnail, title, description, subjectId, (error, data, response) => {
+          this.setState({
+            subiendoVideo: false
+          });
+          if (error) {
+            HaOcurridoUnError(null);
+          } else {
+            Alert.alert(
+              "¡Bien!",
+              "El vídeo ha sido subido con éxito",
+              [
+                {
+                  text: "Vale",
+                  onPress: () => this.props.navigation.goBack()
+                }
+              ],
+              { cancelable: false }
+            );
           }
-        );
+        });
       }
     }
   };
@@ -190,31 +168,14 @@ export default class SubirVideo extends React.Component {
     });
 
     return (
-      <View
-        style={[
-          styles.container,
-          { justifyContent: this.state.loading ? "center" : "flex-start" }
-        ]}
-      >
+      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
-          <InputFixer
-            navigation={this.props.navigation}
-            ref={InputFixer => (this.InputFixer = InputFixer)}
-          >
-            <View
-              style={[
-                styles.viewSelectVideo,
-                { borderColor: this.state.noVideoErr ? "red" : "grey" }
-              ]}
-            >
+          <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
+            <View style={[styles.viewSelectVideo, { borderColor: this.state.noVideoErr ? "red" : "grey" }]}>
               {!this.state.video ? (
-                <Button
-                  buttonStyle={styles.selectVideoButton}
-                  title="ELEGIR VÍDEO"
-                  onPress={this.pickVideo}
-                />
+                <Button buttonStyle={styles.selectVideoButton} title="ELEGIR VÍDEO" onPress={this.pickVideo} />
               ) : (
                 <VideoConSinFlechaAtras
                   flechaSi={false}
@@ -227,12 +188,7 @@ export default class SubirVideo extends React.Component {
             </View>
 
             <View style={styles.viewSelectAsign}>
-              <Text
-                style={[
-                  styles.textAsignatura,
-                  { color: this.state.noAsignaturaErr ? "red" : "black" }
-                ]}
-              >
+              <Text style={[styles.textAsignatura, { color: this.state.noAsignaturaErr ? "red" : "black" }]}>
                 Asignatura:
               </Text>
               <Picker
@@ -255,25 +211,16 @@ export default class SubirVideo extends React.Component {
                 placeholder="Escriba un título..."
                 label="Título"
                 onFocus={() => this.InputFixer.onFocus()}
-                onChangeText={text =>
-                  this.setState({ titulo: text, tituloVacioErr: false })
-                }
+                onChangeText={text => this.setState({ titulo: text, tituloVacioErr: false })}
                 errorStyle={{ color: "red" }}
-                errorMessage={
-                  this.state.tituloVacioErr
-                    ? "El título no puede ser vacío"
-                    : null
-                }
+                errorMessage={this.state.tituloVacioErr ? "El título no puede ser vacío" : null}
               />
             </View>
 
             <View style={styles.viewInput}>
               <Input
                 onFocus={() => this.InputFixer.onFocus()}
-                onChangeText={text =>
-                  this.InputFixer.onFocus() ||
-                  this.setState({ descripción: text })
-                }
+                onChangeText={text => this.InputFixer.onFocus() || this.setState({ descripción: text })}
                 placeholder="Escriba una descripción..."
                 multiline={true}
                 label="Descripción"
@@ -284,10 +231,7 @@ export default class SubirVideo extends React.Component {
               {this.state.noThumbnailErr ? (
                 <Text style={styles.imageErrText}>Falta una miniatura</Text>
               ) : (
-                <Image
-                  source={{ uri: this.state.thumbnail }}
-                  style={styles.imageThumbnail}
-                />
+                <Image source={{ uri: this.state.thumbnail }} style={styles.imageThumbnail} />
               )}
               <Button
                 title="Elegir miniatura"
@@ -298,11 +242,7 @@ export default class SubirVideo extends React.Component {
             </View>
 
             <View style={styles.uploadButtonView}>
-              <Button
-                buttonStyle={styles.uploadButton}
-                title="Subir vídeo"
-                onPress={() => this.tryUpload()}
-              />
+              <Button buttonStyle={styles.uploadButton} title="Subir vídeo" onPress={() => this.tryUpload()} />
             </View>
           </InputFixer>
         )}

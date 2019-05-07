@@ -15,7 +15,8 @@ export default class Biblioteca extends React.Component {
 					activeOpacity={1}
 					onPress={() =>
 						this.props.navigation.navigate("ListaVideos", {
-							title: "Historial"
+							title: "Historial",
+							type: "historial"
 						})
 					}
 				>
@@ -30,7 +31,8 @@ export default class Biblioteca extends React.Component {
 						activeOpacity={1}
 						onPress={() =>
 							this.props.navigation.navigate("ListaVideos", {
-								title: "Mis vídeos"
+								title: "Mis vídeos",
+								type: "mis_videos"
 							})
 						}
 					>
