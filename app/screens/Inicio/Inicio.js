@@ -39,8 +39,8 @@ export default class Inicio extends React.Component {
 		//   let opts = {
 		//     page: this.offset,
 		//     cacheControl: "no-cache, no-store, must-revalidate",
-	  //     pragma: "no-cache",
-	  //     expires: 0
+		//     pragma: "no-cache",
+		//     expires: 0
 		//   };
 		//   this.videoApiInstance.getVideos((error, data, response) => {
 		//     if (!error) {
@@ -70,9 +70,7 @@ export default class Inicio extends React.Component {
 			this.totalPages = undefined;
 			this.setState({
 				refreshing: true,
-				data: [],
-				fetchingNewData: false,
-				loading: false
+				data: []
 			});
 			this.getData();
 		}
@@ -80,12 +78,7 @@ export default class Inicio extends React.Component {
 
 	render() {
 		return (
-			<View
-				style={[
-					styles.container,
-					{ justifyContent: this.state.loading ? "center" : "flex-start" }
-				]}
-			>
+			<View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
 				{this.state.loading ? (
 					<ActivityIndicator size="large" />
 				) : (

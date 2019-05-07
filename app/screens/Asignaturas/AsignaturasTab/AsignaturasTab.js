@@ -55,8 +55,7 @@ export default class AsignaturasTab extends React.Component {
     if (!this.state.refreshing) {
       this.setState({
         refreshing: true,
-        data: [],
-        loading: false
+        data: []
       });
       this.getData();
     }
@@ -64,12 +63,7 @@ export default class AsignaturasTab extends React.Component {
 
   render() {
     return (
-      <View
-        style={[
-          styles.container,
-          { justifyContent: this.state.loading ? "center" : "flex-start" }
-        ]}
-      >
+      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (

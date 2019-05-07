@@ -1,12 +1,5 @@
 import React from "react";
-import {
-	Text,
-	View,
-	Button,
-	ActivityIndicator,
-	FlatList,
-	Alert
-} from "react-native";
+import { Text, View, Button, ActivityIndicator, FlatList, Alert } from "react-native";
 
 import LoadingFooter from "../../../components/LoadingFooter";
 
@@ -14,12 +7,12 @@ import { getUserToken, getUserId } from "../../../config/Auth";
 
 import { VideoApi, DisplayApi, ApiClient } from "swagger_unicast";
 
-import { timeStampToFormat } from "../../../components/Time";
+import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
 import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
-import { secToDuration } from "../../../components/Time";
 import LoadingModal from "../../../components/LoadingModal";
+import LoadingFooter from "../../../components/LoadingFooter";
 
 import styles from "./styles";
 
@@ -36,6 +29,7 @@ export default class ListaVideos extends React.Component {
 			loading: true,
 			currentDate: null,
 			refreshing: false,
+			fetchingNewData: false,
 			deleting: false
 		};
 
@@ -76,25 +70,21 @@ export default class ListaVideos extends React.Component {
 				page: this.offset,
 				sort: ["timestamp", "desc"]
 			};
-			this.apiInstance.getVideosFromUploader(
-				id,
-				opts,
-				(error, data, response) => {
-					console.log(data);
-					if (error) {
-						HaOcurridoUnError(this.getVideosOfUser);
-					} else {
-						this.offset = this.offset + 1;
-						// this.totalPages = data.page.totalPages;
-						this.setState({
-							data: [...this.state.data, ...data._embedded.videos],
-							currentDate: ApiClient.parseDate(response.headers.date),
-							loading: false,
-							refreshing: false
-						});
-					}
+			this.apiInstance.getVideosFromUploader(id, opts, (error, data, response) => {
+				if (error) {
+					HaOcurridoUnError(this.getVideosOfUser);
+				} else {
+					this.offset = this.offset + 1;
+					// this.totalPages = data.page.totalPages;
+					this.setState({
+						data: [...this.state.data, ...data._embedded.videos],
+						currentDate: ApiClient.parseDate(response.headers.date),
+						loading: false,
+						refreshing: false,
+						fetchingNewData: false
+					});
 				}
-			);
+			});
 		}
 	};
 
@@ -116,18 +106,25 @@ export default class ListaVideos extends React.Component {
 					data: [...this.state.data, ...data._embedded.displays],
 					currentDate: ApiClient.parseDate(response.headers.date),
 					loading: false,
-					refreshing: false
+					refreshing: false,
+					fetchingNewData: false
 				});
 			}
 		});
 	};
 
+	onEndReached = () => {
+		if (!this.state.fetchingNewData && !this.state.refreshing) {
+			this.setState({ fetchingNewData: true });
+			this.getData();
+		}
+	};
+
 	onRefresh = () => {
-		if (!this.state.refreshing) {
+		if (!this.state.fetchingNewData && !this.state.refreshing) {
 			this.setState({
 				refreshing: true,
-				data: [],
-				loading: false
+				data: []
 			});
 			this.getData();
 		}
@@ -167,12 +164,7 @@ export default class ListaVideos extends React.Component {
 
 		console.log(this.state.data);
 		return (
-			<View
-				style={[
-					styles.container,
-					{ justifyContent: this.state.loading ? "center" : "flex-start" }
-				]}
-			>
+			<View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
 				{this.state.loading ? (
 					<ActivityIndicator size="large" />
 				) : (
@@ -180,33 +172,22 @@ export default class ListaVideos extends React.Component {
 						data={this.state.data}
 						refreshing={this.state.refreshing}
 						onRefresh={() => this.onRefresh()}
+						onEndReached={this.tipoLista == "Mis vídeos" ? () => this.onEndReached() : () => null}
 						renderItem={({ item, index }) => (
 							<HalfScreenThumbnail
 								navigation={this.props.navigation}
 								image={{
-									uri:
-										this.tipoLista == "Mis vídeos"
-											? item.thumbnailUrl
-											: item.video.thumbnailUrl
+									uri: this.tipoLista == "Mis vídeos" ? item.thumbnailUrl : item.video.thumbnailUrl
 								}}
-								likes={
-									this.tipoLista == "Mis vídeos" ? item.score : item.video.score
-								}
+								likes={this.tipoLista == "Mis vídeos" ? item.score : item.video.score}
 								duracion={
-									this.tipoLista == "Mis vídeos"
-										? secToDuration(item.seconds)
-										: secToDuration(item.video.seconds)
+									this.tipoLista == "Mis vídeos" ? secToDuration(item.seconds) : secToDuration(item.video.seconds)
 								}
-								title={
-									this.tipoLista == "Mis vídeos" ? item.title : item.video.title
-								}
+								title={this.tipoLista == "Mis vídeos" ? item.title : item.video.title}
 								info={
 									this.tipoLista == "Mis vídeos"
 										? timeStampToFormat(item.timestamp, this.state.currentDate)
-										: timeStampToFormat(
-												item.video.timestamp,
-												this.state.currentDate
-										  )
+										: timeStampToFormat(item.video.timestamp, this.state.currentDate)
 								}
 								videoId={this.tipoLista == "Mis vídeos" ? item.id : "item.id"}
 								tipoLista={this.tipoLista}
@@ -214,6 +195,9 @@ export default class ListaVideos extends React.Component {
 								deleteCallback={this.delete}
 							/>
 						)}
+						ListFooterComponent={LoadingFooter({
+							show: this.state.fetchingNewData
+						})}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				)}
