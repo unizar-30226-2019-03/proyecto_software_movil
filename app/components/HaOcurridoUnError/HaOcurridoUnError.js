@@ -2,9 +2,9 @@ import { Alert } from "react-native";
 
 const HaOcurridoUnError = callback => {
 	return Alert.alert(
-		"Error!",
+		"¡Error!",
 		"Ha ocurrido un error, vuelva a intentarlo",
-		[{ text: "Vale", onPress: () => callback() }],
+		[{ text: "Vale", onPress: callback != null ? () => callback() : null }],
 		{ cancelable: false }
 	);
 };

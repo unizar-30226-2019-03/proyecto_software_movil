@@ -75,18 +75,13 @@ export default class MisListas extends React.Component {
 				fetchingNewData: false,
 				loading: false
 			});
-			this.getData();	
+			this.getData();
 		}
 	};
 
 	render() {
 		return (
-			<View
-				style={[
-					styles.container,
-					{ justifyContent: this.state.loading ? "center" : "flex-start" }
-				]}
-			>
+			<View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
 				{this.state.loading ? (
 					<ActivityIndicator size="large" />
 				) : (
@@ -101,7 +96,7 @@ export default class MisListas extends React.Component {
 								image={require("../../../../test/imagenes/imagen.jpg")}
 								title="Nombre bastante largo para ser un nombre de una lista de prueba"
 								info="0 vídeos"
-								tipoLista={"Mis listas"}
+								type={"mis_listas"}
 							/>
 						)}
 						ListFooterComponent={LoadingFooter({

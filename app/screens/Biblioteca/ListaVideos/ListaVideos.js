@@ -34,7 +34,7 @@ export default class ListaVideos extends React.Component {
 		this.offset = 0;
 		this.totalPages = null;
 
-		this.tipoLista = this.props.navigation.getParam("title");
+		this.tipoLista = this.props.navigation.getParam("type");
 
 		let defaultClient = ApiClient.instance;
 		let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -42,48 +42,55 @@ export default class ListaVideos extends React.Component {
 
 		this.apiInstance;
 
-		if (this.tipoLista == "Mis vídeos") {
+		if (this.tipoLista == "mis_videos") {
 			this.apiInstance = new VideoApi();
-		} else if (this.tipoLista == "Historial") {
+		} else if (this.tipoLista == "historial") {
 			this.apiInstance = new DisplayApi();
+		} else if (this.tipoLista == "lista") {
+			console.log("FALTA");
 		}
 		this.getData();
 	}
 
 	getData = () => {
-		if (this.tipoLista == "Mis vídeos") {
-			this.getVideosOfUser();
-		} else if (this.tipoLista == "Historial") {
-			this.getHistorial();
+		if (this.totalPages == undefined || this.offset < this.totalPages) {
+			if (this.tipoLista == "mis_videos") {
+				this.getVideosOfUser();
+			} else if (this.tipoLista == "historial") {
+				this.getHistorial();
+			} else if (this.tipoLista == "lista") {
+				console.log("FALTA");
+			}
+		} else {
+			this.setState({ fetchingNewData: false, refreshing: false, loading: false });
 		}
 	};
 
 	getVideosOfUser = () => {
-		if (this.totalPages == undefined || this.offset < this.totalPages) {
-			let id = getUserId();
-			let opts = {
-				cacheControl: "no-cache, no-store, must-revalidate",
-				pragma: "no-cache",
-				expires: 0,
-				page: this.offset,
-				sort: ["timestamp", "desc"]
-			};
-			this.apiInstance.getVideosFromUploader(id, opts, (error, data, response) => {
-				if (error) {
-					HaOcurridoUnError(this.getVideosOfUser);
-				} else {
-					this.offset = this.offset + 1;
-					// this.totalPages = data.page.totalPages;
-					this.setState({
-						data: [...this.state.data, ...data._embedded.videos],
-						currentDate: ApiClient.parseDate(response.headers.date),
-						loading: false,
-						refreshing: false,
-						fetchingNewData: false
-					});
-				}
-			});
-		}
+		let id = getUserId();
+		let opts = {
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: 0,
+			page: this.offset,
+			sort: ["timestamp", "desc"]
+		};
+		this.apiInstance.getVideosFromUploader(id, opts, (error, data, response) => {
+			console.log(data);
+			if (error) {
+				HaOcurridoUnError(this.getVideosOfUser);
+			} else {
+				this.offset = this.offset + 1;
+				this.totalPages = data.page.totalPages;
+				this.setState({
+					data: [...this.state.data, ...data._embedded.videos],
+					currentDate: ApiClient.parseDate(response.headers.date),
+					loading: false,
+					refreshing: false,
+					fetchingNewData: false
+				});
+			}
+		});
 	};
 
 	getHistorial = () => {
@@ -92,14 +99,16 @@ export default class ListaVideos extends React.Component {
 			cacheControl: "no-cache, no-store, must-revalidate",
 			pragma: "no-cache",
 			expires: 0,
+			page: this.offset,
 			projection: "displayWithVideo",
 			sort: ["timestamp", "desc"]
 		};
 		this.apiInstance.getDisplaysByUser(id, opts, (error, data, response) => {
-			console.log(data);
 			if (error) {
 				HaOcurridoUnError(this.getHistorial);
 			} else {
+				this.offset = this.offset + 1;
+				this.totalPages = data.page.totalPages;
 				this.setState({
 					data: [...this.state.data, ...data._embedded.displays],
 					currentDate: ApiClient.parseDate(response.headers.date),
@@ -119,7 +128,9 @@ export default class ListaVideos extends React.Component {
 	};
 
 	onRefresh = () => {
-		if (!this.state.fetchingNewData && !this.state.refreshing) {
+		if (!this.state.deleting && !this.state.fetchingNewData && !this.state.refreshing) {
+			this.offset = 0;
+			this.totalPages = null;
 			this.setState({
 				refreshing: true,
 				data: []
@@ -134,33 +145,33 @@ export default class ListaVideos extends React.Component {
 	};
 
 	borrarDeHistorial = (index, id) => {
-		// api
-		this.borrarLocal(index);
+		apiInstance.displaysDeleteVideoIdDelete(id, (error, data, response) => {
+			if (error) {
+				HaOcurridoUnError(null);
+			} else {
+				this.borrarLocal(index);
+			}
+		});
 	};
 
 	borrarLocal = index => {
 		var temp = [...this.state.data];
 		temp.splice(index, 1);
-		this.setState({ data: temp });
-
-		this.setState({ deleting: false });
+		this.setState({ data: temp, deleting: false });
 	};
 
 	delete = (index, id) => {
-		if (!this.state.deleting) {
+		if (!this.state.deleting && !this.state.refreshing) {
 			this.setState({ deleting: true });
-			if (this.tipoLista == "Mis vídeos") {
+			if (this.tipoLista == "mis_videos") {
 				this.borrarDeMisVideos();
-			} else if (this.tipoLista == "Historial") {
+			} else if (this.tipoLista == "historial") {
 				this.borrarDeHistorial();
 			}
 		}
 	};
 
 	render() {
-		console.log(this.state.loading);
-
-		console.log(this.state.data);
 		return (
 			<View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
 				{this.state.loading ? (
@@ -170,29 +181,32 @@ export default class ListaVideos extends React.Component {
 						data={this.state.data}
 						refreshing={this.state.refreshing}
 						onRefresh={() => this.onRefresh()}
-						onEndReached={this.tipoLista == "Mis vídeos" ? () => this.onEndReached() : () => null}
-						renderItem={({ item, index }) => (
-							<HalfScreenThumbnail
-								navigation={this.props.navigation}
-								image={{
-									uri: this.tipoLista == "Mis vídeos" ? item.thumbnailUrl : item.video.thumbnailUrl
-								}}
-								likes={this.tipoLista == "Mis vídeos" ? item.score : item.video.score}
-								duracion={
-									this.tipoLista == "Mis vídeos" ? secToDuration(item.seconds) : secToDuration(item.video.seconds)
-								}
-								title={this.tipoLista == "Mis vídeos" ? item.title : item.video.title}
-								info={
-									this.tipoLista == "Mis vídeos"
-										? timeStampToFormat(item.timestamp, this.state.currentDate)
-										: timeStampToFormat(item.video.timestamp, this.state.currentDate)
-								}
-								videoId={this.tipoLista == "Mis vídeos" ? item.id : "item.id"}
-								tipoLista={this.tipoLista}
-								index={index}
-								deleteCallback={this.delete}
-							/>
-						)}
+						onEndReached={() => this.onEndReached()}
+						renderItem={({ item, index }) => {
+							let _item;
+							if (this.tipoLista == "mis_videos") {
+								_item = item;
+							} else if (this.tipoLista == "historial") {
+								_item = item.video;
+							} else if (this.tipoLista == "lista") {
+								console.log("FALTA");
+							}
+							return (
+								<HalfScreenThumbnail
+									navigation={this.props.navigation}
+									image={{ uri: _item.thumbnailUrl }}
+									likes={_item.score}
+									duracion={secToDuration(_item.seconds)}
+									title={_item.title}
+									info={timeStampToFormat(_item.timestamp, this.state.currentDate)}
+									videoId={_item.id}
+									type={this.tipoLista}
+									index={index}
+									deleteCallback={this.delete}
+									canShowPopUp={!this.state.deleting && !this.state.refreshing}
+								/>
+							);
+						}}
 						ListFooterComponent={LoadingFooter({
 							show: this.state.fetchingNewData
 						})}
