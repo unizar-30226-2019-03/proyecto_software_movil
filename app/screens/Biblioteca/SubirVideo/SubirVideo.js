@@ -110,7 +110,7 @@ export default class SubirVideo extends React.Component {
       this.setState({ tituloVacioErr: true });
       someError = true;
     }
-    if (!this.state.thumbnail) {
+    if (this.state.thumbnail == "nula") {
       this.setState({ noThumbnailErr: true });
       someError = true;
     }

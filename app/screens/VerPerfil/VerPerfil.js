@@ -34,7 +34,7 @@ export default class VerPerfil extends React.Component {
       imagen: "",
       loading: true,
       actualizandoDatos: false,
-      photoChange: false
+      imageHasChanged: false
     };
 
     let defaultClient = ApiClient.instance;
@@ -88,7 +88,7 @@ export default class VerPerfil extends React.Component {
       });
 
       if (!result.cancelled) {
-        this.setState({ imagen: result.uri, photoChange: true });
+        this.setState({ imagen: result.uri, imageHasChanged: true });
       }
     }
   };
@@ -112,7 +112,7 @@ export default class VerPerfil extends React.Component {
 
       let opts = {
         description: this.state.descripcion,
-        photo: this.state.photoChange
+        photo: this.state.imageHasChanged
           ? {
               uri: this.state.imagen,
               name: this.state.imagen.substring(this.state.imagen.lastIndexOf("/") + 1, this.state.imagen.length),

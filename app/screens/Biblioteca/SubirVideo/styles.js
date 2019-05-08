@@ -41,19 +41,18 @@ export default StyleSheet.create({
     paddingHorizontal: 8
   },
   viewSelectThumbnail: {
-    paddingHorizontal: 50,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingBottom: 10,
+    justifyContent: "flex-end",
     marginTop: 40,
-    height: 70,
+    height: 70
   },
   selectThumbnail: {
     backgroundColor: Azul
   },
   selectImageButton: {
-    width: 150
+    width: 150,
+    marginRight: 28
   },
   imageThumbnail: {
     aspectRatio: 16 / 9,
@@ -68,7 +67,7 @@ export default StyleSheet.create({
   },
   uploadButton: {
     marginRight: 12,
-    marginBottom: 7,
+    marginBottom: 12,
     width: 120,
     backgroundColor: Azul
   },
