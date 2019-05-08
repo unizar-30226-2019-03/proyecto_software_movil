@@ -20,6 +20,11 @@ import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversi
 import Comentario from "../../components/Comentario";
 import { headerHeight } from "../../constants";
 
+import ApiClient from "swagger_unicast/dist/ApiClient";
+import { VideoApi, VoteApi, CommentApi, UserApi } from "swagger_unicast";
+import { isSignedIn, getUserToken, getUserID } from "../../config/Auth";
+import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
+
 export default class ViendoVideo extends React.Component {
   constructor() {
     super();
@@ -79,6 +84,10 @@ export default class ViendoVideo extends React.Component {
       rowHasChanged: (r1, r2) => r1 !== r2
     });
     var vacio = [];
+    var aux = {
+      url:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+    };
     this.state = {
       comentarios: comentarios,
       comentariosMostrar: vacio,
@@ -89,9 +98,96 @@ export default class ViendoVideo extends React.Component {
       largo: false,
       ultimoAñadido: -1,
       text: "",
-      nombreUsuario: "AnaBanana"
+      nombreUsuario: "AnaBanana",
+      video: aux
     };
+    var SwaggerUnicast = require("swagger_unicast");
+    this.videoApi = new SwaggerUnicast.VideoApi();
+    this.voteApi = new SwaggerUnicast.VoteApi();
+    this.commentApi = new SwaggerUnicast.CommentApi();
+    let defaultClient = ApiClient.instance;
+    // Configure Bearer (JWT) access token for authorization: bearerAuth
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = getUserToken();
+
+    const id = 7;
+    const opts = {
+      cacheControl: "no-cache, no-store, must-revalidate", // String |
+      pragma: "no-cache", // String |
+      expires: "0", // String |
+      projection: "videoWithSubject" // String | Incluir si se quiere obtener tambien la universidad y/o la asignatura en la respuesta
+    };
+    this.videoApi.getVideo(id, opts, (error, data, response) => {
+      if (error) {
+        console.error(error);
+        console.log(data);
+      } else {
+        const now = ApiClient.parseDate(response.headers.date);
+        this.setState({ video: data, timeNow: now });
+        // Alert.alert(this.state.video.url);
+        this.obtenerAsignaturaUni(data);
+        this.obtenerComentarios(data);
+      }
+    });
   }
+
+  obtenerComentarios(video) {
+    let defaultClient = ApiClient.instance;
+    // Configure Bearer (JWT) access token for authorization: bearerAuth
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = getUserToken();
+
+    let opts = {
+      cacheControl: "no-cache, no-store, must-revalidate", // String |
+      pragma: "no-cache", // String |
+      expires: "0", // String |
+      sort: ["asc"] // [String] | Parámetros en la forma `($propertyname,)+[asc|desc]?`
+    };
+    this.commentApi.getCommentsByVideo(
+      video.id,
+      opts,
+      (error, data, response) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log(data);
+
+          let com = data._embedded.comments.map(c => {
+            const t = c.secondsFromBeginning;
+            const text = c.text;
+            const user = "david";
+            const color = generadorColores(user);
+            return { tiempo: t, comentario: text, usuario: user, color: color };
+          });
+          console.log(com);
+          this.setState({ comentarios: com });
+        }
+      }
+    );
+  }
+
+  obtenerAsignaturaUni(video) {
+    let defaultClient = ApiClient.instance;
+    // Configure Bearer (JWT) access token for authorization: bearerAuth
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = getUserToken();
+
+    const opts = {
+      cacheControl: "no-cache, no-store, must-revalidate", // String |
+      pragma: "no-cache", // String |
+      expires: "0", // String |
+      projection: "subjectWithUniversity" // String | Incluir si se quiere obtener tambien la universidad en la respuesta
+    };
+    this.videoApi.getVideoSubject(video.id, opts, (error, data, response) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(data);
+        this.setState({ asig: data });
+      }
+    });
+  }
+  s;
 
   componentDidMount() {
     this.interval = setInterval(() => this.pasaSegundo(), 1000);
@@ -199,12 +295,8 @@ export default class ViendoVideo extends React.Component {
             flechaSi={true}
             goBackDestination={""}
             navigation={this.props.navigation}
-            source={
-              "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-            }
-            thumbnail={
-              "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-            }
+            source={this.state.video.url}
+            thumbnail={this.state.video.thumbnailUrl}
             autoplay={true}
             ref={ref => {
               this.VideoFlechaRef = ref;
@@ -234,25 +326,9 @@ export default class ViendoVideo extends React.Component {
                 image={require("../../../test/imagenes/perfil_uni.jpg")}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.cambiarSeguir()}>
-              <View
-                style={[
-                  this.state.seguida == true
-                    ? styles.botonDejarSeguir
-                    : styles.botonSeguir
-                ]}
-              >
-                <Text
-                  style={[
-                    this.state.seguida == true
-                      ? styles.textoDejarSeguir
-                      : styles.textoSeguir
-                  ]}
-                >
-                  {this.state.texto}
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <View style={{ marginLeft: 60 }}>
+              <BotonSeguirAsignatura />
+            </View>
           </View>
           <Descripcion navigation={this.props.navigation} />
           <View style={{ flex: 1 }}>

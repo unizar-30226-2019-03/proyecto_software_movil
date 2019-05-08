@@ -1,7 +1,7 @@
 import React from "react";
 
 import { View, Text, TouchableHighlight, Modal } from "react-native";
-import { Rating, Icon } from "react-native-elements";
+import { Icon, AirbnbRating } from "react-native-elements";
 import styles from "./styles";
 import { ScreenWidth, GrisClaro } from "../../constants/constants";
 
@@ -70,42 +70,15 @@ export default class CuadroValorar extends React.Component {
             <View style={styles.apartados}>
               <View style={styles.apartado}>
                 <Text style={styles.textoApartado}>Claridad</Text>
-                <Rating
-                  imageSize={35}
-                  style={styles.RatingApartado}
-                  type="star"
-                  ratingCount={5}
-                  fractions={0}
-                />
+                <AirbnbRating size={35} showRating={false} />
               </View>
               <View style={styles.apartado}>
                 <Text style={styles.textoApartado}>Calidad</Text>
-                <Rating
-                  imageSize={35}
-                  style={styles.RatingApartado}
-                  type="star"
-                  ratingCount={5}
-                  fractions={0}
-                />
+                <AirbnbRating size={35} showRating={false} />
               </View>
               <View style={styles.apartado}>
                 <Text style={styles.textoApartado}>Adecuación</Text>
-                <Rating
-                  type="star"
-                  ratingCount={5}
-                  imageSize={35}
-                  fractions={0}
-                />
-              </View>
-              <View style={styles.apartado}>
-                <Text style={styles.textoApartado}>Amenidad</Text>
-                <Rating
-                  imageSize={35}
-                  style={styles.RatingApartado}
-                  type="star"
-                  ratingCount={5}
-                  fractions={0}
-                />
+                <AirbnbRating size={35} showRating={false} />
               </View>
 
               <TouchableHighlight onPress={() => this.quitarPopUp()}>
