@@ -22,74 +22,25 @@ import { headerHeight } from "../../constants";
 
 import ApiClient from "swagger_unicast/dist/ApiClient";
 import { VideoApi, VoteApi, CommentApi, UserApi } from "swagger_unicast";
-import { isSignedIn, getUserToken, getUserID } from "../../config/Auth";
+import { isSignedIn, getUserToken, getUserId } from "../../config/Auth";
+
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
 
 export default class ViendoVideo extends React.Component {
   constructor() {
     super();
-    var comentarios = [
-      {
-        nombreUsuario: "JasenAsen",
-        tiempo: 1,
-        cuerpoComentario: "Saludos"
-      },
-      {
-        nombreUsuario: "Dobby",
-        tiempo: 3,
-        cuerpoComentario: "Salutres"
-      },
-      {
-        nombreUsuario: "Martititi",
-        tiempo: 5,
-        cuerpoComentario: "Salucuatro"
-      },
-      {
-        nombreUsuario: "Lorien",
-        tiempo: 5,
-        cuerpoComentario: "Salucinco"
-      },
-      {
-        nombreUsuario: "Aisac",
-        tiempo: 7,
-        cuerpoComentario: "Saluseis"
-      },
-      {
-        nombreUsuario: "Reichel",
-        tiempo: 8,
-        cuerpoComentario: "Salusiete"
-      },
-      {
-        nombreUsuario: "Paula",
-        tiempo: 10,
-        cuerpoComentario: "Saluocho"
-      },
-      {
-        nombreUsuario: "Rubén",
-        tiempo: 11,
-        cuerpoComentario: "Salunueve"
-      },
-      {
-        nombreUsuario: "José",
-        tiempo: 14,
-        cuerpoComentario: "Saludiez"
-      },
-      {
-        nombreUsuario: "CabezaHuevo",
-        tiempo: 16,
-        cuerpoComentario: "He de comunicaros a todos que estais suspendidos"
-      }
-    ];
+
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
     var vacio = [];
     var aux = {
       url:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      score: undefined
     };
     this.state = {
-      comentarios: comentarios,
+      comentarios: vacio,
       comentariosMostrar: vacio,
       seguida: false,
       texto: "Seguir asignatura",
@@ -98,19 +49,20 @@ export default class ViendoVideo extends React.Component {
       largo: false,
       ultimoAñadido: -1,
       text: "",
-      nombreUsuario: "AnaBanana",
-      video: aux
+      nombreUsuario: "Juan Asensio",
+      video: aux,
+      idUsuario: getUserId()
     };
     var SwaggerUnicast = require("swagger_unicast");
     this.videoApi = new SwaggerUnicast.VideoApi();
-    this.voteApi = new SwaggerUnicast.VoteApi();
+
     this.commentApi = new SwaggerUnicast.CommentApi();
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = getUserToken();
 
-    const id = 7;
+    const id = 6;
     const opts = {
       cacheControl: "no-cache, no-store, must-revalidate", // String |
       pragma: "no-cache", // String |
@@ -123,7 +75,10 @@ export default class ViendoVideo extends React.Component {
         console.log(data);
       } else {
         const now = ApiClient.parseDate(response.headers.date);
-        this.setState({ video: data, timeNow: now });
+        this.setState({
+          video: data,
+          timeNow: now
+        });
         // Alert.alert(this.state.video.url);
         this.obtenerAsignaturaUni(data);
         this.obtenerComentarios(data);
@@ -157,7 +112,12 @@ export default class ViendoVideo extends React.Component {
             const text = c.text;
             const user = "david";
             const color = generadorColores(user);
-            return { tiempo: t, comentario: text, usuario: user, color: color };
+            return {
+              tiempo: t,
+              comentario: text,
+              usuario: user,
+              color: color
+            };
           });
           console.log(com);
           this.setState({ comentarios: com });
@@ -196,17 +156,34 @@ export default class ViendoVideo extends React.Component {
     clearInterval(this.interval);
   }
 
-  cambiarSeguir() {
-    if (this.state.seguida == true) {
-      this.setState({
-        seguida: false,
-        texto: "Seguir asignatura"
-      });
+  getTimePassed(date1, now) {
+    const diffMs = now - date1;
+    const diffMins = Math.round(diffMs / 60000);
+    if (diffMins > 60) {
+      const diffHrs = Math.floor(diffMs / 3600000);
+      if (diffHrs > 24) {
+        const diffDays = Math.floor(diffMs / 86400000);
+        if (diffDays > 7) {
+          const diffWeeks = Math.floor(diffMs / 604800000);
+          if (diffWeeks > 4) {
+            const diffMonths = Math.floor(diffMs / 2629800000);
+            if (diffMonths > 12) {
+              const diffYears = Math.floor(diffMs / 31556952000);
+              return `${diffYears} años`;
+            } else {
+              return `${diffMonths} meses`;
+            }
+          } else {
+            return `${diffWeeks} semanas`;
+          }
+        } else {
+          return `${diffDays} días`;
+        }
+      } else {
+        return `${diffHrs} horas`;
+      }
     } else {
-      this.setState({
-        seguida: true,
-        texto: "Dejar de seguir"
-      });
+      return `${diffMins} minutos`;
     }
   }
   pasaSegundo() {
@@ -305,7 +282,20 @@ export default class ViendoVideo extends React.Component {
         </View>
         <View style={{ flex: 1 }}>
           <View style={{ height: 105 }}>
-            <CuadroValorar navigation={this.props.navigation} />
+            <CuadroValorar
+              puntuacion={this.state.video.score}
+              usuario={this.state.idUsuario}
+              videoId={this.state.video.id}
+              navigation={this.props.navigation}
+              tituloVideo={this.state.video.title}
+              tiempoPasado={
+                "Subido hace " +
+                this.getTimePassed(
+                  this.state.video.timestamp,
+                  this.state.timeNow
+                )
+              }
+            />
           </View>
           <View style={styles.dejarDeSeguir}>
             <TouchableOpacity
@@ -330,7 +320,10 @@ export default class ViendoVideo extends React.Component {
               <BotonSeguirAsignatura />
             </View>
           </View>
-          <Descripcion navigation={this.props.navigation} />
+          <Descripcion
+            texto={this.state.video.description}
+            navigation={this.props.navigation}
+          />
           <View style={{ flex: 1 }}>
             <View style={{ maxHeight: 300 }}>
               <ListView
@@ -338,7 +331,9 @@ export default class ViendoVideo extends React.Component {
                   this.ListView_Ref = ref;
                 }}
                 onContentSizeChange={() =>
-                  this.ListView_Ref.scrollToEnd({ animated: true })
+                  this.ListView_Ref.scrollToEnd({
+                    animated: true
+                  })
                 }
                 dataSource={this.state.dataSource}
                 renderRow={rowData => (

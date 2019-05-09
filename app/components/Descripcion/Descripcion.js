@@ -70,13 +70,7 @@ export default class Descripcion extends React.Component {
             }}
           >
             <View>
-              <Text style={styles.cuerpoDescripcion}>
-                Esto es la descripción de un vídeo en el que se explica como
-                escribir una descripción para un vídeo, lo primero obviamente
-                será grabar un vídeo que se pueda describir; no me seas tolai y
-                me hagas un vídeo friendo un huevo porque ahí poco se puede
-                describir, torpe, que es que eres torpe.
-              </Text>
+              <Text style={styles.cuerpoDescripcion}>{this.props.texto}</Text>
             </View>
             <Text style={styles.profesoresTitulo}>
               Profesores de la asignatura
