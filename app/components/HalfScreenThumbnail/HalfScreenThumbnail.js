@@ -42,7 +42,7 @@ export default class HalfScreenThumbnail extends React.Component {
 							? this.props.navigation.navigate("ListaVideos", {
 									title: "Lista concreta"
 							  })
-							: this.props.navigation.navigate("ViendoVideo")
+							: this.props.navigation.navigate("ViendoVideo", { id: this.props.videoId })
 					}
 					style={styles.flexContainer}
 					activeOpacity={1}
@@ -52,7 +52,7 @@ export default class HalfScreenThumbnail extends React.Component {
 							<View style={styles.duracionYLikesContainer}>
 								{this.props.likes != null ? (
 									<Text style={[styles.likes, { color: this.props.likes * 20 > 49 ? VerdeClaro : RojoClaro }]}>
-										{this.props.likes * 20}
+										{this.props.likes * 20 + "%"}
 									</Text>
 								) : null}
 								<Text style={styles.duracion}>{this.props.duracion}</Text>

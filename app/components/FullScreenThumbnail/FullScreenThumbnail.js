@@ -1,11 +1,5 @@
 import React from "react";
-import {
-	View,
-	Image,
-	ImageBackground,
-	Text,
-	TouchableOpacity
-} from "react-native";
+import { View, Image, ImageBackground, Text, TouchableOpacity } from "react-native";
 
 import { VerdeClaro, RojoClaro } from "../../constants";
 
@@ -21,22 +15,14 @@ const FullScreenThumbnail = props => {
 	return (
 		<View>
 			<TouchableOpacity
-				onPress={() => props.navigation.navigate("ViendoVideo")}
+				onPress={() => props.navigation.navigate("ViendoVideo", { id: props.videoId })}
 				activeOpacity={1}
 			>
-				<ImageBackground
-					source={props.image}
-					style={styles.videoThumbnailContainer}
-				>
+				<ImageBackground source={props.image} style={styles.videoThumbnailContainer}>
 					<View style={styles.duracionYLikesContainer}>
 						{props.likes != null ? (
-							<Text
-								style={[
-									styles.likes,
-									{ color: props.likes > "49%" ? VerdeClaro : RojoClaro }
-								]}
-							>
-								{props.likes}
+							<Text style={[styles.likes, { color: props.likes * 20 > 49 ? VerdeClaro : RojoClaro }]}>
+								{props.likes * 20 + "%"}
 							</Text>
 						) : null}
 						<Text style={styles.duracion}>{props.duracion}</Text>
@@ -49,7 +35,8 @@ const FullScreenThumbnail = props => {
 					<TouchableOpacity
 						onPress={() =>
 							props.navigation.navigate("Asignatura", {
-								title: "UPM - Proyecto software"
+								title: props.asignaturaFullName,
+								id: props.asignaturaId
 							})
 						}
 						activeOpacity={1}
@@ -64,10 +51,7 @@ const FullScreenThumbnail = props => {
 				</View>
 
 				<View style={styles.titleYInfoContainer}>
-					<TouchableOpacity
-						onPress={() => props.navigation.navigate("ViendoVideo")}
-						activeOpacity={1}
-					>
+					<TouchableOpacity onPress={() => props.navigation.navigate("ViendoVideo")} activeOpacity={1}>
 						<View>
 							<Text style={styles.title}>{props.title}</Text>
 							<Text style={styles.info}>{props.info}</Text>
