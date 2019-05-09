@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Text,
-  View,
-  Animated,
-  TouchableOpacity,
-  Alert,
-  ListView,
-  KeyboardAvoidingView,
-  TextInput
-} from "react-native";
+import { Text, View, Animated, TouchableOpacity, Alert, ListView, KeyboardAvoidingView, TextInput } from "react-native";
 
 import styles from "./styles";
 import VideoConSinFlechaAtras from "../../components/VideoConSinFlechaAtras";
@@ -27,16 +18,15 @@ import { isSignedIn, getUserToken, getUserId } from "../../config/Auth";
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
 
 export default class ViendoVideo extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     });
-    var vacio = [];
-    var aux = {
-      url:
-        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    let vacio = [];
+    let aux = {
+      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
       score: undefined
     };
     this.state = {
@@ -53,26 +43,27 @@ export default class ViendoVideo extends React.Component {
       video: aux,
       idUsuario: getUserId()
     };
-    var SwaggerUnicast = require("swagger_unicast");
+
+    let SwaggerUnicast = require("swagger_unicast");
     this.videoApi = new SwaggerUnicast.VideoApi();
 
     this.commentApi = new SwaggerUnicast.CommentApi();
     let defaultClient = ApiClient.instance;
-    // Configure Bearer (JWT) access token for authorization: bearerAuth
+
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = getUserToken();
 
-    const id = 6;
+    const id = this.props.navigation.getParam("id");
     const opts = {
-      cacheControl: "no-cache, no-store, must-revalidate", // String |
-      pragma: "no-cache", // String |
-      expires: "0", // String |
-      projection: "videoWithSubject" // String | Incluir si se quiere obtener tambien la universidad y/o la asignatura en la respuesta
+      cacheControl: "no-cache, no-store, must-revalidate",
+      pragma: "no-cache",
+      expires: "0",
+      projection: "videoWithSubject"
     };
     this.videoApi.getVideo(id, opts, (error, data, response) => {
       if (error) {
-        console.error(error);
-        console.log(data);
+        //// console.error(error);
+        //// console.log(data);
       } else {
         const now = ApiClient.parseDate(response.headers.date);
         this.setState({
@@ -98,31 +89,27 @@ export default class ViendoVideo extends React.Component {
       expires: "0", // String |
       sort: ["asc"] // [String] | Parámetros en la forma `($propertyname,)+[asc|desc]?`
     };
-    this.commentApi.getCommentsByVideo(
-      video.id,
-      opts,
-      (error, data, response) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log(data);
+    this.commentApi.getCommentsByVideo(video.id, opts, (error, data, response) => {
+      if (error) {
+        //// console.error(error);
+      } else {
+        //// console.log(data);
 
-          let com = data._embedded.comments.map(c => {
-            const t = c.secondsFromBeginning;
-            const text = c.text;
-            const user = "Juan Asensio";
+        let com = data._embedded.comments.map(c => {
+          const t = c.secondsFromBeginning;
+          const text = c.text;
+          const user = "Juan Asensio";
 
-            return {
-              tiempo: t,
-              cuerpoComentario: text,
-              nombreUsuario: user
-            };
-          });
-          console.log(com);
-          this.setState({ comentarios: com });
-        }
+          return {
+            tiempo: t,
+            cuerpoComentario: text,
+            nombreUsuario: user
+          };
+        });
+        //// console.log(com);
+        this.setState({ comentarios: com });
       }
-    );
+    });
   }
 
   addComment(comment, time, id) {
@@ -130,18 +117,13 @@ export default class ViendoVideo extends React.Component {
     // Configure Bearer (JWT) access token for authorization: bearerAuth
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = getUserToken();
-    this.commentApi.addComment(
-      comment,
-      Math.floor(time),
-      id,
-      (error, data, response) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log(data);
-        }
+    this.commentApi.addComment(comment, Math.floor(time), id, (error, data, response) => {
+      if (error) {
+        //console.error(error);
+      } else {
+        //console.log(data);
       }
-    );
+    });
   }
 
   obtenerAsignaturaUni(video) {
@@ -158,9 +140,9 @@ export default class ViendoVideo extends React.Component {
     };
     this.videoApi.getVideoSubject(video.id, opts, (error, data, response) => {
       if (error) {
-        console.error(error);
+        //console.error(error);
       } else {
-        console.log(data);
+        //console.log(data);
         this.setState({ asig: data });
       }
     });
@@ -208,24 +190,21 @@ export default class ViendoVideo extends React.Component {
     this.setState({
       largo: Math.floor(this.VideoFlechaRef.devuelveDuracion() / 3600) > 0
     });
-    var nuevo = this.VideoFlechaRef.devuelveEstado();
+    let nuevo = this.VideoFlechaRef.devuelveEstado();
     nuevo = Math.floor(nuevo / 1000 + 0.5);
     this.setState({ segundo: nuevo });
-    var añadir = this.state.comentariosMostrar;
-    var i = this.state.ultimoAñadido + 1;
+    let añadir = this.state.comentariosMostrar;
+    let i = this.state.ultimoAñadido + 1;
 
     if (i < this.state.comentarios.length) {
-      while (
-        i < this.state.comentarios.length &&
-        this.state.comentarios[i].tiempo <= nuevo
-      ) {
+      while (i < this.state.comentarios.length && this.state.comentarios[i].tiempo <= nuevo) {
         añadir = [...añadir, this.state.comentarios[i]];
 
         i = i + 1;
       }
     }
 
-    var ds = this.state.dataSource;
+    let ds = this.state.dataSource;
     this.setState({
       comentariosMostrar: añadir,
       ultimoAñadido: i - 1,
@@ -234,8 +213,8 @@ export default class ViendoVideo extends React.Component {
   }
 
   comentar = () => {
-    var añadidos = this.state.comentariosMostrar;
-    var ds = this.state.dataSource;
+    let añadidos = this.state.comentariosMostrar;
+    let ds = this.state.dataSource;
     añadidos = [
       ...añadidos,
       {
@@ -280,11 +259,7 @@ export default class ViendoVideo extends React.Component {
           title="IR ASIGNATURA"
         /> */
       //QUITO TODO LO ANTERIOR?????????
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior="padding"
-        keyboardVerticalOffset={headerHeight - 80}
-      >
+      <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={headerHeight - 80}>
         <View style={styles.videoContainer}>
           <VideoConSinFlechaAtras
             flechaSi={true}
@@ -306,13 +281,7 @@ export default class ViendoVideo extends React.Component {
               videoId={this.state.video.id}
               navigation={this.props.navigation}
               tituloVideo={this.state.video.title}
-              tiempoPasado={
-                "Subido hace " +
-                this.getTimePassed(
-                  this.state.video.timestamp,
-                  this.state.timeNow
-                )
-              }
+              tiempoPasado={"Subido hace " + this.getTimePassed(this.state.video.timestamp, this.state.timeNow)}
             />
           </View>
           <View style={styles.dejarDeSeguir}>
@@ -338,10 +307,7 @@ export default class ViendoVideo extends React.Component {
               <BotonSeguirAsignatura />
             </View>
           </View>
-          <Descripcion
-            texto={this.state.video.description}
-            navigation={this.props.navigation}
-          />
+          <Descripcion texto={this.state.video.description} navigation={this.props.navigation} />
           <View style={{ flex: 1 }}>
             <View style={{ maxHeight: 300 }}>
               <ListView
