@@ -110,17 +110,35 @@ export default class ViendoVideo extends React.Component {
           let com = data._embedded.comments.map(c => {
             const t = c.secondsFromBeginning;
             const text = c.text;
-            const user = "david";
-            const color = generadorColores(user);
+            const user = "Juan Asensio";
+
             return {
               tiempo: t,
-              comentario: text,
-              usuario: user,
-              color: color
+              cuerpoComentario: text,
+              nombreUsuario: user
             };
           });
           console.log(com);
           this.setState({ comentarios: com });
+        }
+      }
+    );
+  }
+
+  addComment(comment, time, id) {
+    let defaultClient = ApiClient.instance;
+    // Configure Bearer (JWT) access token for authorization: bearerAuth
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = getUserToken();
+    this.commentApi.addComment(
+      comment,
+      Math.floor(time),
+      id,
+      (error, data, response) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log(data);
         }
       }
     );
@@ -226,7 +244,7 @@ export default class ViendoVideo extends React.Component {
         nombreUsuario: this.state.nombreUsuario
       }
     ];
-
+    this.addComment(this.state.text, this.state.segundo, this.state.video.id);
     this.setState({
       text: "",
       dataSource: ds.cloneWithRows(añadidos),
