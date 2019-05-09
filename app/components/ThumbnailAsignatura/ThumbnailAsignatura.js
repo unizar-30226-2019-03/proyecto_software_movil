@@ -9,7 +9,8 @@ const ThumbnailAsignatura = props => {
       style={styles.asignaturaContainer}
       onPress={() =>
         props.navigation.navigate("Asignatura", {
-          title: props.name
+          title: props.name,
+          id: props.id
         })
       }
       activeOpacity={1}
