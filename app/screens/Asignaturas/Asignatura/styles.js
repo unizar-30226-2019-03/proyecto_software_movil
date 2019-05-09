@@ -4,6 +4,9 @@ export default StyleSheet.create({
 	container: {
 		flex: 1
 	},
+	videoContainer: {
+		marginTop: 10
+	},
 	viewSeguirAsignatura: {
 		flexDirection: "row",
 		justifyContent: "flex-end",
@@ -25,7 +28,7 @@ export default StyleSheet.create({
 		fontSize: 15
 	},
 	videosView: {
-		marginTop: 30
+		marginTop: 15
 	},
 	profesoresView: {
 		marginTop: 15

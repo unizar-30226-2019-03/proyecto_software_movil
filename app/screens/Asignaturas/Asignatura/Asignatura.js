@@ -166,19 +166,21 @@ export default class Asignatura extends React.Component {
               onEndReached={() => this.onEndReached()}
               renderItem={({ item, index }) => {
                 return (
-                  <FullScreenThumbnail
-                    navigation={this.props.navigation}
-                    image={{ uri: item.thumbnailUrl }}
-                    likes={item.score}
-                    duracion={secToDuration(item.seconds)}
-                    title={item.title}
-                    info={timeStampToFormat(item.timestamp, this.state.currentDate)}
-                    asignaturaIcon={require("./../../../../test/imagenes/perfil_uni.jpg")}
-                    asignaturaName={item.subject.abbreviation}
-                    asignaturaFullName={item.subject.name}
-                    asignaturaId={item.subject.id}
-                    videoId={item.id}
-                  />
+                  <View style={styles.videoContainer}>
+                    <FullScreenThumbnail
+                      navigation={this.props.navigation}
+                      image={{ uri: item.thumbnailUrl }}
+                      likes={item.score}
+                      duracion={secToDuration(item.seconds)}
+                      title={item.title}
+                      info={timeStampToFormat(item.timestamp, this.state.currentDate)}
+                      asignaturaIcon={require("./../../../../test/imagenes/perfil_uni.jpg")}
+                      asignaturaName={item.subject.abbreviation}
+                      asignaturaFullName={item.subject.name}
+                      asignaturaId={item.subject.id}
+                      videoId={item.id}
+                    />
+                  </View>
                 );
               }}
               ListFooterComponent={LoadingFooter({
