@@ -131,7 +131,11 @@ export default class VideoConSinFlechaAtras extends React.Component {
             onPlaybackStatusUpdate={tiempo => this.cambio(tiempo)}
           />
           {this.props.flechaSi && this.state.showControls ? (
-            <TouchableOpacity onPress={() => this.props.navigation.goBack()} style={styles.zonaFlechaAtras}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => this.props.navigation.goBack()}
+              style={styles.zonaFlechaAtras}
+            >
               <Icon type="octicon" size={35} name="chevron-left" color="white" iconStyle={styles.flechaAtras} />
             </TouchableOpacity>
           ) : null}

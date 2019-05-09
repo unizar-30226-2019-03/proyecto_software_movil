@@ -1,21 +1,12 @@
 import { StyleSheet } from "react-native";
-import {
-  FullScreenWidth,
-  FullScreen16_9_Height,
-  Azul,
-  GrisClaro
-} from "../../constants";
+import { FullScreenWidth, FullScreen16_9_Height, Azul, GrisClaro } from "../../constants";
+
+import { StatusBar } from "react-native";
 
 export default StyleSheet.create({
-  headerContainer: {
-    flexDirection: "row"
-  },
   container: {
-    flex: 1
-  },
-  videoContainer: {
-    width: FullScreenWidth,
-    height: FullScreen16_9_Height
+    flex: 1,
+    marginTop: StatusBar.currentHeight
   },
   dejarDeSeguir: {
     marginVertical: 5,
@@ -30,21 +21,6 @@ export default StyleSheet.create({
     backgroundColor: Azul,
     borderColor: GrisClaro,
     borderRadius: 10
-  },
-  botonSeguir: {
-    borderWidth: 2,
-    marginLeft: 100,
-    padding: 5,
-    borderColor: Azul,
-    borderRadius: 10,
-    alignContent: "center"
-  },
-  textoDejarSeguir: {
-    fontSize: 20,
-    color: "white"
-  },
-  textoSeguir: {
-    fontSize: 20
   },
   textInput: {
     flex: 4,

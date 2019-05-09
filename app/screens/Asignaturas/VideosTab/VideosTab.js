@@ -39,10 +39,9 @@ export default class VideosTab extends React.Component {
 		//   let opts = {
 		//     page: this.offset,
 		//     cacheControl: "no-cache, no-store, must-revalidate",
-  //       pragma: "no-cache",
-  //       expires: 0
+		//       pragma: "no-cache",
+		//       expires: 0
 		//   };
-		  
 		//   this.videoApiInstance.getVideos((error, data, response) => {
 		//     if (!error) {
 		//       this.offset = this.offset + 1;
@@ -61,7 +60,7 @@ export default class VideosTab extends React.Component {
 	onEndReached = () => {
 		if (!this.state.fetchingNewData && !this.state.refreshing) {
 			this.setState({ fetchingNewData: true });
-			this.getData();		
+			this.getData();
 		}
 	};
 
@@ -81,12 +80,7 @@ export default class VideosTab extends React.Component {
 
 	render() {
 		return (
-			<View
-				style={[
-					styles.container,
-					{ justifyContent: this.state.loading ? "center" : "flex-start" }
-				]}
-			>
+			<View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
 				{this.state.loading ? (
 					<ActivityIndicator size="large" />
 				) : (
