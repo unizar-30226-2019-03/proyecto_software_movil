@@ -41,18 +41,18 @@ export default class SignUpOne extends React.Component {
       fetchingNewUniData: false,
       fetchingNewDegData: false,
 
-      username: "asd",
-      email: "asd@asd.com",
-      password: "asd",
-      passwordCheck: "asd",
+      username: "",
+      email: "",
+      password: "",
+      passwordCheck: "",
       image: undefined,
-      name: "asd",
-      surname: "asd",
+      name: "",
+      surname: "",
       universityName: "Seleccione una...",
-      universityId: 1,
+      universityId: undefined,
       degreeName: "Seleccione uno...",
-      degreeId: 1,
-      description: "asd",
+      degreeId: undefined,
+      description: "",
       passwordsMatch: true,
       usernameLengthErr: false,
       emailErr: false,
@@ -80,7 +80,6 @@ export default class SignUpOne extends React.Component {
         this.uniOffset < this.totalUniPages) &&
       !this.state.onUniEndReachedManaged
     ) {
-      console.log("BEGIN tup ", this.totalUniPages, " uo ", this.uniOffset);
       let opts = {
         page: this.uniOffset
       };
@@ -89,7 +88,6 @@ export default class SignUpOne extends React.Component {
         (error, data, response) => {
           if (!error) {
             this.uniOffset = this.uniOffset + 1;
-            console.log("tp ", data.page.totalPages);
             this.totalUniPages = data.page.totalPages;
             this.setState({
               uniData: [...this.state.uniData, ...data._embedded.universities],
@@ -287,6 +285,11 @@ export default class SignUpOne extends React.Component {
   }
 
   tryRegister = () => {
+    const photo = {
+      uri: this.state.image,
+      name: this.state.image.substring(this.state.image.lastIndexOf("/") + 1, this.state.image.length),
+      type: "imagen/png"
+    };
     let apiInstance = new UserApi();
     console.log("username ",this.state.username);
     console.log("pw ",this.state.password);
@@ -306,12 +309,13 @@ export default class SignUpOne extends React.Component {
       this.state.description,
       this.state.universityId,
       this.state.degreeId,
-      this.state.image,
+      photo,
       (error, data, response) => {
         if (error) {
           this.showConnectionErrorAlert();
         } else {
           this.showSuccessfulRegister();
+          this.props.navigation.navigate("SignIn");
         }
       }
     );
