@@ -16,7 +16,6 @@ import styles from "./styles";
  * thumbnail={uri} uri de la thumbnail
  * autoplay={true / false}
  * flechaSi={true / false} si el video tiene flecha para volver atrás o no
- * goBackDestination="destino" destino de navigation, en caso de que flechaSi == {true}
  * width, height: altura y anchura del vídeo.
  */
 export default class VideoConSinFlechaAtras extends React.Component {
@@ -33,13 +32,12 @@ export default class VideoConSinFlechaAtras extends React.Component {
         orientationChangeSecondCall: false,
         pantallaCompleta: !this.state.pantallaCompleta
       });
-    
-      console.log(ScreenOrientation.Orientation.PORTRAIT)
-      console.log(ScreenOrientation.Orientation.LANDSCAPE)
+
+      console.log(ScreenOrientation.Orientation.PORTRAIT);
+      console.log(ScreenOrientation.Orientation.LANDSCAPE);
       this.state.pantallaCompleta
         ? ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT)
         : ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE);
-
     } else {
       this.setState({
         orientationChangeSecondCall: true
@@ -62,13 +60,9 @@ export default class VideoConSinFlechaAtras extends React.Component {
   }
 
   render() {
-    const maxWidth =
-      this.props.width == undefined ? ScreenWidth : videoProps.width;
+    const maxWidth = this.props.width == undefined ? ScreenWidth : videoProps.width;
 
-    const maxHeight =
-      this.props.height == undefined
-        ? FullScreen16_9_Height
-        : videoProps.height;
+    const maxHeight = this.props.height == undefined ? FullScreen16_9_Height : videoProps.height;
 
     const screenRatio = maxWidth / maxHeight;
     let videoHeight = maxHeight;
@@ -97,19 +91,8 @@ export default class VideoConSinFlechaAtras extends React.Component {
           onPlaybackStatusUpdate={tiempo => this.cambio(tiempo)}
         />
         {this.props.flechaSi == true ? (
-          <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate(this.props.goBackDestination)
-            }
-            style={styles.zonaFlechaAtras}
-          >
-            <Icon
-              type="octicon"
-              size={35}
-              name="chevron-left"
-              color="lightgrey"
-              iconStyle={styles.flechaAtras}
-            />
+          <TouchableOpacity onPress={() => this.props.navigation.goBack()} style={styles.zonaFlechaAtras}>
+            <Icon type="octicon" size={35} name="chevron-left" color="lightgrey" iconStyle={styles.flechaAtras} />
           </TouchableOpacity>
         ) : null}
       </View>
