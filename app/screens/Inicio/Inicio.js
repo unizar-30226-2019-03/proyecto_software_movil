@@ -83,6 +83,7 @@ export default class Inicio extends React.Component {
 					<ActivityIndicator size="large" />
 				) : (
 					<FlatList
+						showsVerticalScrollIndicator={false}
 						data={this.state.data}
 						refreshing={this.state.refreshing}
 						onEndReached={() => this.onEndReached()}

@@ -1,11 +1,5 @@
 import React from "react";
-import {
-	Text,
-	View,
-	ScrollView,
-	TextInput,
-	TouchableOpacity
-} from "react-native";
+import { Text, View, ScrollView, TextInput, TouchableOpacity } from "react-native";
 
 import { SearchBar } from "react-native-elements";
 
@@ -64,7 +58,7 @@ export default class Searching extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<ScrollView>
+				<ScrollView showsVerticalScrollIndicator={false}>
 					<ThumbnailAsignatura
 						navigation={this.props.navigation}
 						icon={require("../../../test/imagenes/perfil_uni.jpg")}

@@ -1,12 +1,5 @@
 import React from "react";
-import {
-	Keyboard,
-	UIManager,
-	TextInput,
-	View,
-	ScrollView,
-	StyleSheet
-} from "react-native";
+import { Keyboard, UIManager, TextInput, View, ScrollView, StyleSheet } from "react-native";
 
 import { ScreenhHeight, headerHeight } from "../../constants";
 
@@ -23,14 +16,8 @@ export default class InputFixer extends React.Component {
 	_frame = 0;
 
 	componentWillMount = () => {
-		this.focusListener = this.props.navigation.addListener(
-			"didFocus",
-			this.handleDidFocus
-		);
-		this.blurListener = this.props.navigation.addListener(
-			"didBlur",
-			this.handleDidBlur
-		);
+		this.focusListener = this.props.navigation.addListener("didFocus", this.handleDidFocus);
+		this.blurListener = this.props.navigation.addListener("didBlur", this.handleDidBlur);
 	};
 
 	componentWillUnmount = () => {
@@ -60,14 +47,8 @@ export default class InputFixer extends React.Component {
 	};
 
 	resume() {
-		this.keyboardDidShowSub = Keyboard.addListener(
-			"keyboardDidShow",
-			this.handleKeyboardDidShow
-		);
-		this.keyboardDidHideSub = Keyboard.addListener(
-			"keyboardDidHide",
-			this.handleKeyboardDidHide
-		);
+		this.keyboardDidShowSub = Keyboard.addListener("keyboardDidShow", this.handleKeyboardDidShow);
+		this.keyboardDidHideSub = Keyboard.addListener("keyboardDidHide", this.handleKeyboardDidHide);
 	}
 
 	pause() {
@@ -83,8 +64,7 @@ export default class InputFixer extends React.Component {
 		}
 	};
 
-	update = () => {
-	}
+	update = () => {};
 
 	handleScroll = (event: Object) => {
 		this.setState({ scrollY: event.nativeEvent.contentOffset.y });
@@ -95,17 +75,13 @@ export default class InputFixer extends React.Component {
 			return;
 		}
 		const currentlyFocusedField = TextInputState.currentlyFocusedField();
-		UIManager.measure(
-			currentlyFocusedField,
-			(originX, originY, width, height, pageX, pageY) => {
-				const gap =
-					ScreenhHeight - this.state.keyboardHeight - (pageY + height + 10);
-				if (gap >= 0) {
-					return;
-				}
-				this.scrollView.scrollTo({ y: this.state.scrollY - gap });
+		UIManager.measure(currentlyFocusedField, (originX, originY, width, height, pageX, pageY) => {
+			const gap = ScreenhHeight - this.state.keyboardHeight - (pageY + height + 10);
+			if (gap >= 0) {
+				return;
 			}
-		);
+			this.scrollView.scrollTo({ y: this.state.scrollY - gap });
+		});
 	}
 
 	render() {
@@ -123,14 +99,15 @@ export default class InputFixer extends React.Component {
 				onLayout={this._onLayout}
 			>
 				<ScrollView
+					showsVerticalScrollIndicator={false}
 					ref={scrollView => (this.scrollView = scrollView)}
 					onScroll={this.handleScroll}
 					onUpdate={this.hola}
-					keyboardShouldPersistTaps={'handled'}
+					keyboardShouldPersistTaps={"handled"}
 				>
 					{this.props.children}
-					
-					{this.state.keyboardOpen ? <View style={{marginBottom: 15}}/> : null}
+
+					{this.state.keyboardOpen ? <View style={{ marginBottom: 15 }} /> : null}
 				</ScrollView>
 			</View>
 		);

@@ -12,13 +12,7 @@ export default class Ranking extends React.Component {
     super(props);
 
     this.state = {
-      data: [
-        { temp: "temp" },
-        { temp: "temp" },
-        { temp: "temp" },
-        { temp: "temp" },
-        { temp: "temp" }
-      ],
+      data: [{ temp: "temp" }, { temp: "temp" }, { temp: "temp" }, { temp: "temp" }, { temp: "temp" }],
       loading: true,
       fetchingNewData: false,
       refreshing: false
@@ -104,16 +98,12 @@ export default class Ranking extends React.Component {
 
   render() {
     return (
-      <View
-        style={[
-          styles.container,
-          { justifyContent: this.state.loading ? "center" : "flex-start" }
-        ]}
-      >
+      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={this.state.data}
             refreshing={this.state.refreshing}
             onEndReached={() => this.onEndReached()}

@@ -178,6 +178,7 @@ export default class ListaVideos extends React.Component {
 					<ActivityIndicator size="large" />
 				) : (
 					<FlatList
+						showsVerticalScrollIndicator={false}
 						data={this.state.data}
 						refreshing={this.state.refreshing}
 						onRefresh={() => this.onRefresh()}
