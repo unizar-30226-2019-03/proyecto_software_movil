@@ -6,12 +6,11 @@ export default StyleSheet.create({
 	buttonSeguirAsignatura: {
 		width: 200,
 		padding: 10,
-		borderRadius: 5,
-		borderWidth: 1.5,
-		borderColor: Azul
+		borderRadius: 5
 	},
 	text: {
 		fontSize: 17,
-		textAlign: "center"
+		textAlign: "center",
+		color: "white"
 	}
 });

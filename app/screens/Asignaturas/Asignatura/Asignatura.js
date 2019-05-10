@@ -37,19 +37,14 @@ export default class Asignatura extends React.Component {
 
     this.state = {
       videos: [],
-      profesores: [
-        { temp: "dawda" },
-        { tem: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" }
-      ],
-      loading: true,
-      refreshing: false,
-      fetchingNewData: false,
-      deleting: false
+      profesores: [],
+      loadingVideos: false,
+      loadingProfesores: false,
+      loadingSeguir: false,
+      refreshingVideos: false,
+      refreshingProfesores: false,
+      refreshingSeguir: false,
+      fetchingNewVideos: false
     };
 
     this.id = this.props.navigation.getParam("id");
@@ -61,12 +56,33 @@ export default class Asignatura extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = getUserToken();
 
-    this.apiInstance = new VideoApi();
+    this.videosInstance = new VideoApi();
+  }
 
+  componentDidMount() {
+    this.setState({
+      loadingVideos: true,
+      loadingProfesores: true,
+      loadingSeguir: true
+    });
     this.getData();
   }
 
+  someOneLoading = () => {
+    return this.state.loadingVideos || this.state.loadingProfesores || this.state.loadingSeguir;
+  };
+
+  someOneRefreshing = () => {
+    return this.state.refreshingVideos || this.state.refreshingProfesores || this.state.refreshingSeguir;
+  };
+
   getData = () => {
+    this.getVideos();
+    this.getProfesores();
+    this.botonSeguir.getData();
+  };
+
+  getVideos = () => {
     if (this.totalPages == undefined || this.offset < this.totalPages) {
       let opts = {
         cacheControl: "no-cache, no-store, must-revalidate",
@@ -76,41 +92,65 @@ export default class Asignatura extends React.Component {
         sort: ["timestamp", "desc"],
         projection: "videoWithSubjectAndUniversity"
       };
-      this.apiInstance.getVideosFromSubject(this.id, opts, (error, data, response) => {
-        console.log(data);
-        if (error) {
-          HaOcurridoUnError(this.getVideosOfUser);
-        } else {
+      this.videosInstance.getVideosFromSubject(this.id, opts, (error, data, response) => {
+        if (!error) {
           this.offset = this.offset + 1;
           this.totalPages = data.page.totalPages;
           this.setState({
             videos: [...this.state.videos, ...data._embedded.videos],
             currentDate: ApiClient.parseDate(response.headers.date),
-            loading: false,
-            refreshing: false,
-            fetchingNewData: false
+            loadingVideos: false,
+            refreshingVideos: false,
+            fetchingNewVideos: false
           });
         }
       });
     } else {
-      this.setState({ fetchingNewData: false, refreshing: false, loading: false });
+      this.setState({ fetchingNewVideos: false, refreshingVideos: false, loadingVideos: false });
     }
   };
 
+  getProfesores = () => {
+    this.setState({
+      profesores: [
+        { temp: "dawda" },
+        { temp: "dawda" },
+        { temp: "dawda" },
+        { temp: "dawda" },
+        { temp: "dawda" },
+        { temp: "dawda" },
+        { temp: "dawda" }
+      ],
+      loadingProfesores: false,
+      refreshingProfesores: false
+    });
+  };
+
+  seguirLoaded = () => {
+    console.log("SI");
+    this.setState({
+      loadingSeguir: false,
+      refreshingSeguir: false
+    });
+  };
+
   onEndReached = () => {
-    if (!this.state.fetchingNewData && !this.state.refreshing) {
-      this.setState({ fetchingNewData: true });
-      this.getData();
+    if (!this.state.fetchingNewVideos && !this.someOneRefreshing()) {
+      this.setState({ fetchingNewVideos: true });
+      this.getVideos();
     }
   };
 
   onRefresh = () => {
-    if (!this.state.deleting && !this.state.fetchingNewData && !this.state.refreshing) {
+    if (!this.state.fetchingNewVideos && !this.someOneRefreshing()) {
       this.offset = 0;
       this.totalPages = null;
       this.setState({
-        refreshing: true,
-        videos: []
+        refreshingVideos: true,
+        refreshingProfesores: true,
+        refreshingSeguir: true,
+        videos: [],
+        profesores: []
       });
       this.getData();
     }
@@ -118,17 +158,21 @@ export default class Asignatura extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
-        {this.state.loading ? (
+      <View style={[styles.container, { justifyContent: this.someOneLoading() ? "center" : "flex-start" }]}>
+        {this.someOneLoading() ? (
           <ActivityIndicator size="large" />
         ) : (
           <ScrollView
-            refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={() => this.onRefresh()} />}
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={this.someOneRefreshing()} onRefresh={() => this.onRefresh()} />}
           >
             <View style={styles.viewSeguirAsignatura}>
-              <BotonSeguirAsignatura />
+              <BotonSeguirAsignatura
+                disabled={this.someOneRefreshing()}
+                onRef={ref => (this.botonSeguir = ref)}
+                onLoadCallback={this.seguirLoaded}
+              />
             </View>
-
             <FlatList
               style={styles.profesoresView}
               showsHorizontalScrollIndicator={false}
@@ -161,6 +205,7 @@ export default class Asignatura extends React.Component {
               keyExtractor={(item, index) => index.toString()}
             />
             <FlatList
+              showsVerticalScrollIndicator={false}
               style={styles.videosView}
               data={this.state.videos}
               onEndReached={() => this.onEndReached()}
