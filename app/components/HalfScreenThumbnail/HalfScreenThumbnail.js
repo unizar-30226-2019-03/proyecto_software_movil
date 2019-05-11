@@ -34,6 +34,8 @@ export default class HalfScreenThumbnail extends React.Component {
 		} else if (this.props.type == "mis_listas") {
 			eliminarText = "Eliminar lista";
 		}
+
+		const likes = Math.floor(this.props.likes * 20);
 		return (
 			<View style={styles.container}>
 				<TouchableOpacity
@@ -51,9 +53,7 @@ export default class HalfScreenThumbnail extends React.Component {
 						<ImageBackground source={this.props.image} style={styles.videoThumbnailContainer}>
 							<View style={styles.duracionYLikesContainer}>
 								{this.props.likes != null ? (
-									<Text style={[styles.likes, { color: this.props.likes * 20 > 49 ? VerdeClaro : RojoClaro }]}>
-										{this.props.likes * 20 + "%"}
-									</Text>
+									<Text style={[styles.likes, { color: likes > 49 ? VerdeClaro : RojoClaro }]}>{likes + "%"}</Text>
 								) : null}
 								<Text style={styles.duracion}>{this.props.duracion}</Text>
 							</View>

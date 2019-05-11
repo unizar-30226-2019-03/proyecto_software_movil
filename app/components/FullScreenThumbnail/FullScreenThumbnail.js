@@ -12,6 +12,7 @@ import styles from "./styles";
 // TODO: Parametrizar ir a otras pantallas (a la asignatura y video que toque).
 
 const FullScreenThumbnail = props => {
+	const likes = Math.floor(props.likes * 20);
 	return (
 		<View>
 			<TouchableOpacity
@@ -21,9 +22,7 @@ const FullScreenThumbnail = props => {
 				<ImageBackground source={props.image} style={styles.videoThumbnailContainer}>
 					<View style={styles.duracionYLikesContainer}>
 						{props.likes != null ? (
-							<Text style={[styles.likes, { color: props.likes * 20 > 49 ? VerdeClaro : RojoClaro }]}>
-								{props.likes * 20 + "%"}
-							</Text>
+							<Text style={[styles.likes, { color: likes > 49 ? VerdeClaro : RojoClaro }]}>{likes + "%"}</Text>
 						) : null}
 						<Text style={styles.duracion}>{props.duracion}</Text>
 					</View>
