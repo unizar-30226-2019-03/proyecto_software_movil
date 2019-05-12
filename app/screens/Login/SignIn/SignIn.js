@@ -6,7 +6,7 @@ import { Image, Text, Input, Button } from "react-native-elements";
 
 import { UserApi } from "swagger_unicast";
 
-import { signIn } from "../../../config/Auth";
+import Auth from "../../../config/Auth";
 
 import InputFixer from "../../../components/InputFixer";
 import LoadingModal from "../../../components/LoadingModal";
@@ -32,51 +32,35 @@ export default class SignIn extends React.Component {
       this.setState({
         loginIn: true
       });
-      this.apiInstance.authUser(
-        this.state.username,
-        this.state.password,
-        async (error, data, response) => {
-          if (error) {
-            this.setState({
-              showInputError: true,
-              loginIn: false
-            });
-          } else {
-            await signIn(data.token, data.id, this.props.navigation);
-          }
+      this.apiInstance.authUser(this.state.username, this.state.password, async (error, data, response) => {
+        if (error) {
+          this.setState({
+            showInputError: true,
+            loginIn: false
+          });
+        } else {
+          await Auth.signIn(data.token, data.id, this.props.navigation);
         }
-      );
+      });
     }
   };
 
   render() {
     return (
-      <InputFixer
-        navigation={this.props.navigation}
-        ref={InputFixer => (this.InputFixer = InputFixer)}
-      >
+      <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
         <View style={styles.logoView}>
-          <Image
-            source={require("../../../assets/icon.png")}
-            style={styles.appLogo}
-          />
+          <Image source={require("../../../assets/icon.png")} style={styles.appLogo} />
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
             placeholder="Usuario"
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
-            onChangeText={text =>
-              this.setState({ username: text, showInputError: false })
-            }
+            onChangeText={text => this.setState({ username: text, showInputError: false })}
             autoCapitalize="none"
             onFocus={() => this.InputFixer.onFocus()}
             errorStyle={{ color: "red" }}
-            errorMessage={
-              this.state.showInputError
-                ? "Nombre de usuario o contraseña incorrectos"
-                : null
-            }
+            errorMessage={this.state.showInputError ? "Nombre de usuario o contraseña incorrectos" : null}
             autoCorrect={false}
           />
         </View>
@@ -86,21 +70,14 @@ export default class SignIn extends React.Component {
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
             leftIconContainerStyle={styles.inputSeparation}
-            onChangeText={text =>
-              this.setState({ password: text, showInputError: false })
-            }
+            onChangeText={text => this.setState({ password: text, showInputError: false })}
             onFocus={() => this.InputFixer.onFocus()}
             autoCorrect={false}
             onSubmitEditing={() => this.tryLogin()}
           />
         </View>
         <View style={styles.viewForgotPassword}>
-          <Text
-            style={styles.forgotPassword}
-            onPress={() =>
-              this.props.navigation.navigate("HasOlvidadoContrasenya")
-            }
-          >
+          <Text style={styles.forgotPassword} onPress={() => this.props.navigation.navigate("HasOlvidadoContrasenya")}>
             ¿Has olvidado tu contraseña?
           </Text>
         </View>
@@ -119,7 +96,7 @@ export default class SignIn extends React.Component {
           title="REGISTRARSE"
           type="outline"
         />
-        <LoadingModal visible={this.state.loginIn}/>
+        <LoadingModal visible={this.state.loginIn} />
       </InputFixer>
     );
   }

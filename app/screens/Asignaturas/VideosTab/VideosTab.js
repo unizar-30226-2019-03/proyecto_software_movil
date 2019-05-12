@@ -4,7 +4,7 @@ import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 
 import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 
-import { getUserToken, getUserId } from "../../../config/Auth";
+import Auth from "../../../config/Auth";
 
 import { VideoApi, ApiClient } from "swagger_unicast";
 
@@ -32,16 +32,18 @@ export default class VideosTab extends React.Component {
 
 		let defaultClient = ApiClient.instance;
 		let bearerAuth = defaultClient.authentications["bearerAuth"];
-		bearerAuth.accessToken = getUserToken();
+		bearerAuth.accessToken = Auth.getUserToken();
 
 		this.videoApiInstance = new VideoApi();
-
-		this.getData();
 	}
+
+	componentDidMount = () => {
+		this.getData();
+	};
 
 	getData = () => {
 		if (this.totalPages == undefined || this.offset < this.totalPages) {
-			let id = getUserId();
+			let id = Auth.getUserId();
 			let opts = {
 				cacheControl: "no-cache, no-store, must-revalidate",
 				pragma: "no-cache",

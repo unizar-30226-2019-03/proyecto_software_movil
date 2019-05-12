@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  FlatList,
-  View
-} from "react-native";
+import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
 
 import { Image } from "react-native-elements";
 
@@ -35,10 +29,13 @@ export default class ProfesorTab extends React.Component {
     // bearerAuth.accessToken = getUserToken();
 
     // this.videoApiInstance = new VideoApi();
-
-    // this.getData();
+    //
     this.state.loading = false;
   }
+
+  // componentDidMount = () => {
+  //  // this.getData();
+  // };
 
   getData = () => {
     // if (this.totalPages == undefined || this.offset < this.totalPages) {
@@ -86,12 +83,7 @@ export default class ProfesorTab extends React.Component {
 
   render() {
     return (
-      <View
-        style={[
-          styles.container,
-          { justifyContent: this.state.loading ? "center" : "flex-start" }
-        ]}
-      >
+      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
@@ -115,8 +107,7 @@ export default class ProfesorTab extends React.Component {
                     Luis Fonsi
                   </Text>
                   <Text numberOfLines={1} style={styles.msgText}>
-                    Proyecto Software, Matemáticas III, Procesadores
-                    comerciales, Robótica
+                    Proyecto Software, Matemáticas III, Procesadores comerciales, Robótica
                   </Text>
                 </View>
               </TouchableOpacity>

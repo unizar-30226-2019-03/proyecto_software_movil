@@ -1,7 +1,7 @@
 import React from "react";
 import { Keyboard, UIManager, TextInput, View, ScrollView, StyleSheet } from "react-native";
 
-import { ScreenhHeight, headerHeight } from "../../constants";
+import { ScreenhHeight, HeaderHeight } from "../../constants";
 
 const { State: TextInputState } = TextInput;
 

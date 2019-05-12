@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View, Button, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Icon } from "react-native-elements";
 
-import { getUserToken } from "../../config/Auth";
+import Auth from "../../config/Auth";
 
 import { SubjectApi, ApiClient } from "swagger_unicast";
 
@@ -27,12 +27,14 @@ export default class Ranking extends React.Component {
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
 
     this.apiInstance = new SubjectApi();
-
-    this.getData();
   }
+
+  componentDidMount = () => {
+    this.getData();
+  };
 
   getData = () => {
     if (this.totalPages == undefined || this.offset < this.totalPages) {

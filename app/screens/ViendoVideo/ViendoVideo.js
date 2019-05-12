@@ -9,11 +9,11 @@ import { SearchBar } from "react-native-elements";
 import Descripcion from "../../components/Descripcion";
 import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
 import Comentario from "../../components/Comentario";
-import { headerHeight } from "../../constants";
+import { HeaderHeight } from "../../constants";
 
 import ApiClient from "swagger_unicast/dist/ApiClient";
 import { VideoApi, VoteApi, CommentApi, UserApi } from "swagger_unicast";
-import { isSignedIn, getUserToken, getUserId } from "../../config/Auth";
+import Auth from "../../config/Auth";
 
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
 
@@ -41,7 +41,7 @@ export default class ViendoVideo extends React.Component {
       text: "",
       nombreUsuario: "Juan Asensio",
       video: aux,
-      idUsuario: getUserId()
+      idUsuario: Auth.getUserId()
     };
 
     let SwaggerUnicast = require("swagger_unicast");
@@ -51,7 +51,7 @@ export default class ViendoVideo extends React.Component {
     let defaultClient = ApiClient.instance;
 
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
 
     const id = this.props.navigation.getParam("id");
     const opts = {
@@ -81,7 +81,7 @@ export default class ViendoVideo extends React.Component {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
 
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate", // String |
@@ -116,7 +116,7 @@ export default class ViendoVideo extends React.Component {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
     this.commentApi.addComment(comment, Math.floor(time), id, (error, data, response) => {
       if (error) {
         //console.error(error);
@@ -130,7 +130,7 @@ export default class ViendoVideo extends React.Component {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
 
     const opts = {
       cacheControl: "no-cache, no-store, must-revalidate", // String |
@@ -259,7 +259,7 @@ export default class ViendoVideo extends React.Component {
           title="IR ASIGNATURA"
         /> */
       //QUITO TODO LO ANTERIOR?????????
-      <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={headerHeight - 80}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={HeaderHeight - 80}>
         <View style={styles.videoContainer}>
           <VideoConSinFlechaAtras
             flechaSi={true}

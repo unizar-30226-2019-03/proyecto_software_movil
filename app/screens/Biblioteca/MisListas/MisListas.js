@@ -35,6 +35,10 @@ export default class MisListas extends React.Component {
 		this.state.loading = false;
 	}
 
+	//  componentDidMount = () => {
+	//   this.getData();
+	// };
+
 	getData = () => {
 		// if (this.totalPages == undefined || this.offset < this.totalPages) {
 		//   let opts = {

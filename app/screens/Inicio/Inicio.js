@@ -3,10 +3,12 @@ import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 
 import { VideoApi, ApiClient } from "swagger_unicast";
 
-import { getUserToken } from "../../config/Auth";
+import Auth from "../../config/Auth";
 
 import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 import LoadingFooter from "../../components/LoadingFooter";
+
+import SearchMenu from "../../components/SearchMenu";
 
 import styles from "./styles";
 
@@ -26,13 +28,15 @@ export default class Inicio extends React.Component {
 
 		// let defaultClient = ApiClient.instance;
 		// let bearerAuth = defaultClient.authentications["bearerAuth"];
-		// bearerAuth.accessToken = getUserToken();
+		// bearerAuth.accessToken = Auth.getUserToken();
 
 		// this.videoApiInstance = new VideoApi();
 
-		// this.getData();
 		this.state.loading = false;
 	}
+	// componentDidMount = () => {
+	// 	// this.getData();
+	// };
 
 	getData = () => {
 		// if (this.totalPages == undefined || this.offset < this.totalPages) {

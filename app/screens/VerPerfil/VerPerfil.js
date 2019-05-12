@@ -17,11 +17,16 @@ import ImagenDePerfilConIcono from "../../components/ImagenDePerfilConIcono";
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 import LoadingModal from "../../components/LoadingModal";
 
-import { getUserId, getUserToken } from "../../config/Auth";
+import ImagenPerfilStore from "../../config/ImagenPerfil";
 
+import Auth from "../../config/Auth";
+
+import { observer } from "mobx-react/native";
+
+@observer
 export default class VerPerfil extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam("userId") == getUserId() ? "Mi perfil" : "Perfil de " + navigation.getParam("name")
+    title: navigation.getParam("userId") == Auth.getUserId() ? "Mi perfil" : "Perfil de " + navigation.getParam("name")
   });
 
   constructor(props) {
@@ -39,15 +44,17 @@ export default class VerPerfil extends React.Component {
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
 
     this.apiInstance = new UserApi();
 
     this.userId = this.props.navigation.getParam("userId");
-    this.isPerfilPropio = this.userId == getUserId();
-
-    this.getData();
+    this.isPerfilPropio = this.userId == Auth.getUserId();
   }
+
+  componentDidMount = () => {
+    this.getData();
+  };
 
   getData = () => {
     let id = this.userId;
@@ -132,6 +139,7 @@ export default class VerPerfil extends React.Component {
             { cancelable: false }
           );
         } else {
+          ImagenPerfilStore.setImagenPerfil(data.photo);
           Alert.alert("Bien!", "Tu información ha sido actualizada con éxito", [{ text: "Vale" }], {
             cancelable: false
           });

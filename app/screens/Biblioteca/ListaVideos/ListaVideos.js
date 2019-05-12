@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Button, ActivityIndicator, FlatList, Alert } from "react-native";
 
-import { getUserToken, getUserId } from "../../../config/Auth";
+import Auth from "../../../config/Auth";
 
 import { VideoApi, DisplayApi, ApiClient } from "swagger_unicast";
 
@@ -38,7 +38,7 @@ export default class ListaVideos extends React.Component {
 
 		let defaultClient = ApiClient.instance;
 		let bearerAuth = defaultClient.authentications["bearerAuth"];
-		bearerAuth.accessToken = getUserToken();
+		bearerAuth.accessToken = Auth.getUserToken();
 
 		this.apiInstance;
 
@@ -49,8 +49,11 @@ export default class ListaVideos extends React.Component {
 		} else if (this.tipoLista == "lista") {
 			console.log("FALTA");
 		}
-		this.getData();
 	}
+
+	componentDidMount = () => {
+		this.getData();
+	};
 
 	getData = () => {
 		if (this.totalPages == undefined || this.offset < this.totalPages) {
@@ -67,7 +70,7 @@ export default class ListaVideos extends React.Component {
 	};
 
 	getVideosOfUser = () => {
-		let id = getUserId();
+		let id = Auth.getUserId();
 		let opts = {
 			cacheControl: "no-cache, no-store, must-revalidate",
 			pragma: "no-cache",
@@ -94,7 +97,7 @@ export default class ListaVideos extends React.Component {
 	};
 
 	getHistorial = () => {
-		let id = getUserId();
+		let id = Auth.getUserId();
 		let opts = {
 			cacheControl: "no-cache, no-store, must-revalidate",
 			pragma: "no-cache",

@@ -2,7 +2,7 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text, Icon } from "react-native-elements";
 
-import { isProfesor } from "../../config/Auth";
+import Auth from "../../config/Auth";
 
 import styles from "./styles";
 
@@ -25,7 +25,7 @@ export default class Biblioteca extends React.Component {
 					<Text style={styles.titulo}>HISTORIAL</Text>
 				</TouchableOpacity>
 
-				{isProfesor() ? (
+				{Auth.isProfesor() ? (
 					<TouchableOpacity
 						style={styles.boton}
 						activeOpacity={1}
@@ -52,7 +52,7 @@ export default class Biblioteca extends React.Component {
 					<Text style={styles.titulo}>MIS LISTAS</Text>
 				</TouchableOpacity>
 
-				{isProfesor() ? (
+				{Auth.isProfesor() ? (
 					<TouchableOpacity
 						style={styles.boton}
 						activeOpacity={1}

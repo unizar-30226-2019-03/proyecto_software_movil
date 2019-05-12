@@ -2,7 +2,7 @@ import React from "react";
 
 import { View, Text, Image } from "react-native";
 
-import { isSignedIn } from "../../config/Auth"
+import Auth from "../../config/Auth";
 
 export default class Carga extends React.Component {
   constructor() {
@@ -10,7 +10,7 @@ export default class Carga extends React.Component {
   }
 
   cargarAuth = async () => {
-    await isSignedIn(this.props.navigation);
+    await Auth.isSignedIn(this.props.navigation);
   };
 
   render() {

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { ScreenhHeight, AzulNuevaLista, headerHeight } from "../../constants";
+import { ScreenhHeight, AzulNuevaLista, HeaderHeight } from "../../constants";
 
 export default StyleSheet.create({
 	container: {

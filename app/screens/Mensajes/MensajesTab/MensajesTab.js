@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  FlatList,
-  View
-} from "react-native";
+import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
 import { Image } from "react-native-elements";
 
 import LoadingFooter from "../../../components/LoadingFooter";
@@ -35,9 +29,12 @@ export default class MensajesTab extends React.Component {
 
     // this.videoApiInstance = new VideoApi();
 
-    // this.getData();
     this.state.loading = false;
   }
+
+  // componentDidMount = () => {
+  //  // this.getData();
+  // };
 
   getData = () => {
     // if (this.totalPages == undefined || this.offset < this.totalPages) {
@@ -85,12 +82,7 @@ export default class MensajesTab extends React.Component {
 
   render() {
     return (
-      <View
-        style={[
-          styles.container,
-          { justifyContent: this.state.loading ? "center" : "flex-start" }
-        ]}
-      >
+      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
@@ -114,8 +106,7 @@ export default class MensajesTab extends React.Component {
                     Luis Fonsi
                   </Text>
                   <Text numberOfLines={1} style={styles.msgText}>
-                    Las notas de aprendizaje automático ya se han subido, puedes
-                    consultarlas donde te plazca
+                    Las notas de aprendizaje automático ya se han subido, puedes consultarlas donde te plazca
                   </Text>
                 </View>
                 <Text style={styles.hourText}>12:58</Text>
