@@ -140,14 +140,24 @@ export default class ListaVideos extends React.Component {
 	};
 
 	borrarDeMisVideos = (index, id) => {
-		// api
-		this.borrarLocal(index);
+		console.log("ID", id);
+		this.apiInstance.deleteVideo(id, (error, data, response) => {
+			console.log(data);
+			console.log(error);
+			if (error) {
+				HaOcurridoUnError(null);
+				this.setState({ deleting: false });
+			} else {
+				this.borrarLocal(index);
+			}
+		});
 	};
 
 	borrarDeHistorial = (index, id) => {
-		apiInstance.displaysDeleteVideoIdDelete(id, (error, data, response) => {
+		this.apiInstance.displaysDeleteVideoIdDelete(id, (error, data, response) => {
 			if (error) {
 				HaOcurridoUnError(null);
+				this.setState({ deleting: false });
 			} else {
 				this.borrarLocal(index);
 			}
@@ -161,12 +171,14 @@ export default class ListaVideos extends React.Component {
 	};
 
 	delete = (index, id) => {
+		console.log(index);
+		console.log(id);
 		if (!this.state.deleting && !this.state.refreshing) {
 			this.setState({ deleting: true });
 			if (this.tipoLista == "mis_videos") {
-				this.borrarDeMisVideos();
+				this.borrarDeMisVideos(index, id);
 			} else if (this.tipoLista == "historial") {
-				this.borrarDeHistorial();
+				this.borrarDeHistorial(index, id);
 			}
 		}
 	};

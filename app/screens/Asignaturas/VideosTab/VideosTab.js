@@ -4,7 +4,11 @@ import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 
 import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 
-import { getUserToken } from "../../../config/Auth";
+import { getUserToken, getUserId } from "../../../config/Auth";
+
+import { VideoApi, ApiClient } from "swagger_unicast";
+
+import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
 import LoadingFooter from "../../../components/LoadingFooter";
 
@@ -15,46 +19,56 @@ export default class VideosTab extends React.Component {
 		super(props);
 
 		this.state = {
-			data: [{ temp: "temp" }],
+			data: [],
 			loading: true,
 			fetchingNewData: false,
 			refreshing: false
 		};
 
 		this.offset = 0;
-		this.totalPages = undefined;
+		this.totalPages = null;
 
-		// let defaultClient = ApiClient.instance;
-		// let bearerAuth = defaultClient.authentications["bearerAuth"];
-		// bearerAuth.accessToken = getUserToken();
+		this.tipoLista = this.props.navigation.getParam("type");
 
-		// this.videoApiInstance = new VideoApi();
+		let defaultClient = ApiClient.instance;
+		let bearerAuth = defaultClient.authentications["bearerAuth"];
+		bearerAuth.accessToken = getUserToken();
 
-		// this.getData();
-		this.state.loading = false;
+		this.videoApiInstance = new VideoApi();
+
+		this.getData();
 	}
 
 	getData = () => {
-		// if (this.totalPages == undefined || this.offset < this.totalPages) {
-		//   let opts = {
-		//     page: this.offset,
-		//     cacheControl: "no-cache, no-store, must-revalidate",
-		//       pragma: "no-cache",
-		//       expires: 0
-		//   };
-		//   this.videoApiInstance.getVideos((error, data, response) => {
-		//     if (!error) {
-		//       this.offset = this.offset + 1;
-		//       this.totalPages = data.page.totalPages;
-		//       this.setState({
-		//         data: [...this.state.data, ...data._embedded.videos],
-		//         loading: false,
-		//         fetchingNewData: false,
-		//         refreshing: false
-		//       });
-		//     }
-		//   });
-		// }
+		if (this.totalPages == undefined || this.offset < this.totalPages) {
+			let id = getUserId();
+			let opts = {
+				cacheControl: "no-cache, no-store, must-revalidate",
+				pragma: "no-cache",
+				expires: 0,
+				page: this.offset,
+				sort: ["timestamp", "desc"],
+				projection: ["videoWithSubjectAndUniversity"]
+			};
+			this.videoApiInstance.getVideosOfUserSubjects(id, opts, (error, data, response) => {
+				console.log(data);
+				if (error) {
+					HaOcurridoUnError(this.getData);
+				} else {
+					this.offset = this.offset + 1;
+					this.totalPages = data.page.totalPages;
+					this.setState({
+						data: [...this.state.data, ...data._embedded.videos],
+						currentDate: ApiClient.parseDate(response.headers.date),
+						loading: false,
+						refreshing: false,
+						fetchingNewData: false
+					});
+				}
+			});
+		} else {
+			this.setState({ fetchingNewData: false, refreshing: false, loading: false });
+		}
 	};
 
 	onEndReached = () => {
@@ -67,12 +81,10 @@ export default class VideosTab extends React.Component {
 	onRefresh = () => {
 		if (!this.state.fetchingNewData && !this.state.refreshing) {
 			this.offset = 0;
-			this.totalPages = undefined;
+			this.totalPages = null;
 			this.setState({
 				refreshing: true,
-				data: [],
-				fetchingNewData: false,
-				loading: false
+				data: []
 			});
 			this.getData();
 		}
@@ -90,17 +102,22 @@ export default class VideosTab extends React.Component {
 						refreshing={this.state.refreshing}
 						onEndReached={() => this.onEndReached()}
 						onRefresh={() => this.onRefresh()}
-						renderItem={({ item }) => (
-							<FullScreenThumbnail
-								navigation={this.props.navigation}
-								image={require("../../../../test/imagenes/imagen.jpg")}
-								likes="70%"
-								duracion="1:10"
-								title="Nombre bastante largo para ser un nombre de un video de prueba"
-								info="Hece 3 meses"
-								asignaturaIcon={require("../../../../test/imagenes/perfil_uni.jpg")}
-								asignaturaName="Multiprocesadores"
-							/>
+						renderItem={({ item, index }) => (
+							<View style={styles.videoContainer}>
+								<FullScreenThumbnail
+									navigation={this.props.navigation}
+									image={{ uri: item.thumbnailUrl }}
+									likes={item.score}
+									duracion={secToDuration(item.seconds)}
+									title={item.title}
+									info={timeStampToFormat(item.timestamp, this.state.currentDate)}
+									asignaturaIcon={{ uri: item.university.photo }}
+									asignaturaName={item.subject.abbreviation}
+									asignaturaFullName={item.subject.name}
+									asignaturaId={item.subject.id}
+									videoId={item.id}
+								/>
+							</View>
 						)}
 						ListFooterComponent={LoadingFooter({
 							show: this.state.fetchingNewData

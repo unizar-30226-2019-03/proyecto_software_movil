@@ -304,7 +304,7 @@ export default class ViendoVideo extends React.Component {
               />
             </TouchableOpacity>
             <View style={{ marginLeft: 60 }}>
-              <BotonSeguirAsignatura />
+              <BotonSeguirAsignatura onRef={ref => (this.botonSeguir = ref)} />
             </View>
           </View>
           <Descripcion texto={this.state.video.description} navigation={this.props.navigation} />

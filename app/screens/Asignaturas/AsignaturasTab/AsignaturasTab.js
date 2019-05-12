@@ -36,9 +36,11 @@ export default class AsignaturasTab extends React.Component {
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
       pragma: "no-cache",
+      projection: "subjectWithUniversity",
       expires: 0
     };
     this.apiInstance.getSubjectsOfUser(id, opts, (error, data, response) => {
+      console.log(data);
       if (error) {
         HaOcurridoUnError(this.getData);
       } else {
@@ -75,7 +77,7 @@ export default class AsignaturasTab extends React.Component {
             renderItem={({ item }) => (
               <ThumbnailAsignatura
                 navigation={this.props.navigation}
-                icon={require("../../../../test/imagenes/perfil_uni.jpg")}
+                icon={{ uri: item.university.photo }}
                 name={item.name}
                 id={item.id}
               />
