@@ -4,7 +4,7 @@ import { View, FlatList, ActivityIndicator } from "react-native";
 
 import { UserApi, ApiClient } from "swagger_unicast";
 
-import { getUserToken, getUserId } from "../../../config/Auth";
+import Auth from "../../../config/Auth";
 
 import ThumbnailAsignatura from "../../../components/ThumbnailAsignatura";
 import LoadingFooter from "../../../components/LoadingFooter";
@@ -24,15 +24,17 @@ export default class AsignaturasTab extends React.Component {
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
 
     this.apiInstance = new UserApi();
-
-    this.getData();
   }
 
+  componentDidMount = () => {
+    this.getData();
+  };
+
   getData = () => {
-    let id = getUserId();
+    let id = Auth.getUserId();
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
       pragma: "no-cache",

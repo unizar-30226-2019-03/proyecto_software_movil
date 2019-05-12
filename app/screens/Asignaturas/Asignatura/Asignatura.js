@@ -13,9 +13,9 @@ import {
 
 import { createAppContainer, createStackNavigator } from "react-navigation";
 
-import { getUserToken, getUserId } from "../../../config/Auth";
+import Auth from "../../../config/Auth";
 
-import { VideoApi, ApiClient } from "swagger_unicast";
+import { VideoApi, ApiClient, SubjectApi } from "swagger_unicast";
 
 import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
@@ -38,13 +38,15 @@ export default class Asignatura extends React.Component {
     this.state = {
       videos: [],
       profesores: [],
-      loadingVideos: false,
-      loadingProfesores: false,
-      loadingSeguir: false,
+      asignaturaSeguida: false,
+      loadingVideos: true,
+      loadingProfesores: true,
+      loadingSeguir: true,
       refreshingVideos: false,
       refreshingProfesores: false,
       refreshingSeguir: false,
-      fetchingNewVideos: false
+      fetchingNewVideos: false,
+      changingStateSeguir: false
     };
 
     this.id = this.props.navigation.getParam("id");
@@ -54,19 +56,15 @@ export default class Asignatura extends React.Component {
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = getUserToken();
+    bearerAuth.accessToken = Auth.getUserToken();
 
     this.videosInstance = new VideoApi();
+    this.subjectInstance = new SubjectApi();
   }
 
-  componentDidMount() {
-    this.setState({
-      loadingVideos: true,
-      loadingProfesores: true,
-      loadingSeguir: true
-    });
+  componentDidMount = () => {
     this.getData();
-  }
+  };
 
   someOneLoading = () => {
     return this.state.loadingVideos || this.state.loadingProfesores || this.state.loadingSeguir;
@@ -79,7 +77,7 @@ export default class Asignatura extends React.Component {
   getData = () => {
     this.getVideos();
     this.getProfesores();
-    this.botonSeguir.getData();
+    this.getSeguir();
   };
 
   getVideos = () => {
@@ -126,12 +124,42 @@ export default class Asignatura extends React.Component {
     });
   };
 
-  seguirLoaded = () => {
-    console.log("SI");
-    this.setState({
-      loadingSeguir: false,
-      refreshingSeguir: false
+  getSeguir = () => {
+    let userId = Auth.getUserId();
+    let subjectId = this.id;
+    let opts = {
+      cacheControl: "'no-cache, no-store, must-revalidate'",
+      pragma: "'no-cache'",
+      expires: "'0'"
+    };
+    this.subjectInstance.existsUserInSubject(userId, subjectId, opts, (error, data, response) => {
+      if (!error) {
+        this.setState({ asignaturaSeguida: data, loadingSeguir: false, refreshingSeguir: false });
+      }
     });
+  };
+
+  changeSeguirState = () => {
+    if (!this.state.changingStateSeguir && !this.someOneRefreshing()) {
+      let userId = Auth.getUserId();
+      let subjectId = this.id;
+
+      this.setState({ changingStateSeguir: true });
+
+      if (this.state.asignaturaSeguida) {
+        this.subjectInstance.deleteUserFromSubject(userId, subjectId, (error, data, response) => {
+          if (!error) {
+            this.setState({ asignaturaSeguida: false, changingStateSeguir: false });
+          }
+        });
+      } else {
+        this.subjectInstance.putUser(subjectId, userId, (error, data, response) => {
+          if (!error) {
+            this.setState({ asignaturaSeguida: true, changingStateSeguir: false });
+          }
+        });
+      }
+    }
   };
 
   onEndReached = () => {
@@ -142,13 +170,12 @@ export default class Asignatura extends React.Component {
   };
 
   onRefresh = () => {
-    if (!this.state.fetchingNewVideos && !this.someOneRefreshing()) {
+    if (!this.state.fetchingNewVideos && !this.someOneRefreshing() && !this.state.changingStateSeguir) {
       this.offset = 0;
       this.totalPages = null;
       this.setState({
         refreshingVideos: true,
         refreshingProfesores: true,
-        refreshingSeguir: true,
         videos: [],
         profesores: []
       });
@@ -157,6 +184,7 @@ export default class Asignatura extends React.Component {
   };
 
   render() {
+    console.log(this.state.loadingProfesores, this.state.loadingSeguir, this.state.loadingVideos);
     return (
       <View style={[styles.container, { justifyContent: this.someOneLoading() ? "center" : "flex-start" }]}>
         {this.someOneLoading() ? (
@@ -168,9 +196,9 @@ export default class Asignatura extends React.Component {
           >
             <View style={styles.viewSeguirAsignatura}>
               <BotonSeguirAsignatura
-                disabled={this.someOneRefreshing()}
-                onRef={ref => (this.botonSeguir = ref)}
-                onLoadCallback={this.seguirLoaded}
+                disabled={this.someOneRefreshing() || this.state.changingStateSeguir}
+                asignaturaSeguida={this.state.asignaturaSeguida}
+                callback={this.changeSeguirState}
               />
             </View>
             <FlatList
