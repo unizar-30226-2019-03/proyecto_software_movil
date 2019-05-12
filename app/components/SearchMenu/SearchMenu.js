@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, View, TouchableOpacity, Image } from "react-native";
 
+import ImagenPerfil from "../ImagenPerfil";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 
@@ -15,20 +17,10 @@ const SearchMenuBar = ({ navigation }) => {
 
   return {
     headerTitle: (
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Inicio")}
-        style={styles.flexContainer}
-        activeOpacity={1}
-      >
+      <TouchableOpacity onPress={() => navigation.navigate("Inicio")} style={styles.flexContainer} activeOpacity={1}>
         <View style={styles.container}>
-          <Image
-            source={require("../../assets/icon.png")}
-            style={styles.appLogo}
-          />
-          <Image
-            source={require("../../assets/unicast.png")}
-            style={styles.appText}
-          />
+          <Image source={require("../../assets/icon.png")} style={styles.appLogo} />
+          <Image source={require("../../assets/unicast.png")} style={styles.appText} />
         </View>
       </TouchableOpacity>
     ),
@@ -41,15 +33,8 @@ const SearchMenuBar = ({ navigation }) => {
         >
           <Ionicons name="ios-search" style={styles.searchIcon} />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.userButton}
-          onPress={() => navigation.navigate("Cuenta")}
-          activeOpacity={0.6}
-        >
-          <Image
-            source={require("../../../test/imagenes/perfil.jpg")}
-            style={styles.userIcon}
-          />
+        <TouchableOpacity style={styles.userButton} onPress={() => navigation.navigate("Cuenta")} activeOpacity={0.6}>
+          <ImagenPerfil style={styles.userIcon} />
         </TouchableOpacity>
       </View>
     ),

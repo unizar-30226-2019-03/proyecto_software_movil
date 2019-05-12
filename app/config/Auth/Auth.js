@@ -2,46 +2,57 @@ import React from "react";
 
 import { AsyncStorage } from "react-native";
 
-let userToken = undefined;
-let userId = undefined;
+import { observer } from "mobx-react/native";
 
+import ImagenPerfilStore from "../ImagenPerfil";
 
-export async function signOut(navigation) {
-	await AsyncStorage.clear();
-	userToken = undefined;
-	userId = undefined;
-	navigation.navigate("NotLogged");
-}
+@observer
+export default class Auth {
+	static userToken = undefined;
+	static userId = undefined;
 
-export async function signIn(token, id, navigation) {
-	await AsyncStorage.multiSet(
-		[["userToken", token], ["userId", id.toString()]],
-		null
-	);
-	userToken = token;
-	userId = id;
-	navigation.navigate("Logged");
-}
+	static async signOut(navigation) {
+		await AsyncStorage.clear();
+		userToken = undefined;
+		userId = undefined;
+		navigation.navigate("NotLogged");
+	}
 
-export async function isSignedIn(navigation) {
-	await AsyncStorage.multiGet(["userToken", "userId"]).then(response => {
-		userToken = response[0][1];
-		userId = response[1][1];
-	});
+	static async signIn(token, id, navigation) {
+		await AsyncStorage.multiSet([["userToken", token], ["userId", id.toString()]], null);
+		userToken = token;
+		userId = id;
 
-	console.log(userToken)
-	console.log(userId)
-	navigation.navigate(userToken ? "Logged" : "NotLogged");
-}
+		ImagenPerfilStore.reload();
 
-export function getUserId() {
-	return userId;
-}
+		navigation.navigate("Logged");
+	}
 
-export function isProfesor() {
-	return true;
-}
+	static async isSignedIn(navigation) {
+		await AsyncStorage.multiGet(["userToken", "userId"]).then(response => {
+			userToken = response[0][1];
+			userId = response[1][1];
+		});
 
-export function getUserToken() {
-	return userToken;
+		console.log(userToken);
+		console.log(userId);
+
+		if (userToken) {
+			ImagenPerfilStore.reload();
+		}
+
+		navigation.navigate(userToken ? "Logged" : "NotLogged");
+	}
+
+	static getUserId() {
+		return userId;
+	}
+
+	static isProfesor() {
+		return true;
+	}
+
+	static getUserToken() {
+		return userToken;
+	}
 }

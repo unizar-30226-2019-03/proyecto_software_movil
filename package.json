@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "expo": "^32.0.0",
+    "mobx": "^5.9.4",
+    "mobx-react": "^5.4.3",
     "querystring": "^0.2.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
@@ -18,9 +20,10 @@
     "react-native-slider": "^0.11.0",
     "react-native-vector-icons": "^6.4.2",
     "react-navigation": "^3.5.1",
-    "swagger_unicast": "https://github.com/unizar-30226-2019-03/proyecto_software_cliente_api/releases/download/1.2.0/swagger_unicast-1.2.0.tgz"
+    "swagger_unicast": "https://github.com/unizar-30226-2019-03/proyecto_software_cliente_api/releases/download/1.2.1/swagger_unicast-1.2.1.tgz"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",

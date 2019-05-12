@@ -19,4 +19,4 @@ export const AzulNuevaLista = "#2E5FD4";
 export const GrisFondoBarraBusqueda = "#F4F4F4";
 export const Azul = "#235da9";
 
-export const headerHeight = Header.HEIGHT + StatusBar.currentHeight;
+export const HeaderHeight = Header.HEIGHT + StatusBar.currentHeight;

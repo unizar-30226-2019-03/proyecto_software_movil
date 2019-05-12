@@ -1,3 +1,3 @@
-import { signOut, signIn, isSignedIn, getUserToken, getUserId, isProfesor } from "./Auth";
+import Auth from "./Auth";
 
-export { signOut, signIn, isSignedIn, getUserToken, getUserId, isProfesor };
+export default Auth;

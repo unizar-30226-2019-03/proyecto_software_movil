@@ -2,11 +2,11 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
 	container: {
-		flex: 1,
+		flex: 1
 	},
 	userView: {
 		borderBottomWidth: 1,
-		borderColor: 'grey',
+		borderColor: "grey",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "flex-start"
@@ -15,27 +15,27 @@ export default StyleSheet.create({
 		width: 80,
 		height: 80,
 		borderRadius: 50,
-		margin:20
+		margin: 20
 	},
 	boton: {
-		backgroundColor: 'white',
+		backgroundColor: "white",
 		height: 60,
-		width: '100%',
+		width: "100%",
 		borderBottomWidth: 1,
-		borderColor: 'grey',
+		borderColor: "grey",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "flex-start"
 	},
-	titulo:{
-		color: 'black',
+	titulo: {
+		color: "black",
 		fontSize: 15,
 		fontWeight: "bold",
 		marginLeft: 10
 	},
 	userName: {
-		color: 'black',
+		color: "black",
 		fontWeight: "bold",
-		fontSize: 15,
+		fontSize: 15
 	}
 });

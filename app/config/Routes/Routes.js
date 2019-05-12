@@ -170,13 +170,7 @@ const DownMenu = createBottomTabNavigator(
 					IconComponent = MaterialCommunityIcons;
 					iconName = "folder";
 				}
-				return (
-					<IconComponent
-						name={iconName}
-						style={styles.downMenuIcon}
-						color={tintColor}
-					/>
-				);
+				return <IconComponent name={iconName} style={styles.downMenuIcon} color={tintColor} />;
 			}
 		}),
 		navigationOptions: {
