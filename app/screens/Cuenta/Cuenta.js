@@ -40,7 +40,7 @@ export default class Cuenta extends React.Component {
 						<Text style={styles.titulo}>IR A MI PERFIL</Text>
 					</TouchableOpacity>
 
-					<TouchableOpacity style={styles.boton} activeOpacity={1} onPress={() => signOut(this.props.navigation)}>
+					<TouchableOpacity style={styles.boton} activeOpacity={1} onPress={() => Auth.signOut(this.props.navigation)}>
 						<Icon name="arrow-forward" size={30} marginLeft={20} />
 
 						<Text style={styles.titulo}>CERRAR SESIÓN</Text>

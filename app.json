@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "proyecto_software_movil",
-    "slug": "proyecto_software_movil",
+    "name": "Unicast",
+    "slug": "Unicast",
     "privacy": "public",
     "sdkVersion": "32.0.0",
     "platforms": ["ios", "android"],
@@ -18,7 +18,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.unicast.unicast"
     },
     "android": {
       "package": "com.unicast.unicast"
