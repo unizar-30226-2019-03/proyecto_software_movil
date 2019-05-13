@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { ScreenhHeight, AzulNuevaLista, HeaderHeight } from "../../constants";
+import { ScreenhHeight, Azul, HeaderHeight } from "../../constants";
 
 export default StyleSheet.create({
 	container: {
@@ -13,14 +13,16 @@ export default StyleSheet.create({
 		backgroundColor: "#fff"
 	},
 	texto: {
-		fontSize: 18
+		fontSize: 18,
+		fontWeight: "normal",
+		color: "black"
 	},
 	nuevaListaContainer: {
 		marginLeft: "auto"
 	},
 	nuevaListaTexto: {
 		fontSize: 16,
-		color: AzulNuevaLista
+		color: Azul
 	},
 	guardarYNuevaListaContainer: {
 		flexDirection: "row",
@@ -64,5 +66,16 @@ export default StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "flex-end"
+	},
+	activityIndicatorContainer: {
+		flex: 1,
+		justifyContent: "center"
+	},
+	checkBoxContainer: {
+		backgroundColor: "white",
+		borderWidth: 0,
+		margin: 0,
+		padding: 0,
+		paddingVertical: 10
 	}
 });

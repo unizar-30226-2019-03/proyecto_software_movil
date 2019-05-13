@@ -5,24 +5,85 @@ import {
 	Modal,
 	Text,
 	TouchableWithoutFeedback,
-	ScrollView,
-	CheckBox
+	FlatList,
+	ActivityIndicator
 } from "react-native";
 
-import { Input } from "react-native-elements";
+import { Input, CheckBox } from "react-native-elements";
 
 import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { AzulNuevaLista } from "../../constants";
+import { AzulNuevaLista, Azul } from "../../constants";
 
 import { Divider } from "react-native-elements";
+
+import LoadingFooter from "../../components/LoadingFooter";
+import LoadingModal from "../../components/LoadingModal";
 
 import styles from "./styles";
 
 export default class AnyadirALista extends React.Component {
-	state = {
-		nuevaListaModalVisible: false,
-		nuevaListaInput: ""
+	constructor(props) {
+		super(props);
+		this.state = {
+			data: [
+				{ check: true },
+				{ check: false },
+				{ check: true },
+				{ check: true },
+				{ check: true },
+				{ check: true },
+				{ check: true },
+				{ check: true },
+				{ check: true },
+				{ check: true },
+				{ check: true }
+			],
+			loading: true,
+			fetchingNewData: false,
+			updatingChanges: false,
+			mounted: false,
+			nuevaListaModalVisible: false,
+			nuevaListaInput: ""
+		};
+	}
+
+	onShow = () => {
+		if (!this.state.mounted) {
+			this.setState({
+				mounted: true
+			});
+			this.getData();
+		}
+	};
+
+	changeCheckBox = idx => {
+		let temp = [...this.state.data];
+		temp[idx].check = !temp[idx].check;
+		this.setState({ data: temp });
+	};
+
+	getData = () => {
+		this.setState({
+			loading: false
+		});
+	};
+
+	onEndReached = () => {};
+
+	updateLista = () => {
+		this.props.hide();
+		// this.setState({
+		// 	updatingChanges: true
+		// });
+	};
+
+	crearLista = () => {
+		this.setState({
+			nuevaListaModalVisible: false
+			// updatingChanges: true
+		});
 	};
 
 	hideAnyadirAListaShowNuevaLista() {
@@ -41,12 +102,9 @@ export default class AnyadirALista extends React.Component {
 					visible={this.props.visible}
 					onRequestClose={this.props.hide}
 					onBackdropPress={this.props.hide}
+					onShow={this.onShow}
 				>
-					<TouchableOpacity
-						style={styles.container}
-						onPress={this.props.hide}
-						activeOpacity={1}
-					>
+					<TouchableOpacity style={styles.container} onPress={this.props.hide} activeOpacity={1}>
 						<TouchableWithoutFeedback>
 							<View style={styles.anyadirAListaContainer}>
 								<View style={styles.guardarYNuevaListaContainer}>
@@ -60,104 +118,39 @@ export default class AnyadirALista extends React.Component {
 									</TouchableOpacity>
 								</View>
 								<Divider style={styles.divider} />
-								<ScrollView>
-									<TouchableOpacity
-										style={styles.listaContainer}
-										activeOpacity={1}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										activeOpacity={1}
-										style={styles.listaContainer}
-									>
-										<CheckBox />
-										<Text style={styles.texto}>SIETE</Text>
-									</TouchableOpacity>
-								</ScrollView>
+								{this.state.loading ? (
+									<View style={styles.activityIndicatorContainer}>
+										<ActivityIndicator size="large" />
+									</View>
+								) : (
+									<FlatList
+										showsVerticalScrollIndicator={false}
+										data={this.state.data}
+										onEndReached={() => this.onEndReached()}
+										renderItem={({ item, index }) => (
+											<CheckBox
+												activeOpacity={1}
+												checked={item.check}
+												title="Click Here to Remove This Item"
+												checkedIcon="check-square"
+												uncheckedIcon="square-o"
+												containerStyle={styles.checkBoxContainer}
+												textStyle={styles.texto}
+												onPress={() => this.changeCheckBox(index)}
+											/>
+										)}
+										ListFooterComponent={LoadingFooter({
+											show: this.state.fetchingNewData
+										})}
+										keyExtractor={(item, index) => index.toString()}
+									/>
+								)}
 								<Divider style={styles.divider} />
 								<TouchableOpacity
-									onPress={this.props.hide}
+									onPress={() => this.updateLista()}
 									activeOpacity={1}
 									style={styles.listoContainer}
+									disabled={this.state.loading}
 								>
 									<FontAwesomeIcons name={"check"} style={styles.texto} />
 									<Text style={styles.listoTexto}>Listo</Text>
@@ -198,9 +191,7 @@ export default class AnyadirALista extends React.Component {
 									<Input
 										placeholder="Nombre"
 										autoFocus
-										onChangeText={nuevaListaInput =>
-											this.setState({ nuevaListaInput })
-										}
+										onChangeText={nuevaListaInput => this.setState({ nuevaListaInput })}
 									/>
 								</View>
 								<View style={styles.crearCancelarContainer}>
@@ -216,11 +207,7 @@ export default class AnyadirALista extends React.Component {
 										<Text style={styles.nuevaListaTexto}>CANCELAR</Text>
 									</TouchableOpacity>
 									<TouchableOpacity
-										onPress={() =>
-											this.setState({
-												nuevaListaModalVisible: false
-											})
-										}
+										onPress={() => this.crearLista()}
 										disabled={!(this.state.nuevaListaInput.length > 0)}
 										activeOpacity={1}
 									>
@@ -228,10 +215,7 @@ export default class AnyadirALista extends React.Component {
 											style={[
 												styles.nuevaListaTexto,
 												{
-													color:
-														this.state.nuevaListaInput.length > 0
-															? AzulNuevaLista
-															: "gray"
+													color: this.state.nuevaListaInput.length > 0 ? Azul : "gray"
 												}
 											]}
 										>
@@ -243,6 +227,7 @@ export default class AnyadirALista extends React.Component {
 						</TouchableWithoutFeedback>
 					</TouchableOpacity>
 				</Modal>
+				<LoadingModal visible={this.state.updatingChanges} />
 			</View>
 		);
 	}
