@@ -42,10 +42,6 @@ export default StyleSheet.create({
 		fontSize: 18,
 		marginLeft: 7
 	},
-	listaContainer: {
-		flexDirection: "row",
-		alignItems: "center"
-	},
 	divider: {
 		backgroundColor: "gray"
 	},
