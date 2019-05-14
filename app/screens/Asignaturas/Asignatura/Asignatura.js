@@ -19,6 +19,8 @@ import { VideoApi, ApiClient, SubjectApi } from "swagger_unicast";
 
 import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
+import RippleTouchable from "../../../components/RippleTouchable";
+
 import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 import BotonSeguirAsignatura from "../../../components/BotonSeguirAsignatura";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
@@ -208,8 +210,8 @@ export default class Asignatura extends React.Component {
               horizontal={true}
               renderItem={({ item, index }) => {
                 return (
-                  <TouchableOpacity
-                    activeOpacity={1}
+                  <RippleTouchable
+                    round={true}
                     onPress={() =>
                       this.props.navigation.navigate("Chat", {
                         title: "Juancho Provisional"
@@ -224,7 +226,7 @@ export default class Asignatura extends React.Component {
                       />
                       <Text style={styles.userName}>Pedro E.</Text>
                     </View>
-                  </TouchableOpacity>
+                  </RippleTouchable>
                 );
               }}
               ListFooterComponent={LoadingFooter({

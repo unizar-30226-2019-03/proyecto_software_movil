@@ -6,7 +6,7 @@ export default class RiplleTouchable extends React.Component {
 	render() {
 		let optional_props = {};
 		if (this.props.round) {
-			optional_props.background = TouchableNativeFeedback.Ripple("rgba(0,0,0,.2)", true);
+			optional_props.background = TouchableNativeFeedback.Ripple("ThemeAttrAndroid", true);
 		}
 		return (
 			<TouchableNativeFeedback onPress={this.props.onPress} {...optional_props}>

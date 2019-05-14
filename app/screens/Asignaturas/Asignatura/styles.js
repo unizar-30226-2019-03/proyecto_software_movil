@@ -10,8 +10,8 @@ export default StyleSheet.create({
 	viewSeguirAsignatura: {
 		flexDirection: "row",
 		justifyContent: "flex-end",
-		paddingTop: 10,
-		paddingRight: 5
+		marginTop: 10,
+		marginRight: 5
 	},
 	iconAndNameView: {
 		flexDirection: "column",
@@ -19,9 +19,9 @@ export default StyleSheet.create({
 		justifyContent: "flex-start"
 	},
 	userIcon: {
-		width: 80,
-		height: 80,
-		borderRadius: 50
+		width: 60,
+		height: 60,
+		borderRadius: 30
 	},
 	userName: {
 		color: "black",

@@ -6,7 +6,7 @@ export default StyleSheet.create({
 	},
 	userView: {
 		borderBottomWidth: 1,
-		borderColor: "grey",
+		borderColor: "lightgrey",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "flex-start"
@@ -22,7 +22,7 @@ export default StyleSheet.create({
 		height: 60,
 		width: "100%",
 		borderBottomWidth: 1,
-		borderColor: "grey",
+		borderColor: "lightgrey",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "flex-start"

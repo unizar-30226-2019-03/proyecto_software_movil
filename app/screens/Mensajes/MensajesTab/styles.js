@@ -17,14 +17,14 @@ export default StyleSheet.create({
 		width: 50,
 		height: 50,
 		borderRadius: 50,
-		margin: 8,
+		margin: 8
 	},
 	nameAndMsgContainer: {
 		flex: 1,
 		paddingLeft: 10,
 		flexDirection: "column",
 		alignItems: "flex-start",
-		justifyContent: "space-between",
+		justifyContent: "space-between"
 	},
 	nameText: {
 		fontWeight: "bold",
@@ -32,12 +32,12 @@ export default StyleSheet.create({
 	},
 	msgText: {
 		color: "darkgrey",
-		fontSize: 15,
+		fontSize: 15
 	},
 	hourText: {
 		alignSelf: "flex-start",
 		marginTop: 13,
 		color: "darkgrey",
-		fontSize: 13,
-	},
+		fontSize: 13
+	}
 });

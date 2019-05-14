@@ -181,6 +181,11 @@ const DownMenu = createBottomTabNavigator(
 			}
 		}),
 		navigationOptions: {
+			tabBarOnPress: ev => {
+				Alert.alert("Test", "Tab selected");
+				// Your logic before jumping to the screen
+				ev.jumpToIndex(ev.scene.index); // This actually allow you to jump to your screen
+			},
 			header: null
 		},
 		tabBarOptions: {

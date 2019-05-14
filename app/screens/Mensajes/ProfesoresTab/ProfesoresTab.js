@@ -3,6 +3,8 @@ import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react
 
 import { Image } from "react-native-elements";
 
+import RippleTouchable from "../../../components/RippleTouchable";
+
 import LoadingFooter from "../../../components/LoadingFooter";
 
 import styles from "./styles";
@@ -93,24 +95,25 @@ export default class ProfesorTab extends React.Component {
             onEndReached={() => this.onEndReached()}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.chatContainer}
+              <RippleTouchable
                 onPress={() =>
                   this.props.navigation.navigate("Chat", {
                     title: "Matilde P."
                   })
                 }
               >
-                <Image source={{ uri: samplePic }} style={styles.profilePic} />
-                <View style={styles.nameAndMsgContainer}>
-                  <Text numberOfLines={1} style={styles.nameText}>
-                    Luis Fonsi
-                  </Text>
-                  <Text numberOfLines={1} style={styles.msgText}>
-                    Proyecto Software, Matemáticas III, Procesadores comerciales, Robótica
-                  </Text>
+                <View style={styles.chatContainer}>
+                  <Image source={{ uri: samplePic }} style={styles.profilePic} />
+                  <View style={styles.nameAndMsgContainer}>
+                    <Text numberOfLines={1} style={styles.nameText}>
+                      Luis Fonsi
+                    </Text>
+                    <Text numberOfLines={1} style={styles.msgText}>
+                      Proyecto Software, Matemáticas III, Procesadores comerciales, Robótica
+                    </Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
+              </RippleTouchable>
             )}
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
