@@ -19,6 +19,7 @@ import { AzulNuevaLista, Azul } from "../../constants";
 import { Divider } from "react-native-elements";
 
 import LoadingFooter from "../../components/LoadingFooter";
+import RippleTouchable from "../../components/RippleTouchable";
 import LoadingModal from "../../components/LoadingModal";
 
 import styles from "./styles";
@@ -128,16 +129,18 @@ export default class AnyadirALista extends React.Component {
 										data={this.state.data}
 										onEndReached={() => this.onEndReached()}
 										renderItem={({ item, index }) => (
-											<CheckBox
-												activeOpacity={1}
-												checked={item.check}
-												title="Click Here to Remove This Item"
-												checkedIcon="check-square"
-												uncheckedIcon="square-o"
-												containerStyle={styles.checkBoxContainer}
-												textStyle={styles.texto}
-												onPress={() => this.changeCheckBox(index)}
-											/>
+											<RippleTouchable onPress={() => this.changeCheckBox(index)} style={styles.checkBoxView}>
+												<CheckBox
+													activeOpacity={1}
+													Component={View}
+													checked={item.check}
+													title="Click Here to Remove This Item"
+													checkedIcon="check-square"
+													uncheckedIcon="square-o"
+													containerStyle={styles.checkBoxContainer}
+													textStyle={styles.texto}
+												/>
+											</RippleTouchable>
 										)}
 										ListFooterComponent={LoadingFooter({
 											show: this.state.fetchingNewData
@@ -146,15 +149,14 @@ export default class AnyadirALista extends React.Component {
 									/>
 								)}
 								<Divider style={styles.divider} />
-								<TouchableOpacity
+								<RippleTouchable
 									onPress={() => this.updateLista()}
-									activeOpacity={1}
-									style={styles.listoContainer}
 									disabled={this.state.loading}
+									style={styles.listoContainer}
 								>
 									<FontAwesomeIcons name={"check"} style={styles.texto} />
 									<Text style={styles.listoTexto}>Listo</Text>
-								</TouchableOpacity>
+								</RippleTouchable>
 							</View>
 						</TouchableWithoutFeedback>
 					</TouchableOpacity>

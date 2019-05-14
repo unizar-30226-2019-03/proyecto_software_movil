@@ -1,9 +1,11 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Image, TouchableNativeFeedback } from "react-native";
+import { Text, View, TouchableOpacity, Image } from "react-native";
 
 import { GrisClaro } from "../../constants";
 
 import ImagenPerfil from "../ImagenPerfil";
+
+import RippleTouchable from "../../components/RippleTouchable";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
@@ -28,22 +30,12 @@ const SearchMenuBar = ({ navigation }) => {
     ),
     headerRight: (
       <View style={styles.container}>
-        <TouchableNativeFeedback
-          onPress={() => navigation.navigate("Searching")}
-          background={TouchableNativeFeedback.Ripple(GrisClaro, true)}
-        >
-          <View style={styles.searchButton}>
-            <Ionicons name="ios-search" style={styles.searchIcon} />
-          </View>
-        </TouchableNativeFeedback>
-        <TouchableNativeFeedback
-          onPress={() => navigation.navigate("Cuenta")}
-          background={TouchableNativeFeedback.Ripple(GrisClaro, true)}
-        >
-          <View style={styles.userButton}>
-            <ImagenPerfil style={styles.userIcon} />
-          </View>
-        </TouchableNativeFeedback>
+        <RippleTouchable onPress={() => navigation.navigate("Searching")} style={styles.searchButton} round={true}>
+          <Ionicons name="ios-search" style={styles.searchIcon} />
+        </RippleTouchable>
+        <RippleTouchable onPress={() => navigation.navigate("Cuenta")} style={styles.userButton} round={true}>
+          <ImagenPerfil style={styles.userIcon} />
+        </RippleTouchable>
       </View>
     ),
     headerStyle: {

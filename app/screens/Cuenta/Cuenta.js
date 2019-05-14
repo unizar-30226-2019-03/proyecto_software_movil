@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableNativeFeedback, ActivityIndicator, Image } from "react-native";
+import { View, ActivityIndicator, Image } from "react-native";
 import { Text, Icon } from "react-native-elements";
 
 import Auth from "../../config/Auth";
@@ -7,6 +7,8 @@ import Auth from "../../config/Auth";
 import { UserApi, ApiClient } from "swagger_unicast";
 
 import ImagenPerfil from "../../components/ImagenPerfil";
+
+import RippleTouchable from "../../components/RippleTouchable";
 
 import { observer } from "mobx-react/native";
 
@@ -26,27 +28,24 @@ export default class Cuenta extends React.Component {
 						<Text style={styles.userName}>NOMBRE</Text>
 					</View>
 
-					<TouchableNativeFeedback
+					<RippleTouchable
 						onPress={() =>
 							this.props.navigation.navigate("VerPerfil", {
 								userId: Auth.getUserId()
 							})
 						}
+						style={styles.boton}
 					>
-						<View style={styles.boton}>
-							<Icon name="account-box" size={30} marginLeft={20} />
+						<Icon name="account-box" size={30} marginLeft={20} />
 
-							<Text style={styles.titulo}>IR A MI PERFIL</Text>
-						</View>
-					</TouchableNativeFeedback>
+						<Text style={styles.titulo}>IR A MI PERFIL</Text>
+					</RippleTouchable>
 
-					<TouchableNativeFeedback onPress={() => Auth.signOut(this.props.navigation)}>
-						<View style={styles.boton}>
-							<Icon name="arrow-forward" size={30} marginLeft={20} />
+					<RippleTouchable onPress={() => Auth.signOut(this.props.navigation)} style={styles.boton}>
+						<Icon name="arrow-forward" size={30} marginLeft={20} />
 
-							<Text style={styles.titulo}>CERRAR SESIÓN</Text>
-						</View>
-					</TouchableNativeFeedback>
+						<Text style={styles.titulo}>CERRAR SESIÓN</Text>
+					</RippleTouchable>
 				</View>
 			</View>
 		);

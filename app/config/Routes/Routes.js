@@ -1,5 +1,7 @@
 import React from "react";
 
+import { TouchableNativeFeedback, View } from "react-native";
+
 import {
 	createStackNavigator,
 	createMaterialTopTabNavigator,
@@ -43,6 +45,8 @@ import SearchMenu from "../../components/SearchMenu";
 import EntypoIcons from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+
+import RippleTouchable from "../../components/RippleTouchable";
 
 import { Azul } from "../../constants";
 
@@ -171,6 +175,9 @@ const DownMenu = createBottomTabNavigator(
 					iconName = "folder";
 				}
 				return <IconComponent name={iconName} style={styles.downMenuIcon} color={tintColor} />;
+			},
+			tabBarButtonComponent: props => {
+				return <RippleTouchable {...props} round={true} />;
 			}
 		}),
 		navigationOptions: {

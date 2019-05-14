@@ -68,10 +68,12 @@ export default StyleSheet.create({
 		justifyContent: "center"
 	},
 	checkBoxContainer: {
-		backgroundColor: "white",
+		backgroundColor: "rgba(0, 0, 0, 0)",
 		borderWidth: 0,
 		margin: 0,
-		padding: 0,
+		padding: 0
+	},
+	checkBoxView: {
 		paddingVertical: 10
 	}
 });

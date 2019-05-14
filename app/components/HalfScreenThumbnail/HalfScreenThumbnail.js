@@ -1,11 +1,13 @@
 import React from "react";
-import { View, Image, ImageBackground, Text, TouchableOpacity, TouchableNativeFeedback } from "react-native";
+import { View, Image, ImageBackground, Text, TouchableOpacity } from "react-native";
 
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from "react-native-popup-menu";
 
 import { VerdeClaro, RojoClaro } from "../../constants";
 
 import AnyadirALista from "../AnyadirALista";
+
+import RippleTouchable from "../../components/RippleTouchable";
 
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
@@ -37,7 +39,7 @@ export default class HalfScreenThumbnail extends React.Component {
 
 		const likes = Math.floor(this.props.likes * 20);
 		return (
-			<TouchableNativeFeedback
+			<RippleTouchable
 				onPress={() =>
 					this.props.type == "mis_listas"
 						? this.props.navigation.navigate("ListaVideos", {
@@ -45,63 +47,62 @@ export default class HalfScreenThumbnail extends React.Component {
 						  })
 						: this.props.navigation.navigate("ViendoVideo", { id: this.props.videoId })
 				}
+				style={styles.container}
 			>
-				<View style={styles.container}>
-					<View style={styles.rowContainer}>
-						<ImageBackground source={this.props.image} style={styles.videoThumbnailContainer}>
-							<View style={styles.duracionYLikesContainer}>
-								{this.props.likes != null ? (
-									<Text style={[styles.likes, { color: likes > 49 ? VerdeClaro : RojoClaro }]}>{likes + "%"}</Text>
-								) : null}
-								<Text style={styles.duracion}>{this.props.duracion}</Text>
-							</View>
-						</ImageBackground>
-						<View style={styles.titleYInfoContainer}>
-							<Text style={styles.title} numberOfLines={3}>
-								{this.props.title}
-							</Text>
-							<Text style={styles.info}>{this.props.info}</Text>
+				<View style={styles.rowContainer}>
+					<ImageBackground source={this.props.image} style={styles.videoThumbnailContainer}>
+						<View style={styles.duracionYLikesContainer}>
+							{this.props.likes != null ? (
+								<Text style={[styles.likes, { color: likes > 49 ? VerdeClaro : RojoClaro }]}>{likes + "%"}</Text>
+							) : null}
+							<Text style={styles.duracion}>{this.props.duracion}</Text>
 						</View>
+					</ImageBackground>
+					<View style={styles.titleYInfoContainer}>
+						<Text style={styles.title} numberOfLines={3}>
+							{this.props.title}
+						</Text>
+						<Text style={styles.info}>{this.props.info}</Text>
 					</View>
-					<Menu
-						style={styles.dropDownMenuContainer}
-						opened={this.state.popUpVisible}
-						onBackdropPress={() => this.setState({ popUpVisible: false })}
-					>
-						<MenuTrigger onPress={() => (this.props.canShowPopUp ? this.setState({ popUpVisible: true }) : null)}>
-							<SimpleLineIcons name={"options-vertical"} style={styles.optionsIcon} />
-						</MenuTrigger>
-						<MenuOptions>
+				</View>
+				<Menu
+					style={styles.dropDownMenuContainer}
+					opened={this.state.popUpVisible}
+					onBackdropPress={() => this.setState({ popUpVisible: false })}
+				>
+					<MenuTrigger onPress={() => (this.props.canShowPopUp ? this.setState({ popUpVisible: true }) : null)}>
+						<SimpleLineIcons name={"options-vertical"} style={styles.optionsIcon} />
+					</MenuTrigger>
+					<MenuOptions>
+						<MenuOption
+							onSelect={() =>
+								this.setState({
+									popUpVisible: false
+								}) || this.props.deleteCallback(this.props.index, this.props.videoId)
+							}
+						>
+							<Text style={styles.popUpMenuText}>{eliminarText}</Text>
+						</MenuOption>
+						{this.props.type != "mis_listas" ? (
 							<MenuOption
 								onSelect={() =>
 									this.setState({
-										popUpVisible: false
-									}) || this.props.deleteCallback(this.props.index, this.props.videoId)
+										popUpVisible: false,
+										anyadirAListaVisible: true
+									})
 								}
 							>
-								<Text style={styles.popUpMenuText}>{eliminarText}</Text>
+								<Text style={styles.popUpMenuText}>Añadir a lista de reproducción</Text>
 							</MenuOption>
-							{this.props.type != "mis_listas" ? (
-								<MenuOption
-									onSelect={() =>
-										this.setState({
-											popUpVisible: false,
-											anyadirAListaVisible: true
-										})
-									}
-								>
-									<Text style={styles.popUpMenuText}>Añadir a lista de reproducción</Text>
-								</MenuOption>
-							) : null}
-						</MenuOptions>
-					</Menu>
-					<AnyadirALista
-						visible={this.state.anyadirAListaVisible}
-						hide={this.hideAnyadirALista}
-						videoId={this.props.videoId}
-					/>
-				</View>
-			</TouchableNativeFeedback>
+						) : null}
+					</MenuOptions>
+				</Menu>
+				<AnyadirALista
+					visible={this.state.anyadirAListaVisible}
+					hide={this.hideAnyadirALista}
+					videoId={this.props.videoId}
+				/>
+			</RippleTouchable>
 		);
 	}
 }

@@ -1,8 +1,10 @@
 import React from "react";
-import { Text, View, Button, FlatList, TouchableNativeFeedback, ActivityIndicator } from "react-native";
+import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 import { Icon } from "react-native-elements";
 
 import Auth from "../../config/Auth";
+
+import RippleTouchable from "../../components/RippleTouchable";
 
 import { SubjectApi, ApiClient } from "swagger_unicast";
 
@@ -119,21 +121,20 @@ export default class Ranking extends React.Component {
             onEndReached={() => this.onEndReached()}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item, index }) => (
-              <TouchableNativeFeedback
+              <RippleTouchable
                 onPress={() =>
                   this.props.navigation.navigate("Asignatura", {
                     title: item.name,
                     id: item.id
                   })
                 }
+                style={styles.rankingPlace}
               >
-                <View style={styles.rankingPlace}>
-                  <Text style={styles.rankNumber}>{index + 1 + "."}</Text>
-                  <IconoAsignaturaUniversidad name={item.abbreviation} image={{ uri: item.university.photo }} />
-                  {this.icon(index)}
-                  <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
-                </View>
-              </TouchableNativeFeedback>
+                <Text style={styles.rankNumber}>{index + 1 + "."}</Text>
+                <IconoAsignaturaUniversidad name={item.abbreviation} image={{ uri: item.university.photo }} />
+                {this.icon(index)}
+                <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
+              </RippleTouchable>
             )}
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
