@@ -1,25 +1,25 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableNativeFeedback, Image } from "react-native";
 
 import styles from "./styles";
 
 const ThumbnailAsignatura = props => {
   return (
-    <TouchableOpacity
-      style={styles.asignaturaContainer}
+    <TouchableNativeFeedback
       onPress={() =>
         props.navigation.navigate("Asignatura", {
           title: props.name,
           id: props.id
         })
       }
-      activeOpacity={1}
     >
-      <Image source={props.icon} style={styles.asignaturaIcon} margin={20} />
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{props.name}</Text>
+      <View style={styles.asignaturaContainer}>
+        <Image source={props.icon} style={styles.asignaturaIcon} margin={20} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{props.name}</Text>
+        </View>
       </View>
-    </TouchableOpacity>
+    </TouchableNativeFeedback>
   );
 };
 

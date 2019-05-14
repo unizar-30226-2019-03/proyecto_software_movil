@@ -1,5 +1,7 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity, Image, TouchableNativeFeedback } from "react-native";
+
+import { GrisClaro } from "../../constants";
 
 import ImagenPerfil from "../ImagenPerfil";
 
@@ -26,16 +28,22 @@ const SearchMenuBar = ({ navigation }) => {
     ),
     headerRight: (
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.searchButton}
+        <TouchableNativeFeedback
           onPress={() => navigation.navigate("Searching")}
-          activeOpacity={0.6}
+          background={TouchableNativeFeedback.Ripple(GrisClaro, true)}
         >
-          <Ionicons name="ios-search" style={styles.searchIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.userButton} onPress={() => navigation.navigate("Cuenta")} activeOpacity={0.6}>
-          <ImagenPerfil style={styles.userIcon} />
-        </TouchableOpacity>
+          <View style={styles.searchButton}>
+            <Ionicons name="ios-search" style={styles.searchIcon} />
+          </View>
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback
+          onPress={() => navigation.navigate("Cuenta")}
+          background={TouchableNativeFeedback.Ripple(GrisClaro, true)}
+        >
+          <View style={styles.userButton}>
+            <ImagenPerfil style={styles.userIcon} />
+          </View>
+        </TouchableNativeFeedback>
       </View>
     ),
     headerStyle: {

@@ -1,10 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import {
-  HalfScreenWidth,
-  HalfScreen16_9_Height,
-  GrisClaro
-} from "../../constants";
+import { HalfScreenWidth, HalfScreen16_9_Height, GrisClaro } from "../../constants";
 
 export default StyleSheet.create({
   flexContainer: {
@@ -13,8 +9,8 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    marginLeft: 17,
-    marginTop: 17
+    paddingLeft: 17,
+    paddingVertical: 8
   },
   rowContainer: {
     flex: 1,
@@ -32,15 +28,16 @@ export default StyleSheet.create({
   duracionYLikesContainer: {
     flexDirection: "row",
     marginTop: "auto",
-    marginBottom: 4,
+    marginBottom: 4
   },
   dropDownMenuContainer: {
-    marginRight: 10,
-    marginLeft: 10,
-    marginTop: 10
+    marginRight: 5,
+    marginLeft: 5,
+    marginTop: 5
   },
   optionsIcon: {
-    fontSize: 14
+    fontSize: 14,
+    padding: 5
   },
   title: {
     fontSize: 16

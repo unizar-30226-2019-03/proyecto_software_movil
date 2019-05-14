@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableNativeFeedback } from "react-native";
 import { Text, Icon } from "react-native-elements";
 
 import Auth from "../../config/Auth";
@@ -10,9 +10,7 @@ export default class Biblioteca extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TouchableOpacity
-					style={styles.boton}
-					activeOpacity={1}
+				<TouchableNativeFeedback
 					onPress={() =>
 						this.props.navigation.navigate("ListaVideos", {
 							title: "Historial",
@@ -20,15 +18,15 @@ export default class Biblioteca extends React.Component {
 						})
 					}
 				>
-					<Icon name="access-time" size={30} marginLeft={20} />
+					<View style={styles.boton}>
+						<Icon name="access-time" size={30} marginLeft={20} />
 
-					<Text style={styles.titulo}>HISTORIAL</Text>
-				</TouchableOpacity>
+						<Text style={styles.titulo}>HISTORIAL</Text>
+					</View>
+				</TouchableNativeFeedback>
 
 				{Auth.isProfesor() ? (
-					<TouchableOpacity
-						style={styles.boton}
-						activeOpacity={1}
+					<TouchableNativeFeedback
 						onPress={() =>
 							this.props.navigation.navigate("ListaVideos", {
 								title: "Mis vídeos",
@@ -36,31 +34,29 @@ export default class Biblioteca extends React.Component {
 							})
 						}
 					>
-						<Icon name="play-circle-outline" size={30} marginLeft={20} />
+						<View style={styles.boton}>
+							<Icon name="play-circle-outline" size={30} marginLeft={20} />
 
-						<Text style={styles.titulo}>MIS VÍDEOS</Text>
-					</TouchableOpacity>
+							<Text style={styles.titulo}>MIS VÍDEOS</Text>
+						</View>
+					</TouchableNativeFeedback>
 				) : null}
 
-				<TouchableOpacity
-					style={styles.boton}
-					activeOpacity={1}
-					onPress={() => this.props.navigation.navigate("MisListas")}
-				>
-					<Icon name="playlist-play" size={30} marginLeft={20} />
+				<TouchableNativeFeedback onPress={() => this.props.navigation.navigate("MisListas")}>
+					<View style={styles.boton}>
+						<Icon name="playlist-play" size={30} marginLeft={20} />
 
-					<Text style={styles.titulo}>MIS LISTAS</Text>
-				</TouchableOpacity>
+						<Text style={styles.titulo}>MIS LISTAS</Text>
+					</View>
+				</TouchableNativeFeedback>
 
 				{Auth.isProfesor() ? (
-					<TouchableOpacity
-						style={styles.boton}
-						activeOpacity={1}
-						onPress={() => this.props.navigation.navigate("SubirVideo")}
-					>
-						<Icon name="videocam" size={30} marginLeft={20} />
-						<Text style={styles.titulo}>SUBIR VÍDEO</Text>
-					</TouchableOpacity>
+					<TouchableNativeFeedback onPress={() => this.props.navigation.navigate("SubirVideo")}>
+						<View style={styles.boton}>
+							<Icon name="videocam" size={30} marginLeft={20} />
+							<Text style={styles.titulo}>SUBIR VÍDEO</Text>
+						</View>
+					</TouchableNativeFeedback>
 				) : null}
 			</View>
 		);

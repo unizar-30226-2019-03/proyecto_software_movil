@@ -14,7 +14,7 @@ const ImagenDePerfilConIcono = props => {
     <View>
       <Image source={{ uri: props.source }} style={props.style} />
       {props.cambiarSi == 0 ? (
-        <TouchableOpacity style={styles.viewIcon} onPress={props.onPressIcono} activeOpacity={0.85}>
+        <TouchableOpacity style={styles.viewIcon} onPress={props.onPressIcono} activeOpacity={1}>
           <Icon type="font-awesome" name="camera" color="white" />
         </TouchableOpacity>
       ) : null}
