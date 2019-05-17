@@ -43,7 +43,6 @@ export default class VideosTab extends React.Component {
 
 	getData = () => {
 		if (this.totalPages == undefined || this.offset < this.totalPages) {
-			let id = Auth.getUserId();
 			let opts = {
 				cacheControl: "no-cache, no-store, must-revalidate",
 				pragma: "no-cache",
@@ -52,10 +51,14 @@ export default class VideosTab extends React.Component {
 				sort: ["timestamp", "desc"],
 				projection: ["videoWithSubjectAndUniversity"]
 			};
-			this.videoApiInstance.getVideosOfUserSubjects(id, opts, (error, data, response) => {
+			this.videoApiInstance.getVideosOfUserSubjects(opts, (error, data, response) => {
 				console.log(data);
 				if (error) {
-					HaOcurridoUnError(this.getData);
+					if (error.status == 403) {
+						Auth.signOut(this.props.navigation);
+					} else {
+						HaOcurridoUnError(this.getData);
+					}
 				} else {
 					this.offset = this.offset + 1;
 					this.totalPages = data.page.totalPages;
@@ -113,7 +116,7 @@ export default class VideosTab extends React.Component {
 									duracion={secToDuration(item.seconds)}
 									title={item.title}
 									info={timeStampToFormat(item.timestamp, this.state.currentDate)}
-									asignaturaIcon={{ uri: item.university.photo }}
+									asignaturaIcon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
 									asignaturaName={item.subject.abbreviation}
 									asignaturaFullName={item.subject.name}
 									asignaturaId={item.subject.id}

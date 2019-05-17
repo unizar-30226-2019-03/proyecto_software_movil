@@ -12,8 +12,11 @@ import RippleTouchable from "../../components/RippleTouchable";
 
 import { observer } from "mobx-react/native";
 
+import PerfilStore from "../../config/PerfilStore";
+
 import styles from "./styles";
 
+@observer
 export default class Cuenta extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
 		title: "Cuenta"
@@ -25,7 +28,7 @@ export default class Cuenta extends React.Component {
 				<View>
 					<View style={styles.userView}>
 						<ImagenPerfil style={styles.userIcon} />
-						<Text style={styles.userName}>NOMBRE</Text>
+						<Text style={styles.userName}>{PerfilStore.userName}</Text>
 					</View>
 
 					<RippleTouchable

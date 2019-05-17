@@ -9,7 +9,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    paddingLeft: 17,
+    paddingLeft: 16,
     paddingVertical: 8
   },
   rowContainer: {

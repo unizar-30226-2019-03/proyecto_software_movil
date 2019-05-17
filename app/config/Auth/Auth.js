@@ -6,7 +6,7 @@ import { UserApi, ApiClient } from "swagger_unicast";
 
 import { observer } from "mobx-react/native";
 
-import ImagenPerfilStore from "../ImagenPerfil";
+import PerfilStore from "../PerfilStore";
 
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 
@@ -14,7 +14,7 @@ import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 export default class Auth {
 	static userToken = undefined;
 	static userId = undefined;
-	static admin = undefined;
+	static professor = undefined;
 
 	static getUserData(navigation, response_callback) {
 		let defaultClient = ApiClient.instance;
@@ -38,8 +38,10 @@ export default class Auth {
 					HaOcurridoUnError(getUserData(navigation, response_callback));
 				}
 			} else {
-				admin = data.role == "ROLE_ADMIN" ? true : false;
-				ImagenPerfilStore.setImagenPerfil(data.photo);
+				professor = data.role == "ROLE_PROFESSOR" ? true : false;
+				console.log(data);
+				PerfilStore.setImagenPerfil(data.photo);
+				PerfilStore.setUserName(data.username);
 				navigation.navigate("Logged");
 			}
 		});
@@ -81,7 +83,7 @@ export default class Auth {
 	}
 
 	static isProfesor() {
-		return true;
+		return professor;
 	}
 
 	static getUserToken() {

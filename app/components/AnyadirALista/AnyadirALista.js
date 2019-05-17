@@ -14,7 +14,11 @@ import { Input, CheckBox } from "react-native-elements";
 import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import update from "immutability-helper";
+
 import { AzulNuevaLista, Azul } from "../../constants";
+
+import Auth from "../../config/Auth";
 
 import { Divider } from "react-native-elements";
 
@@ -28,66 +32,94 @@ export default class AnyadirALista extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: [
-				{ check: true },
-				{ check: false },
-				{ check: true },
-				{ check: true },
-				{ check: true },
-				{ check: true },
-				{ check: true },
-				{ check: true },
-				{ check: true },
-				{ check: true },
-				{ check: true }
-			],
-			dataChanging: [false, false, false, false, false, false, false, false, false, false, false],
+			data: [{ check: true }],
+			dataChanging: [true],
 			loading: true,
 			fetchingNewData: false,
-			updatingChanges: false,
-			mounted: false,
 			nuevaListaModalVisible: false,
 			nuevaListaInput: ""
 		};
+
+		this.offset = 0;
+		this.totalPages = null;
+
+		let defaultClient = ApiClient.instance;
+		let bearerAuth = defaultClient.authentications["bearerAuth"];
+		bearerAuth.accessToken = Auth.getUserToken();
+
+		this.apiInstance = new ReproductionListApi();
 	}
 
 	onShow = () => {
-		if (!this.state.mounted) {
-			this.setState({
-				mounted: true
-			});
-			this.getData();
-		}
+		this.setState({
+			loading: true,
+			fetchingNewData: false,
+			data: [],
+			dataChanging: []
+		});
+		this.getData();
 	};
 
 	changeCheckBox = idx => {
 		if (!this.state.dataChanging[idx]) {
+			let tempDataChanging = [...this.state.dataChanging];
+			tempDataChanging[idx] = true;
 			this.setState({
-				dataChanging: update(this.state.dataChanging, { idx: { $set: true } })
+				dataChanging: tempDataChanging
 			});
+
+			// if (this.state.data.)
 
 			// api
 
+			tempDataChanging = [...this.state.dataChanging];
+			tempDataChanging[idx] = false;
+			let tempData = [];
 			this.setState({
-				dataChanging: update(this.state.dataChanging, { idx: { $set: false } }),
-				tempData: update(this.state.data, { idx: { check: { $set: !this.state.data } } })
+				dataChanging: tempDataChanging
+				// data: tempData
 			});
 		}
 	};
 
 	getData = () => {
-		this.setState({
-			loading: false
-		});
+		// if (this.totalPages == undefined || this.offset < this.totalPages) {
+		// 	let opts = {
+		// 		cacheControl: "no-cache, no-store, must-revalidate",
+		// 		pragma: "no-cache",
+		// 		expires: 0,
+		// 		page: this.offset
+		// 	};
+		// 	apiInstance.getUserReproductionLists(opts, (error, data, response) => {
+		// 		if (error) {
+		// 			if (error.status == 403) {
+		// 				Auth.signOut(this.props.navigation);
+		// 			} else {
+		// 				HaOcurridoUnError(this.props.hide);
+		// 			}
+		// 		} else {
+		// 			let tempDataChanging = _.range(data._embedded.reproductionLists).map(function() {
+		// 				return false;
+		// 			});
+		// 			this.setState({
+		// 				loading: false,
+		// 				fetchingNewData: false,
+		// 				data: [...this.state.data, ...data._embedded.reproductionLists],
+		// 				dataChanging: [...this.state.dataChanging, ...tempDataChanging]
+		// 			});
+		// 		}
+		// 	});
+		// } else {
+		// 	this.setState({ loading: false, fetchingNewData: false });
+		// }
+		this.setState({ loading: false, fetchingNewData: false });
 	};
 
-	onEndReached = () => {};
-
-	updateLista = () => {
-		this.props.hide();
-		// this.setState({
-		// 	updatingChanges: true
-		// });
+	onEndReached = () => {
+		if (!this.state.fetchingNewData) {
+			this.setState({ fetchingNewData: true });
+			this.getData();
+		}
 	};
 
 	crearLista = () => {
@@ -160,7 +192,7 @@ export default class AnyadirALista extends React.Component {
 								)}
 								<Divider style={styles.divider} />
 								<RippleTouchable
-									onPress={() => this.updateLista()}
+									onPress={() => this.props.hide()}
 									disabled={this.state.loading}
 									style={styles.listoContainer}
 								>

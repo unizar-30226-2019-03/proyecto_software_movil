@@ -8,6 +8,8 @@ import RippleTouchable from "../../components/RippleTouchable";
 
 import { SubjectApi, ApiClient } from "swagger_unicast";
 
+import HaOcurridoUnError from "../../components/HaOcurridoUnError";
+
 import LoadingFooter from "../../components/LoadingFooter";
 
 import styles from "./styles";
@@ -48,9 +50,13 @@ export default class Ranking extends React.Component {
         projection: "subjectWithUniversity"
       };
       this.apiInstance.getSubjectRanking(opts, (error, data, response) => {
-        console.log(data);
+        console.log(error);
         if (error) {
-          HaOcurridoUnError(this.getData);
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(this.getData);
+          }
         } else {
           this.offset = this.offset + 1;
           this.totalPages = data.page.totalPages;

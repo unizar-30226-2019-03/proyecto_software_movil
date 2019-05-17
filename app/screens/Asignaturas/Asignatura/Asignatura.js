@@ -93,7 +93,12 @@ export default class Asignatura extends React.Component {
         projection: "videoWithSubjectAndUniversity"
       };
       this.videosInstance.getVideosFromSubject(this.id, opts, (error, data, response) => {
-        if (!error) {
+        console.log(data);
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          }
+        } else {
           this.offset = this.offset + 1;
           this.totalPages = data.page.totalPages;
           this.setState({
@@ -111,31 +116,34 @@ export default class Asignatura extends React.Component {
   };
 
   getProfesores = () => {
-    this.setState({
-      profesores: [
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" },
-        { temp: "dawda" }
-      ],
-      loadingProfesores: false,
-      refreshingProfesores: false
-    });
-  };
-
-  getSeguir = () => {
-    let userId = Auth.getUserId();
-    let subjectId = this.id;
     let opts = {
       cacheControl: "'no-cache, no-store, must-revalidate'",
       pragma: "'no-cache'",
       expires: "'0'"
     };
-    this.subjectInstance.existsUserInSubject(userId, subjectId, opts, (error, data, response) => {
-      if (!error) {
+    this.subjectInstance.getProfessorsFromSubject(this.id, opts, (error, data, response) => {
+      if (error) {
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
+        }
+      } else {
+        this.setState({ profesores: [...data._embedded.users], loadingProfesores: false, refreshingProfesores: false });
+      }
+    });
+  };
+
+  getSeguir = () => {
+    let opts = {
+      cacheControl: "'no-cache, no-store, must-revalidate'",
+      pragma: "'no-cache'",
+      expires: "'0'"
+    };
+    this.subjectInstance.existsUserInSubject(this.id, opts, (error, data, response) => {
+      if (error) {
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
+        }
+      } else {
         this.setState({ asignaturaSeguida: data, loadingSeguir: false, refreshingSeguir: false });
       }
     });
@@ -143,19 +151,20 @@ export default class Asignatura extends React.Component {
 
   changeSeguirState = () => {
     if (!this.state.changingStateSeguir && !this.someOneRefreshing()) {
-      let userId = Auth.getUserId();
-      let subjectId = this.id;
-
       this.setState({ changingStateSeguir: true });
 
       if (this.state.asignaturaSeguida) {
-        this.subjectInstance.deleteUserFromSubject(userId, subjectId, (error, data, response) => {
-          if (!error) {
+        this.subjectInstance.unfollowSubject(this.id, (error, data, response) => {
+          if (error) {
+            if (error.status == 403) {
+              Auth.signOut(this.props.navigation);
+            }
+          } else {
             this.setState({ asignaturaSeguida: false, changingStateSeguir: false });
           }
         });
       } else {
-        this.subjectInstance.putUser(subjectId, userId, (error, data, response) => {
+        this.subjectInstance.followSubject(this.id, (error, data, response) => {
           if (!error) {
             this.setState({ asignaturaSeguida: true, changingStateSeguir: false });
           }
@@ -214,17 +223,17 @@ export default class Asignatura extends React.Component {
                     round={true}
                     onPress={() =>
                       this.props.navigation.navigate("Chat", {
-                        title: "Juancho Provisional"
+                        title: item.name + ", " + item.surnames,
+                        id: item.id,
+                        photo: item.photo
                       })
                     }
                   >
                     <View style={styles.iconAndNameView}>
-                      <Image
-                        source={require("./../../../../test/imagenes/perfil.jpg")}
-                        style={styles.userIcon}
-                        margin={20}
-                      />
-                      <Text style={styles.userName}>Pedro E.</Text>
+                      <Image source={{ uri: item.photo }} style={styles.userIcon} />
+                      <Text numberOfLines={1} style={styles.userName}>
+                        {item.name}
+                      </Text>
                     </View>
                   </RippleTouchable>
                 );
@@ -249,7 +258,7 @@ export default class Asignatura extends React.Component {
                       duracion={secToDuration(item.seconds)}
                       title={item.title}
                       info={timeStampToFormat(item.timestamp, this.state.currentDate)}
-                      asignaturaIcon={require("./../../../../test/imagenes/perfil_uni.jpg")}
+                      asignaturaIcon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
                       asignaturaName={item.subject.abbreviation}
                       asignaturaFullName={item.subject.name}
                       asignaturaId={item.subject.id}

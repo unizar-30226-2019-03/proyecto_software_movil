@@ -78,10 +78,14 @@ export default class ListaVideos extends React.Component {
 			page: this.offset,
 			sort: ["timestamp", "desc"]
 		};
-		this.apiInstance.getVideosFromUploader(id, opts, (error, data, response) => {
+		this.apiInstance.getVideosFromUploader(opts, (error, data, response) => {
 			console.log(data);
 			if (error) {
-				HaOcurridoUnError(this.getVideosOfUser);
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(this.getVideosOfUser);
+				}
 			} else {
 				this.offset = this.offset + 1;
 				this.totalPages = data.page.totalPages;
@@ -106,9 +110,13 @@ export default class ListaVideos extends React.Component {
 			projection: "displayWithVideo",
 			sort: ["timestamp", "desc"]
 		};
-		this.apiInstance.getDisplaysByUser(id, opts, (error, data, response) => {
+		this.apiInstance.getDisplaysByUser(opts, (error, data, response) => {
 			if (error) {
-				HaOcurridoUnError(this.getHistorial);
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(this.getHistorial);
+				}
 			} else {
 				this.offset = this.offset + 1;
 				this.totalPages = data.page.totalPages;
@@ -193,6 +201,7 @@ export default class ListaVideos extends React.Component {
 					<ActivityIndicator size="large" />
 				) : (
 					<FlatList
+						style={styles.videosContainer}
 						showsVerticalScrollIndicator={false}
 						data={this.state.data}
 						refreshing={this.state.refreshing}

@@ -43,8 +43,12 @@ export default class AsignaturasTab extends React.Component {
       expires: 0
     };
     this.apiInstance.getSubjectsOfUser(id, opts, (error, data, response) => {
+      console.log("GHDAW");
       console.log(data);
       if (error) {
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
+        }
         HaOcurridoUnError(this.getData);
       } else {
         this.setState({
@@ -80,7 +84,7 @@ export default class AsignaturasTab extends React.Component {
             renderItem={({ item }) => (
               <ThumbnailAsignatura
                 navigation={this.props.navigation}
-                icon={{ uri: item.university.photo }}
+                icon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
                 name={item.name}
                 id={item.id}
               />

@@ -17,7 +17,7 @@ import ImagenDePerfilConIcono from "../../components/ImagenDePerfilConIcono";
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 import LoadingModal from "../../components/LoadingModal";
 
-import ImagenPerfilStore from "../../config/ImagenPerfil";
+import PerfilStore from "../../config/PerfilStore";
 
 import Auth from "../../config/Auth";
 
@@ -67,7 +67,11 @@ export default class VerPerfil extends React.Component {
     this.apiInstance.getUser(id, opts, (error, data, response) => {
       console.log(data);
       if (error) {
-        HaOcurridoUnError(this.getData);
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
+        } else {
+          HaOcurridoUnError(this.getData);
+        }
       } else {
         this.setState({
           imagen: data.photo,
@@ -139,7 +143,7 @@ export default class VerPerfil extends React.Component {
             { cancelable: false }
           );
         } else {
-          ImagenPerfilStore.setImagenPerfil(data.photo);
+          PerfilStore.setImagenPerfil(data.photo);
           Alert.alert("Bien!", "Tu información ha sido actualizada con éxito", [{ text: "Vale" }], {
             cancelable: false
           });

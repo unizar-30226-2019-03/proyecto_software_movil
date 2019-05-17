@@ -3,6 +3,10 @@ import { Text, View, Button, ActivityIndicator, FlatList } from "react-native";
 
 import LoadingFooter from "../../../components/LoadingFooter";
 
+import Auth from "../../../config/Auth";
+
+import { ReproductionListApi, ApiClient } from "swagger_unicast";
+
 import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 
 import styles from "./styles";
@@ -16,7 +20,7 @@ export default class MisListas extends React.Component {
 		super(props);
 
 		this.state = {
-			data: [{ temp: "temp" }],
+			data: [],
 			loading: true,
 			fetchingNewData: false,
 			refreshing: false
@@ -25,41 +29,44 @@ export default class MisListas extends React.Component {
 		this.offset = 0;
 		this.totalPages = undefined;
 
-		// let defaultClient = ApiClient.instance;
-		// let bearerAuth = defaultClient.authentications["bearerAuth"];
-		// bearerAuth.accessToken = getUserToken();
+		let defaultClient = ApiClient.instance;
+		let bearerAuth = defaultClient.authentications["bearerAuth"];
+		bearerAuth.accessToken = Auth.getUserToken();
 
-		// this.videoApiInstance = new VideoApi();
-
-		// this.getData();
-		this.state.loading = false;
+		this.apiInstance = new ReproductionListApi();
 	}
 
-	//  componentDidMount = () => {
-	//   this.getData();
-	// };
+	componentDidMount = () => {
+		this.getData();
+	};
 
 	getData = () => {
-		// if (this.totalPages == undefined || this.offset < this.totalPages) {
-		//   let opts = {
-		//     page: this.offset,
-		//     cacheControl: "no-cache, no-store, must-revalidate",
-		//   	 pragma: "no-cache",
-		//   	 expires: 0
-		//   };
-		//   this.videoApiInstance.getVideos((error, data, response) => {
-		//     if (!error) {
-		//       this.offset = this.offset + 1;
-		//       this.totalPages = data.page.totalPages;
-		//       this.setState({
-		//         data: [...this.state.data, ...data._embedded.videos],
-		//         loading: false,
-		//         fetchingNewData: false,
-		//         refreshing: false
-		//       });
-		//     }
-		//   });
-		// }
+		if (this.totalPages == undefined || this.offset < this.totalPages) {
+			let opts = {
+				cacheControl: "no-cache, no-store, must-revalidate",
+				pragma: "no-cache",
+				expires: 0,
+				page: this.offset
+			};
+			this.apiInstance.getUserReproductionLists(opts, (error, data, response) => {
+				console.log(data);
+				if (error) {
+					if (error.status == 403) {
+						Auth.signOut(this.props.navigation);
+					} else {
+						HaOcurridoUnError(this.getData);
+					}
+				} else {
+					this.setState({
+						loading: false,
+						fetchingNewData: false,
+						data: [...this.state.data, ...data._embedded.reproductionLists]
+					});
+				}
+			});
+		} else {
+			this.setState({ loading: false, fetchingNewData: false });
+		}
 	};
 
 	onEndReached = () => {
@@ -90,6 +97,7 @@ export default class MisListas extends React.Component {
 					<ActivityIndicator size="large" />
 				) : (
 					<FlatList
+						style={styles.listasContainer}
 						showsVerticalScrollIndicator={false}
 						data={this.state.data}
 						refreshing={this.state.refreshing}

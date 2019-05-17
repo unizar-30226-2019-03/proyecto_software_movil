@@ -60,9 +60,13 @@ export default class SubirVideo extends React.Component {
       pragma: "no-cache",
       expires: 0
     };
-    this.userApiInstance.getSubjectsOfUser(id, opts, (error, data, response) => {
+    this.userApiInstance.getSubjectsAsProfessor(id, opts, (error, data, response) => {
       if (error) {
-        HaOcurridoUnError(this.getAsignaturas);
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
+        } else {
+          HaOcurridoUnError(this.getAsignaturas);
+        }
       } else {
         this.setState({
           pickerData: [...this.state.pickerData, ...data._embedded.subjects],
@@ -145,7 +149,14 @@ export default class SubirVideo extends React.Component {
             subiendoVideo: false
           });
           if (error) {
-            HaOcurridoUnError(null);
+            console.log(error);
+            console.log(data);
+
+            if (error.status == 403) {
+              Auth.signOut(this.props.navigation);
+            } else {
+              HaOcurridoUnError(null);
+            }
           } else {
             Alert.alert(
               "¡Bien!",
