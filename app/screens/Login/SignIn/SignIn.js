@@ -39,7 +39,7 @@ export default class SignIn extends React.Component {
             loginIn: false
           });
         } else {
-          await Auth.signIn(data.token, data.id, this.props.navigation);
+          await Auth.signIn(data.token, data.id, this.props.navigation, () => this.setState({ loginIn: false }));
         }
       });
     }
