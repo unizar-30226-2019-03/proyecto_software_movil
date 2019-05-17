@@ -41,6 +41,7 @@ export default class AnyadirALista extends React.Component {
 				{ check: true },
 				{ check: true }
 			],
+			dataChanging: [false, false, false, false, false, false, false, false, false, false, false],
 			loading: true,
 			fetchingNewData: false,
 			updatingChanges: false,
@@ -60,9 +61,18 @@ export default class AnyadirALista extends React.Component {
 	};
 
 	changeCheckBox = idx => {
-		let temp = [...this.state.data];
-		temp[idx].check = !temp[idx].check;
-		this.setState({ data: temp });
+		if (!this.state.dataChanging[idx]) {
+			this.setState({
+				dataChanging: update(this.state.dataChanging, { idx: { $set: true } })
+			});
+
+			// api
+
+			this.setState({
+				dataChanging: update(this.state.dataChanging, { idx: { $set: false } }),
+				tempData: update(this.state.data, { idx: { check: { $set: !this.state.data } } })
+			});
+		}
 	};
 
 	getData = () => {

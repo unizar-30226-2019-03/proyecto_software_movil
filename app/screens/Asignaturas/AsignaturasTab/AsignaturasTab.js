@@ -35,6 +35,7 @@ export default class AsignaturasTab extends React.Component {
 
   getData = () => {
     let id = Auth.getUserId();
+    console.log(id);
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
       pragma: "no-cache",

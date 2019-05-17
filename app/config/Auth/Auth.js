@@ -8,10 +8,13 @@ import { observer } from "mobx-react/native";
 
 import ImagenPerfilStore from "../ImagenPerfil";
 
+import HaOcurridoUnError from "../../components/HaOcurridoUnError";
+
 @observer
 export default class Auth {
 	static userToken = undefined;
 	static userId = undefined;
+	static admin = undefined;
 
 	static getUserData(navigation, response_callback) {
 		let defaultClient = ApiClient.instance;
@@ -29,10 +32,13 @@ export default class Auth {
 				response_callback();
 			}
 			if (error) {
-				// if (error.status)
-				console.log(error.status);
-				navigation.navigate("NotLogged");
+				if (error.status == 403) {
+					navigation.navigate("NotLogged");
+				} else {
+					HaOcurridoUnError(getUserData(navigation, response_callback));
+				}
 			} else {
+				admin = data.role == "ROLE_ADMIN" ? true : false;
 				ImagenPerfilStore.setImagenPerfil(data.photo);
 				navigation.navigate("Logged");
 			}
