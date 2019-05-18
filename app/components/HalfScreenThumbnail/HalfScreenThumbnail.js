@@ -73,10 +73,7 @@ export default class HalfScreenThumbnail extends React.Component {
 						opened={this.state.popUpVisible}
 						onBackdropPress={() => this.setState({ popUpVisible: false })}
 					>
-						<MenuTrigger
-							onPress={() => (this.props.canShowPopUp ? this.setState({ popUpVisible: true }) : null)}
-							triggerTouchable={{ background: TouchableNativeFeedback.Ripple("ThemeAttrAndroid", true) }}
-						>
+						<MenuTrigger onPress={() => (this.props.canShowPopUp ? this.setState({ popUpVisible: true }) : null)}>
 							<SimpleLineIcons name={"options-vertical"} style={styles.optionsIcon} />
 						</MenuTrigger>
 						<MenuOptions>
