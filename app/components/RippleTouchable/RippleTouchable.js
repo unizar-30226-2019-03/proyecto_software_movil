@@ -2,7 +2,7 @@ import React from "react";
 
 import { View, TouchableNativeFeedback } from "react-native";
 
-export default class RiplleTouchable extends React.Component {
+export default class RippleTouchable extends React.Component {
 	render() {
 		let optional_props = {};
 		if (this.props.round) {

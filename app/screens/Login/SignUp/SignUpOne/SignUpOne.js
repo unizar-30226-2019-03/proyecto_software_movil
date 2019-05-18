@@ -17,6 +17,8 @@ import { ImagePicker } from "expo";
 
 import { UniversityApi, DegreeApi, UserApi } from "swagger_unicast";
 
+import RippleTouchable from "../../../../components/RippleTouchable";
+
 import InputFixer from "../../../../components/InputFixer";
 
 import LoadingFooter from "../../../../components/LoadingFooter";
@@ -383,7 +385,9 @@ export default class SignUpOne extends React.Component {
             placeholder="Repita la contraseña*"
             secureTextEntry={true}
             errorMessage={
-              this.state.passwordsMatch ? null : "Las contraseñas no coinciden"
+              this.state.passwordsMatch
+                ? null
+                : "Las contraseñas no coinciden"
             }
             leftIcon={{ type: "font-awesome", name: "lock" }}
             onChangeText={checkpw => this.comparePasswords(checkpw, 2)}
@@ -395,7 +399,10 @@ export default class SignUpOne extends React.Component {
           {this.state.imageErr ? (
             <Text style={styles.imageErrText}>{imageErrText}</Text>
           ) : (
-            <Image source={{ uri: this.state.image }} style={styles.profPic} />
+            <Image
+              source={{ uri: this.state.image }}
+              style={styles.profPic}
+            />
           )}
 
           <Button
@@ -411,7 +418,9 @@ export default class SignUpOne extends React.Component {
             onChangeText={name => this.setState({ name: name })}
             placeholder="Nombre*"
             errorMessage={
-              this.state.nameLengthErr ? "El nombre no puede ser vacío" : null
+              this.state.nameLengthErr
+                ? "El nombre no puede ser vacío"
+                : null
             }
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -461,7 +470,7 @@ export default class SignUpOne extends React.Component {
                 data={this.state.uniData}
                 onEndReached={() => this.onEndReached("uni")}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
+                  <RippleTouchable
                     style={styles.listRow}
                     onPress={() =>
                       this.setState({
@@ -472,7 +481,7 @@ export default class SignUpOne extends React.Component {
                     }
                   >
                     <Text style={styles.rowText}>{item.name}</Text>
-                  </TouchableOpacity>
+                  </RippleTouchable>
                 )}
                 ListFooterComponent={LoadingFooter({
                   show: this.state.fetchingNewUniData
@@ -512,7 +521,7 @@ export default class SignUpOne extends React.Component {
                 data={this.state.degData}
                 onEndReached={() => this.onEndReached("deg")}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
+                  <RippleTouchable
                     style={styles.listRow}
                     onPress={() =>
                       this.setState({
@@ -523,7 +532,7 @@ export default class SignUpOne extends React.Component {
                     }
                   >
                     <Text style={styles.rowText}>{item.name}</Text>
-                  </TouchableOpacity>
+                  </RippleTouchable>
                 )}
                 ListFooterComponent={LoadingFooter({
                   show: this.state.fetchingNewDegData
