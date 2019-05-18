@@ -95,7 +95,6 @@ export default class Ranking extends React.Component {
 
   icon = index => {
     let color = "white";
-    let hidden = false;
 
     if (index == 0) {
       color = "gold";
@@ -103,15 +102,17 @@ export default class Ranking extends React.Component {
       color = "silver";
     } else if (index == 2) {
       color = "brown";
-    } else {
-      hidden = true;
     }
 
-    return (
-      <View style={hidden ? styles.hidden : null}>
-        <Icon name="trophy" type="font-awesome" color={color} />
-      </View>
-    );
+    if (index < 3) {
+      return (
+        <View style={styles.trophy}>
+          <Icon name="trophy" type="font-awesome" color={color} />
+        </View>
+      );
+    } else {
+      return null;
+    }
   };
 
   render() {
@@ -137,7 +138,12 @@ export default class Ranking extends React.Component {
                 style={styles.rankingPlace}
               >
                 <Text style={styles.rankNumber}>{index + 1 + "."}</Text>
-                <IconoAsignaturaUniversidad name={item.abbreviation} image={{ uri: item.university.photo }} />
+                <View style={styles.iconoAsignaturaUniversidad}>
+                  <IconoAsignaturaUniversidad
+                    name={item.abbreviation}
+                    image={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
+                  />
+                </View>
                 {this.icon(index)}
                 <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
               </RippleTouchable>
