@@ -28,11 +28,6 @@ export default StyleSheet.create({
 		flexDirection: "row",
 		padding: 10
 	},
-	anyadirListaContainer: {
-		marginTop: ScreenhHeight * 0.1,
-		marginHorizontal: 20,
-		backgroundColor: "#fff"
-	},
 	listoContainer: {
 		padding: 10,
 		flexDirection: "row",
@@ -44,24 +39,6 @@ export default StyleSheet.create({
 	},
 	divider: {
 		backgroundColor: "gray"
-	},
-	nuevaListaModalTexto: {
-		padding: 10,
-		marginLeft: 5,
-		fontSize: 18
-	},
-	nuevaListaInputContainer: {
-		marginLeft: 5
-	},
-	cancelar: {
-		marginRight: 10
-	},
-	crearCancelarContainer: {
-		padding: 10,
-		marginTop: 15,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "flex-end"
 	},
 	activityIndicatorContainer: {
 		flex: 1,
