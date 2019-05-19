@@ -1,15 +1,6 @@
 import React from "react";
 
-import {
-  View,
-  Text,
-  Animated,
-  Picker,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity,
-  Alert
-} from "react-native";
+import { View, Text, Animated, Picker, FlatList, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
 
 import { Input, Image, Button, Overlay } from "react-native-elements";
 
@@ -17,15 +8,17 @@ import { ImagePicker } from "expo";
 
 import { UniversityApi, DegreeApi, UserApi } from "swagger_unicast";
 
-import InputFixer from "../../../../components/InputFixer";
+import RippleTouchable from "../../../components/RippleTouchable";
 
-import LoadingFooter from "../../../../components/LoadingFooter";
+import InputFixer from "../../../components/InputFixer";
+
+import LoadingFooter from "../../../components/LoadingFooter";
 
 import styles from "./styles";
 
 const imageErrText = "Falta una\nimagen de perfil";
 
-export default class SignUpOne extends React.Component {
+export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -76,28 +69,24 @@ export default class SignUpOne extends React.Component {
 
   getUniData = () => {
     if (
-      (this.totalUniPages == undefined ||
-        this.uniOffset < this.totalUniPages) &&
+      (this.totalUniPages == undefined || this.uniOffset < this.totalUniPages) &&
       !this.state.onUniEndReachedManaged
     ) {
       let opts = {
         page: this.uniOffset
       };
-      this.universityApiInstance.getUniversities(
-        opts,
-        (error, data, response) => {
-          if (!error) {
-            this.uniOffset = this.uniOffset + 1;
-            this.totalUniPages = data.page.totalPages;
-            this.setState({
-              uniData: [...this.state.uniData, ...data._embedded.universities],
-              loadingUni: false,
-              fetchingNewUniData: false,
-              onUniEndReachedManaged: false
-            });
-          }
+      this.universityApiInstance.getUniversities(opts, (error, data, response) => {
+        if (!error) {
+          this.uniOffset = this.uniOffset + 1;
+          this.totalUniPages = data.page.totalPages;
+          this.setState({
+            uniData: [...this.state.uniData, ...data._embedded.universities],
+            loadingUni: false,
+            fetchingNewUniData: false,
+            onUniEndReachedManaged: false
+          });
         }
-      );
+      });
     } else {
       this.setState({ loadingUni: false, fetchingNewUniData: false });
     }
@@ -105,8 +94,7 @@ export default class SignUpOne extends React.Component {
 
   getDegData = () => {
     if (
-      (this.totalDegPages == undefined ||
-        this.degOffset < this.totalDegPages) &&
+      (this.totalDegPages == undefined || this.degOffset < this.totalDegPages) &&
       !this.state.onDegEndReachedManaged
     ) {
       let opts = {
@@ -260,29 +248,21 @@ export default class SignUpOne extends React.Component {
   };
 
   showConnectionErrorAlert = () => {
-    Alert.alert(
-      'Error en el registro',
-      'Posiblemente se deba a un error de conexión',
-      [
-        {
-          text: 'Cerrar',
-          style: 'cancel',
-        }
-      ],
-    );
-  }
+    Alert.alert("Error en el registro", "Posiblemente se deba a un error de conexión", [
+      {
+        text: "Cerrar",
+        style: "cancel"
+      }
+    ]);
+  };
 
   showSuccessfulRegister = () => {
-    Alert.alert(
-      '¡Registro completado!',
-      'Ya puede usar la aplicación introduciendo sus datos',
-      [
-        {
-          text: 'OK',
-        }
-      ],
-    );
-  }
+    Alert.alert("¡Registro completado!", "Ya puede usar la aplicación introduciendo sus datos", [
+      {
+        text: "OK"
+      }
+    ]);
+  };
 
   tryRegister = () => {
     const photo = {
@@ -291,15 +271,15 @@ export default class SignUpOne extends React.Component {
       type: "imagen/png"
     };
     let apiInstance = new UserApi();
-    console.log("username ",this.state.username);
-    console.log("pw ",this.state.password);
-    console.log("name ",this.state.name);
-    console.log("surname ",this.state.surname);
-    console.log("email ",this.state.email);
-    console.log("descr ",this.state.description);
-    console.log("univer ",this.state.universityId);
-    console.log("degre ",this.state.degreeId);
-    console.log("image ",this.state.image);
+    console.log("username ", this.state.username);
+    console.log("pw ", this.state.password);
+    console.log("name ", this.state.name);
+    console.log("surname ", this.state.surname);
+    console.log("email ", this.state.email);
+    console.log("descr ", this.state.description);
+    console.log("univer ", this.state.universityId);
+    console.log("degre ", this.state.degreeId);
+    console.log("image ", this.state.image);
     apiInstance.addUser(
       this.state.username,
       this.state.password,
@@ -323,26 +303,16 @@ export default class SignUpOne extends React.Component {
 
   render() {
     return (
-      <InputFixer
-        navigation={this.props.navigation}
-        ref={InputFixer => (this.InputFixer = InputFixer)}
-      >
+      <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
         <View style={styles.logoView}>
-          <Image
-            source={require("../../../../assets/icon.png")}
-            style={styles.appLogo}
-          />
+          <Image source={require("../../../assets/icon.png")} style={styles.appLogo} />
         </View>
 
         <View style={styles.inputBoxSeparation}>
           <Input
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Nombre de usuario*"
-            errorMessage={
-              this.state.usernameLengthErr
-                ? "El nombre de usuario no puede ser vacío"
-                : null
-            }
+            errorMessage={this.state.usernameLengthErr ? "El nombre de usuario no puede ser vacío" : null}
             onChangeText={username => this.setState({ username: username })}
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -353,9 +323,7 @@ export default class SignUpOne extends React.Component {
           <Input
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Correo electrónico*"
-            errorMessage={
-              this.state.emailErr ? "Correo electrónico no válido" : null
-            }
+            errorMessage={this.state.emailErr ? "Correo electrónico no válido" : null}
             onChangeText={email => this.setState({ email: email })}
             leftIcon={{ type: "font-awesome", name: "at" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -367,11 +335,7 @@ export default class SignUpOne extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Contraseña*"
             secureTextEntry={true}
-            errorMessage={
-              this.state.passwordLengthErr
-                ? "La contraseña no puede ser vacía"
-                : null
-            }
+            errorMessage={this.state.passwordLengthErr ? "La contraseña no puede ser vacía" : null}
             leftIcon={{ type: "font-awesome", name: "lock" }}
             onChangeText={password => this.comparePasswords(password, 1)}
             leftIconContainerStyle={styles.inputSeparation}
@@ -382,9 +346,7 @@ export default class SignUpOne extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Repita la contraseña*"
             secureTextEntry={true}
-            errorMessage={
-              this.state.passwordsMatch ? null : "Las contraseñas no coinciden"
-            }
+            errorMessage={this.state.passwordsMatch ? null : "Las contraseñas no coinciden"}
             leftIcon={{ type: "font-awesome", name: "lock" }}
             onChangeText={checkpw => this.comparePasswords(checkpw, 2)}
             leftIconContainerStyle={styles.inputSeparation}
@@ -410,9 +372,7 @@ export default class SignUpOne extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             onChangeText={name => this.setState({ name: name })}
             placeholder="Nombre*"
-            errorMessage={
-              this.state.nameLengthErr ? "El nombre no puede ser vacío" : null
-            }
+            errorMessage={this.state.nameLengthErr ? "El nombre no puede ser vacío" : null}
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
@@ -422,31 +382,16 @@ export default class SignUpOne extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             onChangeText={surname => this.setState({ surname: surname })}
             placeholder="Apellidos*"
-            errorMessage={
-              this.state.surnameLengthErr
-                ? "Los apellidos no pueden ser vacíos"
-                : null
-            }
+            errorMessage={this.state.surnameLengthErr ? "Los apellidos no pueden ser vacíos" : null}
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
         </View>
 
         <View style={styles.viewSelectAsign}>
-          <Text
-            style={
-              this.state.universityErr
-                ? styles.textAsignaturaErr
-                : styles.textAsignatura
-            }
-          >
-            Universidad:
-          </Text>
+          <Text style={this.state.universityErr ? styles.textAsignaturaErr : styles.textAsignatura}>Universidad:</Text>
 
-          <Text
-            style={styles.collegeName}
-            onPress={() => this.setState({ openUniModal: true })}
-          >
+          <Text style={styles.collegeName} onPress={() => this.setState({ openUniModal: true })}>
             {this.state.universityName}
           </Text>
 
@@ -461,7 +406,7 @@ export default class SignUpOne extends React.Component {
                 data={this.state.uniData}
                 onEndReached={() => this.onEndReached("uni")}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
+                  <RippleTouchable
                     style={styles.listRow}
                     onPress={() =>
                       this.setState({
@@ -472,7 +417,7 @@ export default class SignUpOne extends React.Component {
                     }
                   >
                     <Text style={styles.rowText}>{item.name}</Text>
-                  </TouchableOpacity>
+                  </RippleTouchable>
                 )}
                 ListFooterComponent={LoadingFooter({
                   show: this.state.fetchingNewUniData
@@ -484,20 +429,9 @@ export default class SignUpOne extends React.Component {
         </View>
 
         <View style={styles.viewSelectAsign}>
-          <Text
-            style={
-              this.state.degreeErr
-                ? styles.textAsignaturaErr
-                : styles.textAsignatura
-            }
-          >
-            Estudios:
-          </Text>
+          <Text style={this.state.degreeErr ? styles.textAsignaturaErr : styles.textAsignatura}>Estudios:</Text>
 
-          <Text
-            style={styles.collegeName}
-            onPress={() => this.setState({ openDegModal: true })}
-          >
+          <Text style={styles.collegeName} onPress={() => this.setState({ openDegModal: true })}>
             {this.state.degreeName}
           </Text>
 
@@ -512,7 +446,7 @@ export default class SignUpOne extends React.Component {
                 data={this.state.degData}
                 onEndReached={() => this.onEndReached("deg")}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
+                  <RippleTouchable
                     style={styles.listRow}
                     onPress={() =>
                       this.setState({
@@ -523,7 +457,7 @@ export default class SignUpOne extends React.Component {
                     }
                   >
                     <Text style={styles.rowText}>{item.name}</Text>
-                  </TouchableOpacity>
+                  </RippleTouchable>
                 )}
                 ListFooterComponent={LoadingFooter({
                   show: this.state.fetchingNewDegData
@@ -538,15 +472,9 @@ export default class SignUpOne extends React.Component {
           <Input
             onCharge
             onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={description =>
-              this.updateDescriptionAndFocus(description)
-            }
+            onChangeText={description => this.updateDescriptionAndFocus(description)}
             placeholder="Escriba su descripción..."
-            errorMessage={
-              this.state.descriptionLengthErr
-                ? "La descripción no puede ser vacía"
-                : null
-            }
+            errorMessage={this.state.descriptionLengthErr ? "La descripción no puede ser vacía" : null}
             leftIcon={{ type: "font-awesome", name: "info" }}
             leftIconContainerStyle={styles.inputSeparationInfo}
             multiline={true}

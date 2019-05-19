@@ -3,7 +3,7 @@ import { Text, View, Button, ActivityIndicator, FlatList, Alert } from "react-na
 
 import Auth from "../../../config/Auth";
 
-import { VideoApi, DisplayApi, ApiClient } from "swagger_unicast";
+import { VideoApi, DisplayApi, ApiClient, ReproductionListApi } from "swagger_unicast";
 
 import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
@@ -40,14 +40,13 @@ export default class ListaVideos extends React.Component {
 		let bearerAuth = defaultClient.authentications["bearerAuth"];
 		bearerAuth.accessToken = Auth.getUserToken();
 
-		this.apiInstance;
-
 		if (this.tipoLista == "mis_videos") {
 			this.apiInstance = new VideoApi();
 		} else if (this.tipoLista == "historial") {
 			this.apiInstance = new DisplayApi();
 		} else if (this.tipoLista == "lista") {
-			console.log("FALTA");
+			this.videoApiInstance = new VideoApi();
+			this.reproductionApiInstance = new ReproductionListApi();
 		}
 	}
 
@@ -62,11 +61,45 @@ export default class ListaVideos extends React.Component {
 			} else if (this.tipoLista == "historial") {
 				this.getHistorial();
 			} else if (this.tipoLista == "lista") {
-				console.log("FALTA");
+				this.getVideosDeLista();
 			}
 		} else {
 			this.setState({ fetchingNewData: false, refreshing: false, loading: false });
 		}
+	};
+
+	getVideosDeLista = () => {
+		let reproListId = this.props.navigation.getParam("id");
+		console.log("ID REPRO", reproListId);
+		let opts = {
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: "0",
+			page: this.offset,
+			sort: ["null"],
+			projection: "videoWithSubject"
+		};
+		this.videoApiInstance.getVideosFromReproductionList(reproListId, opts, (error, data, response) => {
+			console.log(data);
+			console.log(error);
+			if (error) {
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(this.getVideosDeLista);
+				}
+			} else {
+				this.offset = this.offset + 1;
+				this.totalPages = data.page.totalPages;
+				this.setState({
+					data: [...this.state.data, ...data._embedded.videos],
+					currentDate: ApiClient.parseDate(response.headers.date),
+					loading: false,
+					refreshing: false,
+					fetchingNewData: false
+				});
+			}
+		});
 	};
 
 	getVideosOfUser = () => {
@@ -156,7 +189,11 @@ export default class ListaVideos extends React.Component {
 			console.log(data);
 			console.log(error);
 			if (error) {
-				HaOcurridoUnError(null);
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(null);
+				}
 				this.setState({ deleting: false });
 			} else {
 				this.borrarLocal(index);
@@ -167,7 +204,27 @@ export default class ListaVideos extends React.Component {
 	borrarDeHistorial = (index, id) => {
 		this.apiInstance.displaysDeleteVideoIdDelete(id, (error, data, response) => {
 			if (error) {
-				HaOcurridoUnError(null);
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(null);
+				}
+				this.setState({ deleting: false });
+			} else {
+				this.borrarLocal(index);
+			}
+		});
+	};
+
+	borrarDeLista = (index, id) => {
+		let reproListId = this.props.navigation.getParam("id");
+		this.reproductionApiInstance.deleteVideoFromReproductionList(reproListId, id, (error, data, response) => {
+			if (error) {
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(null);
+				}
 				this.setState({ deleting: false });
 			} else {
 				this.borrarLocal(index);
@@ -190,6 +247,8 @@ export default class ListaVideos extends React.Component {
 				this.borrarDeMisVideos(index, id);
 			} else if (this.tipoLista == "historial") {
 				this.borrarDeHistorial(index, id);
+			} else if (this.tipoLista == "lista") {
+				this.borrarDeLista(index, id);
 			}
 		}
 	};
@@ -201,7 +260,7 @@ export default class ListaVideos extends React.Component {
 					<ActivityIndicator size="large" />
 				) : (
 					<FlatList
-						style={styles.videosContainer}
+						keyboardShouldPersistTaps={"handled"}
 						showsVerticalScrollIndicator={false}
 						data={this.state.data}
 						refreshing={this.state.refreshing}
@@ -214,7 +273,7 @@ export default class ListaVideos extends React.Component {
 							} else if (this.tipoLista == "historial") {
 								_item = item.video;
 							} else if (this.tipoLista == "lista") {
-								console.log("FALTA");
+								_item = item;
 							}
 							return (
 								<HalfScreenThumbnail
@@ -224,7 +283,7 @@ export default class ListaVideos extends React.Component {
 									duracion={secToDuration(_item.seconds)}
 									title={_item.title}
 									info={timeStampToFormat(_item.timestamp, this.state.currentDate)}
-									videoId={_item.id}
+									itemId={_item.id}
 									type={this.tipoLista}
 									index={index}
 									deleteCallback={this.delete}
@@ -232,9 +291,13 @@ export default class ListaVideos extends React.Component {
 								/>
 							);
 						}}
-						ListFooterComponent={LoadingFooter({
-							show: this.state.fetchingNewData
-						})}
+						ListHeaderComponent={<View style={styles.videosTopMargin} />}
+						ListFooterComponent={
+							<View>
+								<View style={styles.videosBottomMargin} />
+								<LoadingFooter show={this.state.fetchingNewData} />
+							</View>
+						}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				)}

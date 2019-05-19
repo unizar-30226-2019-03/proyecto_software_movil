@@ -76,11 +76,6 @@ export default class SignIn extends React.Component {
             onSubmitEditing={() => this.tryLogin()}
           />
         </View>
-        <View style={styles.viewForgotPassword}>
-          <Text style={styles.forgotPassword} onPress={() => this.props.navigation.navigate("HasOlvidadoContrasenya")}>
-            ¿Has olvidado tu contraseña?
-          </Text>
-        </View>
 
         <Button
           buttonStyle={styles.loginButton}
@@ -92,7 +87,7 @@ export default class SignIn extends React.Component {
         <Button
           containerStyle={styles.registerButtonContainer}
           buttonStyle={styles.registerButton}
-          onPress={() => this.props.navigation.navigate("SignUpOne")}
+          onPress={() => this.props.navigation.navigate("SignUp")}
           title="REGISTRARSE"
           type="outline"
         />

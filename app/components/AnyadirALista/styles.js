@@ -18,7 +18,9 @@ export default StyleSheet.create({
 		color: "black"
 	},
 	nuevaListaContainer: {
-		marginLeft: "auto"
+		marginLeft: "auto",
+		paddingVertical: 5,
+		paddingHorizontal: 10
 	},
 	nuevaListaTexto: {
 		fontSize: 16,
@@ -26,12 +28,10 @@ export default StyleSheet.create({
 	},
 	guardarYNuevaListaContainer: {
 		flexDirection: "row",
-		padding: 10
-	},
-	anyadirListaContainer: {
-		marginTop: ScreenhHeight * 0.1,
-		marginHorizontal: 20,
-		backgroundColor: "#fff"
+		paddingVertical: 5,
+		paddingLeft: 10,
+		paddingRight: 5,
+		alignItems: "center"
 	},
 	listoContainer: {
 		padding: 10,
@@ -44,24 +44,6 @@ export default StyleSheet.create({
 	},
 	divider: {
 		backgroundColor: "gray"
-	},
-	nuevaListaModalTexto: {
-		padding: 10,
-		marginLeft: 5,
-		fontSize: 18
-	},
-	nuevaListaInputContainer: {
-		marginLeft: 5
-	},
-	cancelar: {
-		marginRight: 10
-	},
-	crearCancelarContainer: {
-		padding: 10,
-		marginTop: 15,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "flex-end"
 	},
 	activityIndicatorContainer: {
 		flex: 1,

@@ -4,41 +4,39 @@ export default StyleSheet.create({
   container: {
     flex: 1
   },
-  viewFilter: {
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
   rankingTitle: {
     fontWeight: "bold",
     fontSize: 17
   },
-  searchBarContainer: {
-    width: 190,
-    backgroundColor: "white",
-    borderRadius: 7
-  },
-  searchBar: {
-    backgroundColor: "lightgrey"
-  },
   rankingPlace: {
+    flex: 1,
     paddingHorizontal: 10,
     height: 70,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     borderColor: "lightgrey"
+  },
+  rankNumberView: {
+    flex: 0.2
   },
   rankNumber: {
     fontSize: 17,
     fontWeight: "bold"
   },
+  rankScoreView: {
+    flex: 0.2,
+    marginLeft: "auto"
+  },
   rankScore: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    marginLeft: "auto"
   },
-  hidden: {
-    opacity: 0
+  trophyView: {
+    justifyContent: "center",
+    flex: 0.3
+  },
+  iconoAsignaturaUniversidad: {
+    flex: 0.3
   }
 });

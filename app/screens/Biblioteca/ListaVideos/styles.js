@@ -4,7 +4,10 @@ export default StyleSheet.create({
 	container: {
 		flex: 1
 	},
-	videosContainer: {
-		marginVertical: 8
+	videosTopMargin: {
+		marginTop: 8
+	},
+	videosBottomMargin: {
+		marginBottom: 8
 	}
 });

@@ -36,6 +36,6 @@ export default StyleSheet.create({
 	userName: {
 		color: "black",
 		fontWeight: "bold",
-		fontSize: 15
+		fontSize: 18
 	}
 });

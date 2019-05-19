@@ -28,25 +28,16 @@ export default StyleSheet.create({
 	inputSeparation: {
 		paddingRight: 10
 	},
-	viewForgotPassword: {
-		paddingTop: 20,
-		alignItems: "center"
-	},
-	forgotPassword: {
-		color: "skyblue",
-		textDecorationLine: "underline",
-		fontSize: 17
-	},
 	loginButtonContainer: {
-		paddingTop: 40,
-		paddingHorizontal: 50
+		marginTop: 70,
+		marginHorizontal: 50
 	},
 	loginButton: {
 		backgroundColor: Azul
 	},
 	registerButtonContainer: {
-		paddingTop: 20,
-		paddingHorizontal: 50
+		marginTop: 20,
+		marginHorizontal: 50
 	},
 	registerButton: {
 		borderColor: Azul

@@ -1,20 +1,37 @@
 import React from "react";
 import { Text, View, Button, ActivityIndicator, FlatList } from "react-native";
 
-import LoadingFooter from "../../../components/LoadingFooter";
-
-import Auth from "../../../config/Auth";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 import { ReproductionListApi, ApiClient } from "swagger_unicast";
 
+import Auth from "../../../config/Auth";
+
 import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
+
+import RippleTouchable from "../../../components/RippleTouchable";
+
+import LoadingModal from "../../../components/LoadingModal";
+import LoadingFooter from "../../../components/LoadingFooter";
+import AnyadirLista from "../../../components/AnyadirLista";
+import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
+
+import { Azul } from "../../../constants";
 
 import styles from "./styles";
 
 export default class MisListas extends React.Component {
-	static navigationOptions = ({ navigation }) => ({
-		title: "Mis listas"
-	});
+	static navigationOptions = ({ navigation }) => {
+		const { params = {} } = navigation.state;
+		return {
+			title: "Mis listas",
+			headerRight: (
+				<RippleTouchable round={true} onPress={() => params.openAnyadirLista()} style={styles.viewBotonAnyadirLista}>
+					<MaterialIcons name={"add"} style={styles.botonAnyadirLista} />
+				</RippleTouchable>
+			)
+		};
+	};
 
 	constructor(props) {
 		super(props);
@@ -23,7 +40,9 @@ export default class MisListas extends React.Component {
 			data: [],
 			loading: true,
 			fetchingNewData: false,
-			refreshing: false
+			refreshing: false,
+			deleting: false,
+			anyadirListaOpen: false
 		};
 
 		this.offset = 0;
@@ -37,7 +56,19 @@ export default class MisListas extends React.Component {
 	}
 
 	componentDidMount = () => {
+		this.openAnyadirLista = this.openAnyadirLista.bind(this);
+		this.props.navigation.setParams({
+			openAnyadirLista: this.openAnyadirLista
+		});
 		this.getData();
+	};
+
+	openAnyadirLista = () => {
+		this.setState({ anyadirListaOpen: true });
+	};
+
+	hideAnyadirLista = () => {
+		this.setState({ anyadirListaOpen: false });
 	};
 
 	getData = () => {
@@ -57,9 +88,12 @@ export default class MisListas extends React.Component {
 						HaOcurridoUnError(this.getData);
 					}
 				} else {
+					this.offset = this.offset + 1;
+					this.totalPages = data.page.totalPages;
 					this.setState({
 						loading: false,
 						fetchingNewData: false,
+						refreshing: false,
 						data: [...this.state.data, ...data._embedded.reproductionLists]
 					});
 				}
@@ -79,14 +113,32 @@ export default class MisListas extends React.Component {
 	onRefresh = () => {
 		if (!this.state.fetchingNewData && !this.state.refreshing) {
 			this.offset = 0;
-			this.totalPages = undefined;
+			this.totalPages = null;
 			this.setState({
 				refreshing: true,
-				data: [],
-				fetchingNewData: false,
-				loading: false
+				data: []
 			});
 			this.getData();
+		}
+	};
+
+	delete = (index, id) => {
+		if (!this.state.deleting && !this.state.refreshing) {
+			this.setState({ deleting: true });
+			this.apiInstance.deleteReproductionList(id, (error, data, response) => {
+				if (error) {
+					if (error.status == 403) {
+						Auth.signOut(this.props.navigation);
+					} else {
+						HaOcurridoUnError(null);
+					}
+					this.setState({ deleting: false });
+				} else {
+					var temp = [...this.state.data];
+					temp.splice(index, 1);
+					this.setState({ data: temp, deleting: false });
+				}
+			});
 		}
 	};
 
@@ -103,21 +155,37 @@ export default class MisListas extends React.Component {
 						refreshing={this.state.refreshing}
 						onEndReached={() => this.onEndReached()}
 						onRefresh={() => this.onRefresh()}
-						renderItem={({ item }) => (
+						renderItem={({ item, index }) => (
 							<HalfScreenThumbnail
+								hideMenu={item.name == "Favoritos" ? true : false}
 								navigation={this.props.navigation}
 								image={require("../../../../test/imagenes/imagen.jpg")}
-								title="Nombre bastante largo para ser un nombre de una lista de prueba"
+								title={item.name}
 								info="0 vídeos"
 								type={"mis_listas"}
+								index={index}
+								itemId={item.id}
+								itemName={item.name}
+								canShowPopUp={!this.state.deleting && !this.state.refreshing}
+								deleteCallback={this.delete}
 							/>
 						)}
-						ListFooterComponent={LoadingFooter({
-							show: this.state.fetchingNewData
-						})}
+						ListHeaderComponent={<View style={styles.videosTopMargin} />}
+						ListFooterComponent={
+							<View>
+								<View style={styles.videosBottomMargin} />
+								<LoadingFooter show={this.state.fetchingNewData} />
+							</View>
+						}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				)}
+				<AnyadirLista
+					visible={this.state.anyadirListaOpen}
+					hide={this.hideAnyadirLista}
+					onListaAdded={this.onRefresh}
+				/>
+				<LoadingModal visible={this.state.deleting} />
 			</View>
 		);
 	}

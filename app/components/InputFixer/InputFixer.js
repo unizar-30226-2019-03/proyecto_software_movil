@@ -64,8 +64,6 @@ export default class InputFixer extends React.Component {
 		}
 	};
 
-	update = () => {};
-
 	handleScroll = (event: Object) => {
 		this.setState({ scrollY: event.nativeEvent.contentOffset.y });
 	};
