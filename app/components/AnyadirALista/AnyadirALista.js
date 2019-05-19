@@ -22,7 +22,6 @@ import Auth from "../../config/Auth";
 
 import { Divider } from "react-native-elements";
 
-import LoadingFooter from "../../components/LoadingFooter";
 import AnyadirLista from "../../components/AnyadirLista";
 import RippleTouchable from "../../components/RippleTouchable";
 import LoadingModal from "../../components/LoadingModal";
@@ -36,13 +35,11 @@ export default class AnyadirALista extends React.Component {
 			data: [],
 			dataChanging: [],
 			loading: false,
-			fetchingNewData: false,
+			addingVideoToNewList: false,
 			nuevaListaModalVisible: false
 		};
 
 		this.listsVideoIn = [];
-		this.offset = 0;
-		this.totalPages = null;
 
 		let defaultClient = ApiClient.instance;
 		let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -61,11 +58,8 @@ export default class AnyadirALista extends React.Component {
 
 	onShow = () => {
 		this.listsVideoIn = [];
-		this.offset = 0;
-		this.totalPages = null;
 		this.setState({
 			loading: true,
-			fetchingNewData: false,
 			data: [],
 			dataChanging: []
 		});
@@ -119,7 +113,7 @@ export default class AnyadirALista extends React.Component {
 	};
 
 	getDataFull = () => {
-		let videoId = this.props.videoId; // Number | Id del video que se quiere mirar
+		let videoId = this.props.videoId;
 		let opts = {
 			cacheControl: "no-cache, no-store, must-revalidate",
 			pragma: "no-cache",
@@ -140,52 +134,37 @@ export default class AnyadirALista extends React.Component {
 	};
 
 	getData = () => {
-		if (this.totalPages == undefined || this.offset < this.totalPages) {
-			let opts = {
-				cacheControl: "no-cache, no-store, must-revalidate",
-				pragma: "no-cache",
-				expires: 0,
-				page: this.offset
-			};
-			this.apiInstance.getUserReproductionLists(opts, (error, data, response) => {
-				if (error) {
-					if (error.status == 403) {
-						Auth.signOut(this.props.navigation);
-					} else {
-						HaOcurridoUnError(this.onHide);
-					}
+		let opts = {
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: 0,
+			page: this.offset
+		};
+		this.apiInstance.getUserReproductionLists(opts, (error, data, response) => {
+			if (error) {
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
 				} else {
-					this.offset = this.offset + 1;
-					this.totalPages = data.page.totalPages;
-
-					let tempDataChanging = data._embedded.reproductionLists.map(lista => {
-						return false;
-					});
-
-					let tempData = data._embedded.reproductionLists.map(lista => {
-						let listaVideo = this.listsVideoIn.find(lv => lv.id === lista.id);
-						return listaVideo ? { lista, check: true } : { lista, check: false };
-					});
-					this.setState({
-						loading: false,
-						fetchingNewData: false,
-						data: [...this.state.data, ...tempData],
-						dataChanging: [...this.state.dataChanging, ...tempDataChanging]
-					});
-
-					console.log(this.state.data);
+					HaOcurridoUnError(this.onHide);
 				}
-			});
-		} else {
-			this.setState({ loading: false, fetchingNewData: false });
-		}
-	};
+			} else {
+				let tempDataChanging = data._embedded.reproductionLists.map(lista => {
+					return false;
+				});
 
-	onEndReached = () => {
-		if (!this.state.fetchingNewData) {
-			this.setState({ fetchingNewData: true });
-			this.getData();
-		}
+				let tempData = data._embedded.reproductionLists.map(lista => {
+					let listaVideo = this.listsVideoIn.find(lv => lv.id === lista.id);
+					return listaVideo ? { lista, check: true } : { lista, check: false };
+				});
+				this.setState({
+					loading: false,
+					data: [...this.state.data, ...tempData],
+					dataChanging: [...this.state.dataChanging, ...tempDataChanging]
+				});
+
+				console.log(this.state.data);
+			}
+		});
 	};
 
 	hideAnyadirLista = () => {
@@ -201,12 +180,19 @@ export default class AnyadirALista extends React.Component {
 		});
 	};
 
-	onNewLista = id_lista => {
-		let reproListId = this.state.data[idx].lista.id;
+	onListaAdded = id_lista => {
 		let videoId = this.props.videoId;
-		this.apiInstance.addVideotoReproductionList(reproListId, videoId, (error, data, response) => {
-			if (!error) {
+		this.apiInstance.addVideotoReproductionList(id_lista, videoId, (error, data, response) => {
+			if (error) {
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(null);
+				}
 			}
+			this.setState({
+				addingVideoToNewList: false
+			});
 		});
 	};
 
@@ -243,7 +229,6 @@ export default class AnyadirALista extends React.Component {
 									<FlatList
 										showsVerticalScrollIndicator={false}
 										data={this.state.data}
-										onEndReached={() => this.onEndReached()}
 										renderItem={({ item, index }) => (
 											<RippleTouchable onPress={() => this.changeCheckBox(index)} style={styles.checkBoxView}>
 												<CheckBox
@@ -257,9 +242,6 @@ export default class AnyadirALista extends React.Component {
 												/>
 											</RippleTouchable>
 										)}
-										ListFooterComponent={LoadingFooter({
-											show: this.state.fetchingNewData
-										})}
 										keyExtractor={(item, index) => index.toString()}
 									/>
 								)}
@@ -280,7 +262,10 @@ export default class AnyadirALista extends React.Component {
 					visible={this.state.nuevaListaModalVisible}
 					hide={this.hideAnyadirLista}
 					videoId={this.props.videoId}
+					onListaAdded={this.onListaAdded}
+					onAddingLista={() => this.setState({ addingVideoToNewList: true })}
 				/>
+				<LoadingModal visible={this.state.addingVideoToNewList} />
 			</View>
 		);
 	}

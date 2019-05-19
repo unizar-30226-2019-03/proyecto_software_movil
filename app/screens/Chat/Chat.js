@@ -48,20 +48,23 @@ export default class Chat extends React.Component {
       text: ""
     };
   }
+  componentDidMount = () => {
+    //lamar aqui a get data NUNCA EN EL CONSTRUCTOR
+  };
 
   static navigationOptions = ({ navigation }) => ({
     headerTitle: (
       <TouchableOpacity
         onPress={() =>
           navigation.navigate("VerPerfil", {
-            name: "Pedro",
-            userId: Auth.getUserId() // Cambiar cuando se integre esta pantalla
+            name: navigation.getParam("title"),
+            userId: navigation.getParam("id")
           })
         }
         activeOpacity={0.6}
       >
         <View style={styles.headerContainer}>
-          <Image source={require("../../../test/imagenes/perfil.jpg")} style={styles.userIcon} />
+          <Image source={{ uri: navigation.getParam("photo") }} style={styles.userIcon} />
           <Text style={styles.userName}>{navigation.getParam("title")}</Text>
         </View>
       </TouchableOpacity>

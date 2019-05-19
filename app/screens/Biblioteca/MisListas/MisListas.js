@@ -12,7 +12,6 @@ import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 import RippleTouchable from "../../../components/RippleTouchable";
 
 import LoadingModal from "../../../components/LoadingModal";
-import LoadingFooter from "../../../components/LoadingFooter";
 import AnyadirLista from "../../../components/AnyadirLista";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 
@@ -39,14 +38,10 @@ export default class MisListas extends React.Component {
 		this.state = {
 			data: [],
 			loading: true,
-			fetchingNewData: false,
 			refreshing: false,
-			deleting: false,
+			changingVideo: false,
 			anyadirListaOpen: false
 		};
-
-		this.offset = 0;
-		this.totalPages = undefined;
 
 		let defaultClient = ApiClient.instance;
 		let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -72,46 +67,31 @@ export default class MisListas extends React.Component {
 	};
 
 	getData = () => {
-		if (this.totalPages == undefined || this.offset < this.totalPages) {
-			let opts = {
-				cacheControl: "no-cache, no-store, must-revalidate",
-				pragma: "no-cache",
-				expires: 0,
-				page: this.offset
-			};
-			this.apiInstance.getUserReproductionLists(opts, (error, data, response) => {
-				console.log(data);
-				if (error) {
-					if (error.status == 403) {
-						Auth.signOut(this.props.navigation);
-					} else {
-						HaOcurridoUnError(this.getData);
-					}
+		let opts = {
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: 0
+		};
+		this.apiInstance.getUserReproductionLists(opts, (error, data, response) => {
+			console.log(data);
+			if (error) {
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
 				} else {
-					this.offset = this.offset + 1;
-					this.totalPages = data.page.totalPages;
-					this.setState({
-						loading: false,
-						fetchingNewData: false,
-						refreshing: false,
-						data: [...this.state.data, ...data._embedded.reproductionLists]
-					});
+					HaOcurridoUnError(this.getData);
 				}
-			});
-		} else {
-			this.setState({ loading: false, fetchingNewData: false });
-		}
-	};
-
-	onEndReached = () => {
-		if (!this.state.fetchingNewData && !this.state.refreshing) {
-			this.setState({ fetchingNewData: true });
-			this.getData();
-		}
+			} else {
+				this.setState({
+					loading: false,
+					refreshing: false,
+					data: [...data._embedded.reproductionLists]
+				});
+			}
+		});
 	};
 
 	onRefresh = () => {
-		if (!this.state.fetchingNewData && !this.state.refreshing) {
+		if (!this.state.refreshing) {
 			this.offset = 0;
 			this.totalPages = null;
 			this.setState({
@@ -123,8 +103,8 @@ export default class MisListas extends React.Component {
 	};
 
 	delete = (index, id) => {
-		if (!this.state.deleting && !this.state.refreshing) {
-			this.setState({ deleting: true });
+		if (!this.state.changingVideo && !this.state.refreshing) {
+			this.setState({ changingVideo: true });
 			this.apiInstance.deleteReproductionList(id, (error, data, response) => {
 				if (error) {
 					if (error.status == 403) {
@@ -132,11 +112,11 @@ export default class MisListas extends React.Component {
 					} else {
 						HaOcurridoUnError(null);
 					}
-					this.setState({ deleting: false });
+					this.setState({ changingVideo: false });
 				} else {
 					var temp = [...this.state.data];
 					temp.splice(index, 1);
-					this.setState({ data: temp, deleting: false });
+					this.setState({ data: temp, changingVideo: false });
 				}
 			});
 		}
@@ -153,20 +133,19 @@ export default class MisListas extends React.Component {
 						showsVerticalScrollIndicator={false}
 						data={this.state.data}
 						refreshing={this.state.refreshing}
-						onEndReached={() => this.onEndReached()}
 						onRefresh={() => this.onRefresh()}
 						renderItem={({ item, index }) => (
 							<HalfScreenThumbnail
 								hideMenu={item.name == "Favoritos" ? true : false}
 								navigation={this.props.navigation}
-								image={require("../../../../test/imagenes/imagen.jpg")}
+								image={item.thumbnail ? { uri: item.thumbnail } : require("../../../assets/lista_vacia.png")}
 								title={item.name}
-								info="0 vídeos"
+								info={item.numVideos + (item.numVideos == 1 ? " vídeo" : " vídeos")}
 								type={"mis_listas"}
 								index={index}
 								itemId={item.id}
 								itemName={item.name}
-								canShowPopUp={!this.state.deleting && !this.state.refreshing}
+								canShowPopUp={!this.state.changingVideo && !this.state.refreshing}
 								deleteCallback={this.delete}
 							/>
 						)}
@@ -174,7 +153,6 @@ export default class MisListas extends React.Component {
 						ListFooterComponent={
 							<View>
 								<View style={styles.videosBottomMargin} />
-								<LoadingFooter show={this.state.fetchingNewData} />
 							</View>
 						}
 						keyExtractor={(item, index) => index.toString()}
@@ -183,9 +161,10 @@ export default class MisListas extends React.Component {
 				<AnyadirLista
 					visible={this.state.anyadirListaOpen}
 					hide={this.hideAnyadirLista}
-					onListaAdded={this.onRefresh}
+					onListaAdded={() => this.setState({ changingVideo: false }) || this.onRefresh()}
+					onAddingLista={() => this.setState({ changingVideo: true })}
 				/>
-				<LoadingModal visible={this.state.deleting} />
+				<LoadingModal visible={this.state.changingVideo} />
 			</View>
 		);
 	}

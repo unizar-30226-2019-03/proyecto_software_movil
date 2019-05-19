@@ -3,21 +3,22 @@ import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react
 
 import { Image } from "react-native-elements";
 
+import { UserApi, ApiClient } from "swagger_unicast";
+
 import RippleTouchable from "../../../components/RippleTouchable";
+
+import Auth from "../../../config/Auth";
 
 import LoadingFooter from "../../../components/LoadingFooter";
 
 import styles from "./styles";
-
-const samplePic =
-  "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80";
 
 export default class ProfesorTab extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: [{ temp: "temp" }],
+      data: [],
       loading: true,
       fetchingNewData: false,
       refreshing: false
@@ -26,40 +27,48 @@ export default class ProfesorTab extends React.Component {
     this.offset = 0;
     this.totalPages = undefined;
 
-    // let defaultClient = ApiClient.instance;
-    // let bearerAuth = defaultClient.authentications["bearerAuth"];
-    // bearerAuth.accessToken = getUserToken();
+    let defaultClient = ApiClient.instance;
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = Auth.getUserToken();
 
-    // this.videoApiInstance = new VideoApi();
-    //
-    this.state.loading = false;
+    this.apiInstance = new UserApi();
   }
 
-  // componentDidMount = () => {
-  //  // this.getData();
-  // };
+  componentDidMount = () => {
+    this.getData();
+  };
 
   getData = () => {
-    // if (this.totalPages == undefined || this.offset < this.totalPages) {
-    //   let opts = {
-    //     page: this.offset,
-    //     cacheControl: "no-cache, no-store, must-revalidate",
-    //     pragma: "no-cache",
-    //     expires: 0
-    //   };
-    //   this.videoApiInstance.getVideos((error, data, response) => {
-    //     if (!error) {
-    //       this.offset = this.offset + 1;
-    //       this.totalPages = data.page.totalPages;
-    //       this.setState({
-    //         data: [...this.state.data, ...data._embedded.videos],
-    //         loading: false,
-    //         fetchingNewData: false,
-    //         refreshing: false
-    //       });
-    //     }
-    //   });
-    // }
+    if (this.totalPages == undefined || this.offset < this.totalPages) {
+      let opts = {
+        cacheControl: "no-cache, no-store, must-revalidate",
+        pragma: "no-cache",
+        expires: 0,
+        page: this.offset,
+        sort: ["desc"]
+      };
+      this.apiInstance.findUserProfessors(opts, (error, data, response) => {
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(this.getData);
+          }
+        } else {
+          console.log(data);
+          this.offset = this.offset + 1;
+          this.totalPages = data.page.totalPages;
+          this.setState({
+            data: [...this.state.data, ...data._embedded.users],
+            loading: false,
+            fetchingNewData: false,
+            refreshing: false
+          });
+        }
+      });
+    } else {
+      this.setState({ fetchingNewData: false, refreshing: false, loading: false });
+    }
   };
 
   onEndReached = () => {
@@ -98,18 +107,17 @@ export default class ProfesorTab extends React.Component {
               <RippleTouchable
                 onPress={() =>
                   this.props.navigation.navigate("Chat", {
-                    title: "Matilde P."
+                    title: item.name,
+                    photo: item.photo,
+                    id: item.id
                   })
                 }
               >
                 <View style={styles.chatContainer}>
-                  <Image source={{ uri: samplePic }} style={styles.profilePic} />
+                  <Image source={{ uri: item.photo }} style={styles.profilePic} />
                   <View style={styles.nameAndMsgContainer}>
                     <Text numberOfLines={1} style={styles.nameText}>
-                      Luis Fonsi
-                    </Text>
-                    <Text numberOfLines={1} style={styles.msgText}>
-                      Proyecto Software, Matemáticas III, Procesadores comerciales, Robótica
+                      {item.name + ", " + item.surnames}
                     </Text>
                   </View>
                 </View>

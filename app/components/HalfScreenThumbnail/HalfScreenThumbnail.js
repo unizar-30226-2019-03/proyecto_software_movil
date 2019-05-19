@@ -57,7 +57,7 @@ export default class HalfScreenThumbnail extends React.Component {
 							{this.props.likes != null ? (
 								<Text style={[styles.likes, { color: likes > 49 ? VerdeClaro : RojoClaro }]}>{likes + "%"}</Text>
 							) : null}
-							<Text style={styles.duracion}>{this.props.duracion}</Text>
+							{this.props.likes != null ? <Text style={styles.duracion}>{this.props.duracion}</Text> : null}
 						</View>
 					</ImageBackground>
 					<View style={styles.titleYInfoContainer}>
