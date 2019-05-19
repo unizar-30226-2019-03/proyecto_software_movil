@@ -1,5 +1,7 @@
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, TouchableNativeFeedback, Text } from "react-native";
+
+import RippleTouchable from "../../components/RippleTouchable";
 
 import { Icon, Image } from "react-native-elements";
 
@@ -14,9 +16,11 @@ const ImagenDePerfilConIcono = props => {
     <View>
       <Image source={{ uri: props.source }} style={props.style} />
       {props.cambiarSi == 0 ? (
-        <TouchableOpacity style={styles.viewIcon} onPress={props.onPressIcono} activeOpacity={1}>
-          <Icon type="font-awesome" name="camera" color="white" />
-        </TouchableOpacity>
+        <View style={styles.viewIcon}>
+          <RippleTouchable style={styles.touchable} onPress={props.onPressIcono} round={true}>
+            <Icon type="font-awesome" name="camera" color="white" />
+          </RippleTouchable>
+        </View>
       ) : null}
     </View>
   );
