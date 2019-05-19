@@ -237,6 +237,30 @@ export default class ViendoVideo extends React.Component {
             }
           }
         );
+        this.subjectApi.getProfessorsFromSubject(
+          id,
+          opts,
+          (error, data, response) => {
+            if (error) {
+              console.error(error);
+            } else {
+              let prof = data._embedded.users.map(c => {
+                t = c.secondsFromBeginning;
+
+                const name = c.name;
+                const photo = c.photo;
+                const surnames = c.surnames;
+
+                return {
+                  nombre: name,
+                  foto: photo,
+                  apellidos: surnames
+                };
+              });
+              this.setState({ profesores: prof });
+            }
+          }
+        );
       }
     });
   }
@@ -426,6 +450,7 @@ export default class ViendoVideo extends React.Component {
           <Descripcion
             texto={this.state.video.description}
             navigation={this.props.navigation}
+            profesores={this.state.profesores}
           />
           <View style={{ flex: 1 }}>
             <View style={{ maxHeight: 300 }}>
