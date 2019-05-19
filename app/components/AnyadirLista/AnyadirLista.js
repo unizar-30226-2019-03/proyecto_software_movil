@@ -20,12 +20,8 @@ export default class AnyadirLista extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			nuevaListaInput: "",
-			updatingChanges: false
+			nuevaListaInput: ""
 		};
-
-		this.offset = 0;
-		this.totalPages = null;
 
 		let defaultClient = ApiClient.instance;
 		let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -37,7 +33,9 @@ export default class AnyadirLista extends React.Component {
 	crearLista = () => {
 		let name = this.state.nuevaListaInput;
 		this.props.hide();
-		this.setState({ updatingChanges: true });
+		if (this.props.onAddingLista) {
+			this.props.onAddingLista();
+		}
 		this.apiInstance.addReproductionList(name, (error, data, response) => {
 			if (error) {
 				this.setState({ updatingChanges: false });
@@ -47,11 +45,9 @@ export default class AnyadirLista extends React.Component {
 					HaOcurridoUnError(null);
 				}
 			} else {
-				console.log("DATATAWTAWTATAT", data);
 				this.setState({ updatingChanges: false });
 				if (this.props.onListaAdded) {
-					// this.props.onListaAdded(data.id);
-					this.props.onListaAdded();
+					this.props.onListaAdded(data.id);
 				}
 			}
 		});
@@ -103,7 +99,6 @@ export default class AnyadirLista extends React.Component {
 						</TouchableWithoutFeedback>
 					</TouchableOpacity>
 				</Modal>
-				<LoadingModal visible={this.state.updatingChanges} />
 			</View>
 		);
 	}

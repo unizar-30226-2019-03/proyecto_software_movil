@@ -8,6 +8,8 @@ import Auth from "../../config/Auth";
 import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 import LoadingFooter from "../../components/LoadingFooter";
 
+import { timeStampToFormat, secToDuration } from "../../components/Time";
+
 import SearchMenu from "../../components/SearchMenu";
 
 import styles from "./styles";
@@ -17,61 +19,54 @@ export default class Inicio extends React.Component {
 		super(props);
 
 		this.state = {
-			data: [{ temp: "temp" }],
+			data: [],
 			loading: true,
-			fetchingNewData: false,
 			refreshing: false
 		};
 
-		this.offset = 0;
-		this.totalPages = undefined;
+		this.currentDate = null;
 
-		// let defaultClient = ApiClient.instance;
-		// let bearerAuth = defaultClient.authentications["bearerAuth"];
-		// bearerAuth.accessToken = Auth.getUserToken();
+		let defaultClient = ApiClient.instance;
+		let bearerAuth = defaultClient.authentications["bearerAuth"];
+		bearerAuth.accessToken = Auth.getUserToken();
 
-		// this.videoApiInstance = new VideoApi();
-
-		this.state.loading = false;
+		this.apiInstance = new VideoApi();
 	}
-	// componentDidMount = () => {
-	// 	// this.getData();
-	// };
 
-	getData = () => {
-		// if (this.totalPages == undefined || this.offset < this.totalPages) {
-		//   let opts = {
-		//     page: this.offset,
-		//     cacheControl: "no-cache, no-store, must-revalidate",
-		//     pragma: "no-cache",
-		//     expires: 0
-		//   };
-		//   this.videoApiInstance.getVideos((error, data, response) => {
-		//     if (!error) {
-		//       this.offset = this.offset + 1;
-		//       this.totalPages = data.page.totalPages;
-		//       this.setState({
-		//         data: [...this.state.data, ...data._embedded.videos],
-		//         loading: false,
-		//         fetchingNewData: false,
-		//         refreshing: false
-		//       });
-		//     }
-		//   });
-		// }
+	componentDidMount = () => {
+		this.getData();
 	};
 
-	onEndReached = () => {
-		if (!this.state.fetchingNewData && !this.state.refreshing) {
-			this.setState({ fetchingNewData: true });
-			this.getData();
-		}
+	getData = () => {
+		let opts = {
+			cacheControl: "no-cache, no-store, must-revalidate",
+			pragma: "no-cache",
+			expires: 0,
+			projection: "videoWithSubject"
+		};
+		this.apiInstance.findRecommendedVideos(opts, (error, data, response) => {
+			if (error) {
+				if (error.status == 403) {
+					Auth.signOut(this.props.navigation);
+				} else {
+					HaOcurridoUnError(this.getData);
+				}
+			} else {
+				this.currentDate = ApiClient.parseDate(response.headers.date);
+				this.setState({
+					data: [...data._embedded.videos],
+					loading: false,
+					refreshing: false
+				});
+
+				console.log("DATOSSSSSS");
+				console.log(data);
+			}
+		});
 	};
 
 	onRefresh = () => {
 		if (!this.state.fetchingNewData && !this.state.refreshing) {
-			this.offset = 0;
-			this.totalPages = undefined;
 			this.setState({
 				refreshing: true,
 				data: []
@@ -90,18 +85,20 @@ export default class Inicio extends React.Component {
 						showsVerticalScrollIndicator={false}
 						data={this.state.data}
 						refreshing={this.state.refreshing}
-						onEndReached={() => this.onEndReached()}
 						onRefresh={() => this.onRefresh()}
-						renderItem={({ item }) => (
+						renderItem={({ item, index }) => (
 							<FullScreenThumbnail
 								navigation={this.props.navigation}
-								image={require("../../../test/imagenes/imagen.jpg")}
-								likes="70%"
-								duracion="1:10"
-								title="Nombre bastante largo para ser un nombre de un video de prueba"
-								info="Hece 3 meses"
-								asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-								asignaturaName="Multiprocesadores"
+								image={{ uri: item.thumbnailUrl }}
+								likes={item.score}
+								duracion={secToDuration(item.seconds)}
+								title={item.title}
+								info={timeStampToFormat(item.timestamp, this.currentDate)}
+								asignaturaIcon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
+								asignaturaName={item.subject.abbreviation}
+								asignaturaFullName={item.subject.name}
+								asignaturaId={item.subject.id}
+								videoId={item.id}
 							/>
 						)}
 						ListFooterComponent={LoadingFooter({

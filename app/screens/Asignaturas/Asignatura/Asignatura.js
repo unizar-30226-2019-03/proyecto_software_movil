@@ -56,6 +56,8 @@ export default class Asignatura extends React.Component {
     this.offset = 0;
     this.totalPages = null;
 
+    this.currentDate = null;
+
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
@@ -101,9 +103,9 @@ export default class Asignatura extends React.Component {
         } else {
           this.offset = this.offset + 1;
           this.totalPages = data.page.totalPages;
+          this.currentDate = ApiClient.parseDate(response.headers.date);
           this.setState({
             videos: [...this.state.videos, ...data._embedded.videos],
-            currentDate: ApiClient.parseDate(response.headers.date),
             loadingVideos: false,
             refreshingVideos: false,
             fetchingNewVideos: false
@@ -257,7 +259,7 @@ export default class Asignatura extends React.Component {
                       likes={item.score}
                       duracion={secToDuration(item.seconds)}
                       title={item.title}
-                      info={timeStampToFormat(item.timestamp, this.state.currentDate)}
+                      info={timeStampToFormat(item.timestamp, this.currentDate)}
                       asignaturaIcon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
                       asignaturaName={item.subject.abbreviation}
                       asignaturaFullName={item.subject.name}

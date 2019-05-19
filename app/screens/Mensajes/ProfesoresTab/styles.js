@@ -17,7 +17,7 @@ export default StyleSheet.create({
 		width: 50,
 		height: 50,
 		borderRadius: 50,
-		margin: 8,
+		margin: 8
 	},
 	nameAndMsgContainer: {
 		flex: 1,
@@ -27,17 +27,6 @@ export default StyleSheet.create({
 		justifyContent: "space-between"
 	},
 	nameText: {
-		fontWeight: "bold",
-		fontSize: 17
-	},
-	msgText: {
-		color: "darkgrey",
-		fontSize: 15,
-	},
-	hourText: {
-		alignSelf: "flex-start",
-		marginTop: 13,
-		color: "darkgrey",
-		fontSize: 13,
-	},
+		fontSize: 18
+	}
 });

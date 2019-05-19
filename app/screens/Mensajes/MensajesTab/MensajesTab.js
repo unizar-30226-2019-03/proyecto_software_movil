@@ -1,6 +1,11 @@
 import React from "react";
 import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
+
 import { Image } from "react-native-elements";
+
+import { UserApi, MessageApi, ApiClient } from "swagger_unicast";
+
+import Auth from "../../../config/Auth";
 
 import RippleTouchable from "../../../components/RippleTouchable";
 
@@ -16,49 +21,66 @@ export default class MensajesTab extends React.Component {
     super(props);
 
     this.state = {
-      data: [{ temp: "temp" }],
+      data: [],
       loading: true,
       fetchingNewData: false,
       refreshing: false
     };
 
+    this.barrier = 0;
     this.offset = 0;
     this.totalPages = undefined;
 
-    // let defaultClient = ApiClient.instance;
-    // let bearerAuth = defaultClient.authentications["bearerAuth"];
-    // bearerAuth.accessToken = getUserToken();
+    let defaultClient = ApiClient.instance;
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = Auth.getUserToken();
 
-    // this.videoApiInstance = new VideoApi();
-
-    this.state.loading = false;
+    this.userApiInstance = new UserApi();
+    this.messageApiInstance = new MessageApi();
   }
 
-  // componentDidMount = () => {
-  //  // this.getData();
-  // };
+  componentDidMount = () => {
+    this.getData();
+  };
 
   getData = () => {
-    // if (this.totalPages == undefined || this.offset < this.totalPages) {
-    //   let opts = {
-    //     page: this.offset,
-    //     cacheControl: "no-cache, no-store, must-revalidate",
-    //     pragma: "no-cache",
-    //     expires: 0
-    //   };
-    //   this.videoApiInstance.getVideos((error, data, response) => {
-    //     if (!error) {
-    //       this.offset = this.offset + 1;
-    //       this.totalPages = data.page.totalPages;
-    //       this.setState({
-    //         data: [...this.state.data, ...data._embedded.videos],
-    //         loading: false,
-    //         fetchingNewData: false,
-    //         refreshing: false
-    //       });
-    //     }
-    //   });
-    // }
+    if (this.totalPages == undefined || this.offset < this.totalPages) {
+      let opts = {
+        cacheControl: "no-cache, no-store, must-revalidate",
+        pragma: "no-cache",
+        expires: 0,
+        page: this.offset,
+        sort: ["desc"]
+      };
+      this.userApiInstance.findUserProfessors(opts, (error, data, response) => {
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(this.getData);
+          }
+        } else {
+          console.log(data);
+          let newData = [];
+          data._embedded.users.forEach(item => console.log(item));
+
+          // ultimo mensaje de cada profesor
+
+          // BARERRA
+
+          this.offset = this.offset + 1;
+          this.totalPages = data.page.totalPages;
+          this.setState({
+            data: [...this.state.data, ...data._embedded.users],
+            loading: false,
+            fetchingNewData: false,
+            refreshing: false
+          });
+        }
+      });
+    } else {
+      this.setState({ fetchingNewData: false, refreshing: false, loading: false });
+    }
   };
 
   onEndReached = () => {
