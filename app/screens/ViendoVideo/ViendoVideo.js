@@ -74,6 +74,17 @@ export default class ViendoVideo extends React.Component {
     this.subjectApi = new SwaggerUnicast.SubjectApi();
 
     this.userApi = new SwaggerUnicast.UserApi();
+    this.userApi.getUser(
+      this.state.idUsuario,
+      opts,
+      (error, data, response) => {
+        if (error) {
+          console.error(error);
+        } else {
+          this.setState({ nombreUsuario: data.username });
+        }
+      }
+    );
 
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
@@ -81,7 +92,7 @@ export default class ViendoVideo extends React.Component {
     //const id = this.props.navigation.getParam("id");
 
     const id = 3;
-    console.log(id);
+    //console.log(id);
     const opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
       pragma: "no-cache",
@@ -91,7 +102,7 @@ export default class ViendoVideo extends React.Component {
     this.videoApi.getVideo(id, opts, (error, data, response) => {
       if (error) {
         //// console.error(error);
-        //// console.log(data);
+        //// //console.log(data);
       } else {
         const now = ApiClient.parseDate(response.headers.date);
         this.setState({
@@ -113,7 +124,7 @@ export default class ViendoVideo extends React.Component {
           if (error) {
             console.error(error);
           } else {
-            console.log("Asignatura dejada de seguir");
+            //console.log("Asignatura dejada de seguir");
           }
         }
       );
@@ -125,7 +136,7 @@ export default class ViendoVideo extends React.Component {
           if (error) {
             console.error(error);
           } else {
-            console.log("Asignatura seguida");
+            //console.log("Asignatura seguida");
           }
         }
       );
@@ -141,7 +152,8 @@ export default class ViendoVideo extends React.Component {
       cacheControl: "no-cache, no-store, must-revalidate", // String |
       pragma: "no-cache", // String |
       expires: "0", // String |
-      sort: ["asc"] // [String] | Parámetros en la forma `($propertyname,)+[asc|desc]?`
+      sort: ["secondsFromBeginning"], // [String] | Parámetros en la forma `($propertyname,)+[asc|desc]?`
+      projection: "commentWithUser"
     };
     this.commentApi.getCommentsByVideo(
       video.id,
@@ -150,12 +162,13 @@ export default class ViendoVideo extends React.Component {
         if (error) {
           //// console.error(error);
         } else {
-          //// console.log(data);
+          console.log(data);
 
           let com = data._embedded.comments.map(c => {
-            const t = c.secondsFromBeginning;
+            t = c.secondsFromBeginning;
+
             const text = c.text;
-            const user = "Juan Asensio";
+            const user = c.user.username;
 
             return {
               tiempo: t,
@@ -163,7 +176,7 @@ export default class ViendoVideo extends React.Component {
               nombreUsuario: user
             };
           });
-          //// console.log(com);
+          console.log(com);
           this.setState({ comentarios: com });
         }
       }
@@ -183,7 +196,7 @@ export default class ViendoVideo extends React.Component {
         if (error) {
           //console.error(error);
         } else {
-          //console.log(data);
+          ////console.log(data);
         }
       }
     );
@@ -205,7 +218,7 @@ export default class ViendoVideo extends React.Component {
       if (error) {
         //console.error(error);
       } else {
-        console.log(data);
+        //console.log(data);
         this.setState({ asig: data });
 
         this.userApi.getSubjectsOfUser(
@@ -213,9 +226,9 @@ export default class ViendoVideo extends React.Component {
           opts,
           (error, data, response) => {
             if (error) {
-              console.log(error);
+              //console.log(error);
             } else {
-              console.log(data);
+              //console.log(data);
               const found = data._embedded.subjects.find(s => {
                 return s.id === this.state.asig.id;
               });
@@ -273,11 +286,14 @@ export default class ViendoVideo extends React.Component {
       largo: Math.floor(this.VideoFlechaRef.devuelveDuracion() / 3600) > 0
     });
     let nuevo = this.VideoFlechaRef.devuelveEstado();
-    nuevo = Math.floor(nuevo / 1000 + 0.5);
+    nuevo = Math.floor(nuevo);
+    console.log("Nuevo");
+    console.log(nuevo);
     this.setState({ segundo: nuevo });
     let añadir = this.state.comentariosMostrar;
     let i = this.state.ultimoAñadido + 1;
-
+    console.log("Comentario");
+    console.log(this.state.comentarios[i].tiempo);
     if (i < this.state.comentarios.length) {
       while (
         i < this.state.comentarios.length &&
@@ -288,7 +304,7 @@ export default class ViendoVideo extends React.Component {
         i = i + 1;
       }
     }
-
+    //console.log(añadir);
     let ds = this.state.dataSource;
     this.setState({
       comentariosMostrar: añadir,

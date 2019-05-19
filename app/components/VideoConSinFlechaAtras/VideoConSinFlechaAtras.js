@@ -75,9 +75,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
   };
   componentWillUnmount = () => {
     posicion = this.devuelvePosicion();
-    if (posicion >= this.devuelveDuracion()) {
-      posicion = 0;
-    }
+
     this.displayApi.updateDisplay(posicion, this.props.videoId);
     this.clearTimeout();
   };
@@ -110,7 +108,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
 
   cambio = nuevo => {
     let posicion = Math.floor(nuevo.positionMillis / 1000);
-    let duracion = Math.floor(nuevo.durationMillis / 1000 + 0.5);
+    let duracion = Math.floor(nuevo.durationMillis / 1000);
     this.setState({
       posicion: posicion,
       duracion: duracion
