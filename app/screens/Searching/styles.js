@@ -47,7 +47,9 @@ export default StyleSheet.create({
     shadowRadius: 2.22 */
   },
   inactiveSwap: {
-    flex: 0.5
+    flex: 0.5,
+    borderBottomWidth: 1.5,
+    borderColor: "lightgray"
     /*     shadowColor: "#000",
     shadowOffset: {
       width: 0,
