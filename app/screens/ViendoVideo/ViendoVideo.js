@@ -1,5 +1,14 @@
 import React from "react";
-import { Text, View, Animated, TouchableOpacity, Alert, ListView, KeyboardAvoidingView, TextInput } from "react-native";
+import {
+  Text,
+  View,
+  Animated,
+  TouchableOpacity,
+  Alert,
+  ListView,
+  KeyboardAvoidingView,
+  TextInput
+} from "react-native";
 
 import styles from "./styles";
 import VideoConSinFlechaAtras from "../../components/VideoConSinFlechaAtras";
@@ -12,7 +21,14 @@ import Comentario from "../../components/Comentario";
 import { HeaderHeight } from "../../constants";
 
 import ApiClient from "swagger_unicast/dist/ApiClient";
-import { VideoApi, VoteApi, CommentApi, UserApi } from "swagger_unicast";
+import {
+  VideoApi,
+  VoteApi,
+  CommentApi,
+  UserApi,
+  DisplayApi,
+  SubjectApi
+} from "swagger_unicast";
 import Auth from "../../config/Auth";
 
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
@@ -26,21 +42,26 @@ export default class ViendoVideo extends React.Component {
     });
     let vacio = [];
     let aux = {
-      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      url:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
       score: undefined
     };
     this.state = {
       comentarios: vacio,
       comentariosMostrar: vacio,
       seguida: false,
-      texto: "Seguir asignatura",
-      segundo: 0,
+
       dataSource: ds,
       largo: false,
       ultimoAñadido: -1,
       text: "",
       nombreUsuario: "Juan Asensio",
       video: aux,
+      asig: {
+        abbreviation: "dummy",
+        university: { photo2: require("../../../test/imagenes/perfil_uni.jpg") }
+      },
+      photo: require("../../../test/imagenes/perfil_uni.jpg"),
       idUsuario: Auth.getUserId()
     };
 
@@ -50,16 +71,23 @@ export default class ViendoVideo extends React.Component {
     this.commentApi = new SwaggerUnicast.CommentApi();
     let defaultClient = ApiClient.instance;
 
+    this.subjectApi = new SwaggerUnicast.SubjectApi();
+
+    this.userApi = new SwaggerUnicast.UserApi();
+
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
 
-    const id = this.props.navigation.getParam("id");
+    //const id = this.props.navigation.getParam("id");
+
+    const id = 3;
+    console.log(id);
     const opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
       pragma: "no-cache",
-      expires: "0",
-      projection: "videoWithSubject"
+      expires: "0"
     };
+
     this.videoApi.getVideo(id, opts, (error, data, response) => {
       if (error) {
         //// console.error(error);
@@ -71,12 +99,38 @@ export default class ViendoVideo extends React.Component {
           timeNow: now
         });
         // Alert.alert(this.state.video.url);
-        this.obtenerAsignaturaUni(data);
+
         this.obtenerComentarios(data);
       }
     });
   }
-
+  seguir() {
+    if (this.state.seguida == true) {
+      this.setState({ seguida: false });
+      this.subjectApi.unfollowSubject(
+        this.state.asig.id,
+        (error, data, response) => {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log("Asignatura dejada de seguir");
+          }
+        }
+      );
+    } else {
+      this.setState({ seguida: true });
+      this.subjectApi.followSubject(
+        this.state.asig.id,
+        (error, data, response) => {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log("Asignatura seguida");
+          }
+        }
+      );
+    }
+  }
   obtenerComentarios(video) {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
@@ -89,27 +143,31 @@ export default class ViendoVideo extends React.Component {
       expires: "0", // String |
       sort: ["asc"] // [String] | Parámetros en la forma `($propertyname,)+[asc|desc]?`
     };
-    this.commentApi.getCommentsByVideo(video.id, opts, (error, data, response) => {
-      if (error) {
-        //// console.error(error);
-      } else {
-        //// console.log(data);
+    this.commentApi.getCommentsByVideo(
+      video.id,
+      opts,
+      (error, data, response) => {
+        if (error) {
+          //// console.error(error);
+        } else {
+          //// console.log(data);
 
-        let com = data._embedded.comments.map(c => {
-          const t = c.secondsFromBeginning;
-          const text = c.text;
-          const user = "Juan Asensio";
+          let com = data._embedded.comments.map(c => {
+            const t = c.secondsFromBeginning;
+            const text = c.text;
+            const user = "Juan Asensio";
 
-          return {
-            tiempo: t,
-            cuerpoComentario: text,
-            nombreUsuario: user
-          };
-        });
-        //// console.log(com);
-        this.setState({ comentarios: com });
+            return {
+              tiempo: t,
+              cuerpoComentario: text,
+              nombreUsuario: user
+            };
+          });
+          //// console.log(com);
+          this.setState({ comentarios: com });
+        }
       }
-    });
+    );
   }
 
   addComment(comment, time, id) {
@@ -117,16 +175,21 @@ export default class ViendoVideo extends React.Component {
     // Configure Bearer (JWT) access token for authorization: bearerAuth
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
-    this.commentApi.addComment(comment, Math.floor(time), id, (error, data, response) => {
-      if (error) {
-        //console.error(error);
-      } else {
-        //console.log(data);
+    this.commentApi.addComment(
+      comment,
+      Math.floor(time),
+      id,
+      (error, data, response) => {
+        if (error) {
+          //console.error(error);
+        } else {
+          //console.log(data);
+        }
       }
-    });
+    );
   }
 
-  obtenerAsignaturaUni(video) {
+  obtenerAsignaturaUni(id) {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
     let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -138,17 +201,36 @@ export default class ViendoVideo extends React.Component {
       expires: "0", // String |
       projection: "subjectWithUniversity" // String | Incluir si se quiere obtener tambien la universidad en la respuesta
     };
-    this.videoApi.getVideoSubject(video.id, opts, (error, data, response) => {
+    this.videoApi.getVideoSubject(id, opts, (error, data, response) => {
       if (error) {
         //console.error(error);
       } else {
-        //console.log(data);
+        console.log(data);
         this.setState({ asig: data });
+
+        this.userApi.getSubjectsOfUser(
+          this.state.idUsuario,
+          opts,
+          (error, data, response) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log(data);
+              const found = data._embedded.subjects.find(s => {
+                return s.id === this.state.asig.id;
+              });
+              //Si no la ha encontrado -> No sigue la asignatura
+              this.setState({ seguida: found === undefined ? false : true });
+            }
+          }
+        );
       }
     });
   }
-  s;
 
+  componentWillMount() {
+    this.obtenerAsignaturaUni(3);
+  }
   componentDidMount() {
     this.interval = setInterval(() => this.pasaSegundo(), 1000);
   }
@@ -197,7 +279,10 @@ export default class ViendoVideo extends React.Component {
     let i = this.state.ultimoAñadido + 1;
 
     if (i < this.state.comentarios.length) {
-      while (i < this.state.comentarios.length && this.state.comentarios[i].tiempo <= nuevo) {
+      while (
+        i < this.state.comentarios.length &&
+        this.state.comentarios[i].tiempo <= nuevo
+      ) {
         añadir = [...añadir, this.state.comentarios[i]];
 
         i = i + 1;
@@ -259,7 +344,11 @@ export default class ViendoVideo extends React.Component {
           title="IR ASIGNATURA"
         /> */
       //QUITO TODO LO ANTERIOR?????????
-      <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={HeaderHeight - 80}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        keyboardVerticalOffset={HeaderHeight - 50}
+      >
         <View style={styles.videoContainer}>
           <VideoConSinFlechaAtras
             flechaSi={true}
@@ -271,6 +360,7 @@ export default class ViendoVideo extends React.Component {
             ref={ref => {
               this.VideoFlechaRef = ref;
             }}
+            videoId={this.state.video.id}
           />
         </View>
         <View style={{ flex: 1 }}>
@@ -281,7 +371,13 @@ export default class ViendoVideo extends React.Component {
               videoId={this.state.video.id}
               navigation={this.props.navigation}
               tituloVideo={this.state.video.title}
-              tiempoPasado={"Subido hace " + this.getTimePassed(this.state.video.timestamp, this.state.timeNow)}
+              tiempoPasado={
+                "Subido hace " +
+                this.getTimePassed(
+                  this.state.video.timestamp,
+                  this.state.timeNow
+                )
+              }
             />
           </View>
           <View style={styles.dejarDeSeguir}>
@@ -299,15 +395,22 @@ export default class ViendoVideo extends React.Component {
                   alignSelf: "flex-start"
                 }}
                 navigation={this.props.navigation}
-                name="Proyecto Software"
-                image={require("../../../test/imagenes/perfil_uni.jpg")}
+                name={this.state.asig.abbreviation}
+                image={this.state.asig.photo}
               />
             </TouchableOpacity>
             <View style={{ marginLeft: 60 }}>
-              <BotonSeguirAsignatura onRef={ref => (this.botonSeguir = ref)} />
+              <BotonSeguirAsignatura
+                onRef={ref => (this.botonSeguir = ref)}
+                asignaturaSeguida={this.state.seguida}
+                callback={() => this.seguir()}
+              />
             </View>
           </View>
-          <Descripcion texto={this.state.video.description} navigation={this.props.navigation} />
+          <Descripcion
+            texto={this.state.video.description}
+            navigation={this.props.navigation}
+          />
           <View style={{ flex: 1 }}>
             <View style={{ maxHeight: 300 }}>
               <ListView
@@ -319,6 +422,7 @@ export default class ViendoVideo extends React.Component {
                     animated: true
                   })
                 }
+                enableEmptySections={true}
                 dataSource={this.state.dataSource}
                 renderRow={rowData => (
                   <Comentario
