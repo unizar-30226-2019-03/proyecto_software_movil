@@ -34,9 +34,7 @@ import ViendoVideoScreen from "../../screens/ViendoVideo";
 import CuentaScreen from "../../screens/Cuenta";
 
 import SignInScreen from "../../screens/Login/SignIn";
-import SignUpOneScreen from "../../screens/Login/SignUp/SignUpOne";
-import SignUpTwoScreen from "../../screens/Login/SignUp/SignUpTwo";
-import HasOlvidadoContrasenyaScreen from "../../screens/Login/HasOlvidadoContrasenya";
+import SignUpScreen from "../../screens/Login/SignUp";
 
 import CargaScreen from "../../screens/Carga";
 
@@ -221,9 +219,7 @@ const NotLogged = createStackNavigator({
 			header: null
 		}
 	},
-	SignUpOne: SignUpOneScreen,
-	SignUpTwo: SignUpTwoScreen,
-	HasOlvidadoContrasenya: HasOlvidadoContrasenyaScreen
+	SignUp: SignUpScreen
 });
 
 export default createAppContainer(

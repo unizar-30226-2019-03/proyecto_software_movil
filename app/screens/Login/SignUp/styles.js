@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { Azul } from "../../../../constants";
+import { Azul } from "../../../constants";
 
 export default StyleSheet.create({
   container: {
@@ -59,18 +59,18 @@ export default StyleSheet.create({
   },
   textAsignatura: {
     fontSize: 18,
-    marginBottom: 2,
+    marginBottom: 2
   },
   textAsignaturaErr: {
     fontSize: 18,
     marginBottom: 2,
-    color: "red",
+    color: "red"
   },
   collegeName: {
     fontSize: 16,
     color: "blue",
     textAlign: "left",
-    maxWidth: 160,
+    maxWidth: 160
   },
   listRow: {
     flexDirection: "row",
@@ -80,15 +80,15 @@ export default StyleSheet.create({
     borderColor: "lightgrey",
     width: 270,
     paddingTop: 6,
-    paddingBottom: 12,
+    paddingBottom: 12
   },
   rowText: {
-    fontSize: 17,
+    fontSize: 17
   },
   overlayStyle: {
-		justifyContent: "center",
-		alignItems: "center"
-	},
+    justifyContent: "center",
+    alignItems: "center"
+  },
   pickerAsign: {
     width: 200,
     color: Azul
@@ -106,8 +106,8 @@ export default StyleSheet.create({
     width: 140
   },
   nextText: {
-		fontSize: 17,
-	},
+    fontSize: 17
+  },
   buttonColor: {
     backgroundColor: Azul
   }
