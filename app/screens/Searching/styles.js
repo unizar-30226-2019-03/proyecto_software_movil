@@ -16,7 +16,7 @@ export default StyleSheet.create({
       height: 1
     },
     shadowOpacity: 0.32,
-    shadowRadius: 2.22,
+    shadowRadius: 2.22
   },
   videoMargin: {
     marginBottom: 10
@@ -25,18 +25,19 @@ export default StyleSheet.create({
     marginBottom: 5
   },
   activeTab: {
+    fontSize: 13,
     textAlign: "center",
-    paddingVertical: 20,
-    color: "black"
+    paddingVertical: 15
   },
   inactiveTab: {
+    fontSize: 13,
     textAlign: "center",
-    paddingVertical: 20,
-    color: "lightgrey"
+    paddingVertical: 15
   },
   activeSwap: {
-    width: 205,
-    borderBottomWidth: 2
+    flex: 0.5,
+    borderBottomWidth: 1.5,
+    borderColor: "black"
     /*     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -46,7 +47,7 @@ export default StyleSheet.create({
     shadowRadius: 2.22 */
   },
   inactiveSwap: {
-    width: 205
+    flex: 0.5
     /*     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -56,7 +57,7 @@ export default StyleSheet.create({
     shadowRadius: 2.22 */
   },
   loadingCircleView: {
-    paddingTop: 50,
+    paddingTop: 50
   },
   headerContainer: {
     width: ScreenWidth - 56
