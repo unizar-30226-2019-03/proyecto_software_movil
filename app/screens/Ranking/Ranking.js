@@ -106,12 +106,12 @@ export default class Ranking extends React.Component {
 
     if (index < 3) {
       return (
-        <View style={styles.trophy}>
+        <View style={styles.trophyView}>
           <Icon name="trophy" type="font-awesome" color={color} />
         </View>
       );
     } else {
-      return null;
+      <View style={styles.trophyView} />;
     }
   };
 
@@ -137,7 +137,9 @@ export default class Ranking extends React.Component {
                 }
                 style={styles.rankingPlace}
               >
-                <Text style={styles.rankNumber}>{index + 1 + "."}</Text>
+                <View style={styles.rankNumberView}>
+                  <Text style={styles.rankNumber}>{index + 1 + "."}</Text>
+                </View>
                 <View style={styles.iconoAsignaturaUniversidad}>
                   <IconoAsignaturaUniversidad
                     name={item.abbreviation}
@@ -145,7 +147,9 @@ export default class Ranking extends React.Component {
                   />
                 </View>
                 {this.icon(index)}
-                <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
+                <View style={styles.rankScoreView}>
+                  <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
+                </View>
               </RippleTouchable>
             )}
             ListFooterComponent={LoadingFooter({

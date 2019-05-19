@@ -9,25 +9,34 @@ export default StyleSheet.create({
     fontSize: 17
   },
   rankingPlace: {
+    flex: 1,
     paddingHorizontal: 10,
     height: 70,
     flexDirection: "row",
     alignItems: "center",
     borderColor: "lightgrey"
   },
+  rankNumberView: {
+    flex: 0.2
+  },
   rankNumber: {
     fontSize: 17,
     fontWeight: "bold"
+  },
+  rankScoreView: {
+    flex: 0.2,
+    marginLeft: "auto"
   },
   rankScore: {
     fontSize: 20,
     fontWeight: "bold",
     marginLeft: "auto"
   },
-  trophy: {
-    marginLeft: 70
+  trophyView: {
+    justifyContent: "center",
+    flex: 0.3
   },
   iconoAsignaturaUniversidad: {
-    marginLeft: 55
+    flex: 0.3
   }
 });
