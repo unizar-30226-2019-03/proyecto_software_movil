@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, FlatList } from "react-native";
+import { View, ScrollView, FlatList, ActivityIndicator } from "react-native";
 
 import { SearchBar, Button, Text } from "react-native-elements";
 
@@ -15,7 +15,7 @@ import RippleTouchable from "../../components/RippleTouchable";
 
 export default class Searching extends React.Component {
   constructor(props) {
-		super(props);
+    super(props);
     this.state = {
       searchText: "",
       viewingVideos: true,
@@ -24,8 +24,8 @@ export default class Searching extends React.Component {
       subData: [],
       onVidEndReachedManaged: false,
       onSubEndReachedManaged: false,
-      loadingVid: true,
-      loadingSub: true,
+      loadingVid: false,
+      loadingSub: false,
       fetchingNewVidData: false,
       fetchingNewSubData: false
     };
@@ -35,11 +35,11 @@ export default class Searching extends React.Component {
   }
 
   componentDidMount() {
-		this.changeSearchText = this.changeSearchText.bind(this);
-		this.getData = this.getData.bind(this);
+    this.changeSearchText = this.changeSearchText.bind(this);
+    this.getData = this.getData.bind(this);
     this.props.navigation.setParams({
-			changeSearchText: this.changeSearchText,
-			getData: this.getData,
+      changeSearchText: this.changeSearchText,
+      getData: this.getData,
       searchText: this.state.searchText
     });
   }
@@ -47,8 +47,8 @@ export default class Searching extends React.Component {
   getVideoData = () => {
     if (!this.state.onVidEndReachedManaged) {
       let opts = {
-				title: this.state.searchText,
-				projection: "videoWithSubjectAndUniversity"
+        title: this.state.searchText,
+        projection: "videoWithSubjectAndUniversity"
       };
       this.videoApiInstance.findVideosContainingTitle(
         opts,
@@ -58,9 +58,9 @@ export default class Searching extends React.Component {
               vidData: data._embedded.videos,
               loadingVid: false,
               fetchingNewVidData: false,
-							onVidEndReachedManaged: false,
-							currentDate: ApiClient.parseDate(response.headers.date),
-						});
+              onVidEndReachedManaged: false,
+              currentDate: ApiClient.parseDate(response.headers.date)
+            });
           }
         }
       );
@@ -83,8 +83,8 @@ export default class Searching extends React.Component {
               subData: data._embedded.subjects,
               loadingSub: false,
               fetchingNewSubData: false,
-							onSubEndReachedManaged: false,
-						});
+              onSubEndReachedManaged: false
+            });
           } else {
           }
         }
@@ -94,41 +94,50 @@ export default class Searching extends React.Component {
     }
   };
 
-  changeTabThenGetData = (viewingVideo) => {
+  changeTabThenGetData = viewingVideo => {
     if (viewingVideo) {
-      this.setState({
-        viewingVideos: viewingVideo,
-        fetchingNewVidData: true
-      });
       if (this.state.searchText != "") {
-
+        this.setState({
+          loadingVid: true,
+          viewingVideos: viewingVideo,
+          fetchingNewVidData: true
+        });
         this.getVideoData();
+      } else {
+        this.setState({
+          viewingVideos: viewingVideo,
+          fetchingNewVidData: true
+        });
       }
-    } 
-    else {
-      this.setState({
-        viewingVideos: viewingVideo,
-        fetchingNewSubData: true
-      });
+    } else {
       if (this.state.searchText != "") {
-
-        this.getSubjectData(); 
+        this.setState({
+          loadingSub: true,
+          viewingVideos: viewingVideo,
+          fetchingNewSubData: true
+        });
+        this.getSubjectData();
+      } else {
+        this.setState({
+          viewingVideos: viewingVideo,
+          fetchingNewSubData: true
+        });
       }
     }
-  }
+  };
 
   getData = () => {
     if (this.state.viewingVideos) {
-      this.setState({ fetchingNewVidData: true });
+      this.setState({ fetchingNewVidData: true, loadingVid: true });
       if (this.state.searchText != "") this.getVideoData();
     } else {
-      this.setState({ fetchingNewSubData: true });
+      this.setState({ fetchingNewSubData: true, loadingSub: true });
       if (this.state.searchText != "") this.getSubjectData();
     }
   };
 
   static navigationOptions = ({ navigation }) => {
-		const { params = {} } = navigation.state;
+    const { params = {} } = navigation.state;
 
     return {
       headerTitle: (
@@ -140,8 +149,8 @@ export default class Searching extends React.Component {
             inputContainerStyle={styles.searchBarIn}
             searchIcon={false}
             containerStyle={styles.searchBarOut}
-						onChangeText={text => params.changeSearchText(text)}
-						onSubmitEditing={(event) => params.getData()}
+            onChangeText={text => params.changeSearchText(text)}
+            onSubmitEditing={event => params.getData()}
           />
         </View>
       )
@@ -200,34 +209,44 @@ export default class Searching extends React.Component {
             </RippleTouchable>
           </View>
           {this.state.viewingVideos ? (
-            <FlatList
-              data={this.state.vidData}
-              renderItem={({ item }) => (
-                <View style={styles.videoMargin}>
-                  <FullScreenThumbnail
-                    navigation={this.props.navigation}
-                    image={{ uri: item.thumbnailUrl }}
-                    likes={item.score}
-                    duracion={secToDuration(item.seconds)}
-                    title={item.title}
-                    info={timeStampToFormat(
-                      item.timestamp,
-                      this.state.currentDate
-                    )}
-                    asignaturaIcon={{
-                      uri:
-                        item.university != null
-                          ? item.university.photo
-                          : "uri_nula"
-                    }}
-                    asignaturaName={item.subject.abbreviation}
-                    asignaturaFullName={item.subject.name}
-                    asignaturaId={item.subject.id}
-                    videoId={item.id}
-                  />
-                </View>
-              )}
-            />
+            this.state.loadingVid ? (
+              <View style={styles.loadingCircleView}>
+                <ActivityIndicator size="large" />
+              </View>
+            ) : (
+              <FlatList
+                data={this.state.vidData}
+                renderItem={({ item }) => (
+                  <View style={styles.videoMargin}>
+                    <FullScreenThumbnail
+                      navigation={this.props.navigation}
+                      image={{ uri: item.thumbnailUrl }}
+                      likes={item.score}
+                      duracion={secToDuration(item.seconds)}
+                      title={item.title}
+                      info={timeStampToFormat(
+                        item.timestamp,
+                        this.state.currentDate
+                      )}
+                      asignaturaIcon={{
+                        uri:
+                          item.university != null
+                            ? item.university.photo
+                            : "uri_nula"
+                      }}
+                      asignaturaName={item.subject.abbreviation}
+                      asignaturaFullName={item.subject.name}
+                      asignaturaId={item.subject.id}
+                      videoId={item.id}
+                    />
+                  </View>
+                )}
+              />
+            )
+          ) : this.state.loadingSub ? (
+            <View style={styles.loadingCircleView}>
+              <ActivityIndicator size="large" />
+            </View>
           ) : (
             <FlatList
               data={this.state.subData}

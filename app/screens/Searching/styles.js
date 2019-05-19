@@ -55,6 +55,9 @@ export default StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22 */
   },
+  loadingCircleView: {
+    paddingTop: 50,
+  },
   headerContainer: {
     width: ScreenWidth - 56
   },
