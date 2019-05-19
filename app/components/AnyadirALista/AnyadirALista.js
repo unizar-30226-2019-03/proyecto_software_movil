@@ -14,7 +14,7 @@ import { Input, CheckBox } from "react-native-elements";
 import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { AzulNuevaLista, Azul } from "../../constants";
+import { Azul } from "../../constants";
 
 import { ReproductionListApi, ApiClient } from "swagger_unicast";
 
@@ -166,8 +166,6 @@ export default class AnyadirALista extends React.Component {
 						let listaVideo = this.listsVideoIn.find(lv => lv.id === lista.id);
 						return listaVideo ? { lista, check: true } : { lista, check: false };
 					});
-
-					console.log(tempData);
 					this.setState({
 						loading: false,
 						fetchingNewData: false,
@@ -175,7 +173,7 @@ export default class AnyadirALista extends React.Component {
 						dataChanging: [...this.state.dataChanging, ...tempDataChanging]
 					});
 
-					console.log(data);
+					console.log(this.state.data);
 				}
 			});
 		} else {
@@ -229,13 +227,12 @@ export default class AnyadirALista extends React.Component {
 							<View style={styles.anyadirAListaContainer}>
 								<View style={styles.guardarYNuevaListaContainer}>
 									<Text style={styles.texto}>Guardar vídeo en...</Text>
-									<TouchableOpacity
+									<RippleTouchable
 										onPress={() => this.hideAnyadirAListaShowNuevaLista()}
-										activeOpacity={1}
 										style={styles.nuevaListaContainer}
 									>
 										<Text style={styles.nuevaListaTexto}>+NUEVA LISTA</Text>
-									</TouchableOpacity>
+									</RippleTouchable>
 								</View>
 								<Divider style={styles.divider} />
 								{this.state.loading ? (
@@ -250,7 +247,6 @@ export default class AnyadirALista extends React.Component {
 										renderItem={({ item, index }) => (
 											<RippleTouchable onPress={() => this.changeCheckBox(index)} style={styles.checkBoxView}>
 												<CheckBox
-													activeOpacity={1}
 													Component={View}
 													checked={item.check}
 													title={item.lista.name}

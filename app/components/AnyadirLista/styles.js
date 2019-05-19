@@ -15,7 +15,8 @@ export default StyleSheet.create({
 	},
 	nuevaListaTexto: {
 		fontSize: 16,
-		color: Azul
+		color: Azul,
+		padding: 5
 	},
 	guardarYNuevaListaContainer: {
 		flexDirection: "row",
@@ -30,7 +31,7 @@ export default StyleSheet.create({
 		marginLeft: 5
 	},
 	cancelar: {
-		marginRight: 10
+		marginRight: 5
 	},
 	crearCancelarContainer: {
 		padding: 10,

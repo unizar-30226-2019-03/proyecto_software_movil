@@ -18,7 +18,9 @@ export default StyleSheet.create({
 		color: "black"
 	},
 	nuevaListaContainer: {
-		marginLeft: "auto"
+		marginLeft: "auto",
+		paddingVertical: 5,
+		paddingHorizontal: 10
 	},
 	nuevaListaTexto: {
 		fontSize: 16,
@@ -26,7 +28,10 @@ export default StyleSheet.create({
 	},
 	guardarYNuevaListaContainer: {
 		flexDirection: "row",
-		padding: 10
+		paddingVertical: 5,
+		paddingLeft: 10,
+		paddingRight: 5,
+		alignItems: "center"
 	},
 	listoContainer: {
 		padding: 10,

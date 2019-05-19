@@ -1,12 +1,9 @@
 import React from "react";
 import { View, TouchableOpacity, Modal, Text, TouchableWithoutFeedback } from "react-native";
 
-import { Input, CheckBox } from "react-native-elements";
+import { Input } from "react-native-elements";
 
-import FontAwesomeIcons from "react-native-vector-icons/FontAwesome";
-import Ionicons from "react-native-vector-icons/Ionicons";
-
-import { AzulNuevaLista, Azul } from "../../constants";
+import { Azul } from "../../constants";
 
 import { ReproductionListApi, ApiClient } from "swagger_unicast";
 
@@ -82,10 +79,10 @@ export default class AnyadirLista extends React.Component {
 									/>
 								</View>
 								<View style={styles.crearCancelarContainer}>
-									<TouchableOpacity onPress={this.props.hide} style={styles.cancelar} activeOpacity={1}>
+									<RippleTouchable onPress={this.props.hide} style={styles.cancelar} activeOpacity={1}>
 										<Text style={styles.nuevaListaTexto}>CANCELAR</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
+									</RippleTouchable>
+									<RippleTouchable
 										onPress={() => this.crearLista()}
 										disabled={!(this.state.nuevaListaInput.length > 0)}
 										activeOpacity={1}
@@ -100,7 +97,7 @@ export default class AnyadirLista extends React.Component {
 										>
 											CREAR
 										</Text>
-									</TouchableOpacity>
+									</RippleTouchable>
 								</View>
 							</View>
 						</TouchableWithoutFeedback>
