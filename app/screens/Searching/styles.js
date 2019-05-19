@@ -10,8 +10,13 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderBottomWidth: 1,
-    borderColor: "lightgrey"
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 2.22
   },
   videoMargin: {
     marginBottom: 10
@@ -19,8 +24,40 @@ export default StyleSheet.create({
   subjectMargin: {
     marginBottom: 5
   },
-  swapButton: {
-    width: 205
+  activeTab: {
+    fontSize: 13,
+    textAlign: "center",
+    paddingVertical: 15
+  },
+  inactiveTab: {
+    fontSize: 13,
+    textAlign: "center",
+    paddingVertical: 15
+  },
+  activeSwap: {
+    flex: 0.5,
+    borderBottomWidth: 1.5,
+    borderColor: "black"
+    /*     shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22 */
+  },
+  inactiveSwap: {
+    flex: 0.5
+    /*     shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22 */
+  },
+  loadingCircleView: {
+    paddingTop: 50
   },
   headerContainer: {
     width: ScreenWidth - 56

@@ -1,7 +1,7 @@
 import React from "react";
-import { View, ScrollView, FlatList, Text } from "react-native";
+import { View, ScrollView, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
 
-import { SearchBar, Button } from "react-native-elements";
+import { SearchBar, Button, Text } from "react-native-elements";
 
 import { VideoApi, SubjectApi, ApiClient } from "swagger_unicast";
 
@@ -10,13 +10,12 @@ import ThumbnailAsignatura from "../../components/ThumbnailAsignatura";
 
 import { timeStampToFormat, secToDuration } from "../../components/Time";
 
-import EntypoIcons from "react-native-vector-icons/Entypo";
-
 import styles from "./styles";
+import RippleTouchable from "../../components/RippleTouchable";
 
 export default class Searching extends React.Component {
   constructor(props) {
-		super(props);
+    super(props);
     this.state = {
       searchText: "",
       viewingVideos: true,
@@ -25,8 +24,8 @@ export default class Searching extends React.Component {
       subData: [],
       onVidEndReachedManaged: false,
       onSubEndReachedManaged: false,
-      loadingVid: true,
-      loadingSub: true,
+      loadingVid: false,
+      loadingSub: false,
       fetchingNewVidData: false,
       fetchingNewSubData: false
     };
@@ -36,11 +35,11 @@ export default class Searching extends React.Component {
   }
 
   componentDidMount() {
-		this.changeSearchText = this.changeSearchText.bind(this);
-		this.getData = this.getData.bind(this);
+    this.changeSearchText = this.changeSearchText.bind(this);
+    this.getData = this.getData.bind(this);
     this.props.navigation.setParams({
-			changeSearchText: this.changeSearchText,
-			getData: this.getData,
+      changeSearchText: this.changeSearchText,
+      getData: this.getData,
       searchText: this.state.searchText
     });
   }
@@ -48,23 +47,20 @@ export default class Searching extends React.Component {
   getVideoData = () => {
     if (!this.state.onVidEndReachedManaged) {
       let opts = {
-				title: this.state.searchText,
-				projection: "videoWithSubjectAndUniversity"
+        title: this.state.searchText,
+        projection: "videoWithSubjectAndUniversity"
       };
-      this.videoApiInstance.findVideosContainingTitle(
-        opts,
-        (error, data, response) => {
-          if (!error) {
-            this.setState({
-              vidData: data._embedded.videos,
-              loadingVid: false,
-              fetchingNewVidData: false,
-							onVidEndReachedManaged: false,
-							currentDate: ApiClient.parseDate(response.headers.date),
-						});
-          }
+      this.videoApiInstance.findVideosContainingTitle(opts, (error, data, response) => {
+        if (!error) {
+          this.setState({
+            vidData: data._embedded.videos,
+            loadingVid: false,
+            fetchingNewVidData: false,
+            onVidEndReachedManaged: false,
+            currentDate: ApiClient.parseDate(response.headers.date)
+          });
         }
-      );
+      });
     } else {
       this.setState({ loadingVid: false, fetchingNewVidData: false });
     }
@@ -76,60 +72,66 @@ export default class Searching extends React.Component {
         name: this.state.searchText,
         projection: "subjectWithUniversity"
       };
-      this.subjectApiInstance.findSubjectsContainingName(
-        opts,
-        (error, data, response) => {
-          if (!error) {
-            this.setState({
-              subData: data._embedded.subjects,
-              loadingSub: false,
-              fetchingNewSubData: false,
-							onSubEndReachedManaged: false,
-						});
-          } else {
-          }
+      this.subjectApiInstance.findSubjectsContainingName(opts, (error, data, response) => {
+        if (!error) {
+          this.setState({
+            subData: data._embedded.subjects,
+            loadingSub: false,
+            fetchingNewSubData: false,
+            onSubEndReachedManaged: false
+          });
+        } else {
         }
-      );
+      });
     } else {
       this.setState({ loadingSub: false, fetchingNewSubData: false });
     }
   };
 
-  changeTabThenGetData = (viewingVideo) => {
+  changeTabThenGetData = viewingVideo => {
     if (viewingVideo) {
-      this.setState({
-        viewingVideos: viewingVideo,
-        fetchingNewVidData: true
-      });
       if (this.state.searchText != "") {
-
+        this.setState({
+          loadingVid: true,
+          viewingVideos: viewingVideo,
+          fetchingNewVidData: true
+        });
         this.getVideoData();
+      } else {
+        this.setState({
+          viewingVideos: viewingVideo,
+          fetchingNewVidData: true
+        });
       }
-    } 
-    else {
-      this.setState({
-        viewingVideos: viewingVideo,
-        fetchingNewSubData: true
-      });
+    } else {
       if (this.state.searchText != "") {
-
-        this.getSubjectData(); 
+        this.setState({
+          loadingSub: true,
+          viewingVideos: viewingVideo,
+          fetchingNewSubData: true
+        });
+        this.getSubjectData();
+      } else {
+        this.setState({
+          viewingVideos: viewingVideo,
+          fetchingNewSubData: true
+        });
       }
     }
-  }
+  };
 
   getData = () => {
     if (this.state.viewingVideos) {
-      this.setState({ fetchingNewVidData: true });
+      this.setState({ fetchingNewVidData: true, loadingVid: true });
       if (this.state.searchText != "") this.getVideoData();
     } else {
-      this.setState({ fetchingNewSubData: true });
+      this.setState({ fetchingNewSubData: true, loadingSub: true });
       if (this.state.searchText != "") this.getSubjectData();
     }
   };
 
   static navigationOptions = ({ navigation }) => {
-		const { params = {} } = navigation.state;
+    const { params = {} } = navigation.state;
 
     return {
       headerTitle: (
@@ -141,11 +143,14 @@ export default class Searching extends React.Component {
             inputContainerStyle={styles.searchBarIn}
             searchIcon={false}
             containerStyle={styles.searchBarOut}
-						onChangeText={text => params.changeSearchText(text)}
-						onSubmitEditing={(event) => params.getData()}
+            onChangeText={text => params.changeSearchText(text)}
+            onSubmitEditing={event => params.getData()}
           />
         </View>
-      )
+      ),
+      headerStyle: {
+        elevation: 0
+      }
     };
   };
 
@@ -161,64 +166,65 @@ export default class Searching extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <View showsVerticalScrollIndicator={false}>
           <View style={styles.buttonRow}>
-            <Button
-              title="Vídeos"
-              containerStyle={styles.swapButton}
-              type={this.state.viewingVideos ? "solid" : "clear"}
-              onPress={() => this.changeTabThenGetData(true)}
-            />
-            <Button
-              title="Asignaturas"
-              containerStyle={styles.swapButton}
-              type={this.state.viewingVideos ? "clear" : "solid"}
+            <TouchableOpacity
+              activeOpacity={1}
+              style={this.state.viewingVideos ? styles.inactiveSwap : styles.activeSwap}
               onPress={() => this.changeTabThenGetData(false)}
-            />
+            >
+              <Text style={this.state.viewingVideos ? styles.inactiveTab : styles.activeTab}>ASIGNATURAS</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={this.state.viewingVideos ? styles.activeSwap : styles.inactiveSwap}
+              onPress={() => this.changeTabThenGetData(true)}
+            >
+              <Text style={this.state.viewingVideos ? styles.activeTab : styles.inactiveTab}>VÍDEOS</Text>
+            </TouchableOpacity>
           </View>
           {this.state.viewingVideos ? (
-            <FlatList
-              data={this.state.vidData}
-              onEndReached={() => this.getData()}
-              renderItem={({ item }) => (
-                <View style={styles.videoMargin}>
-                  <FullScreenThumbnail
-                    navigation={this.props.navigation}
-                    image={{ uri: item.thumbnailUrl }}
-                    likes={item.score}
-                    duracion={secToDuration(item.seconds)}
-                    title={item.title}
-                    info={timeStampToFormat(
-                      item.timestamp,
-                      this.state.currentDate
-                    )}
-                    asignaturaIcon={{
-                      uri:
-                        item.university != null
-                          ? item.university.photo
-                          : "uri_nula"
-                    }}
-                    asignaturaName={item.subject.abbreviation}
-                    asignaturaFullName={item.subject.name}
-                    asignaturaId={item.subject.id}
-                    videoId={item.id}
-                  />
-                </View>
-              )}
-            />
+            this.state.loadingVid ? (
+              <View style={styles.loadingCircleView}>
+                <ActivityIndicator size="large" />
+              </View>
+            ) : (
+              <FlatList
+                data={this.state.vidData}
+                renderItem={({ item }) => (
+                  <View style={styles.videoMargin}>
+                    <FullScreenThumbnail
+                      navigation={this.props.navigation}
+                      image={{ uri: item.thumbnailUrl }}
+                      likes={item.score}
+                      duracion={secToDuration(item.seconds)}
+                      title={item.title}
+                      info={timeStampToFormat(item.timestamp, this.state.currentDate)}
+                      asignaturaIcon={{
+                        uri: item.university != null ? item.university.photo : "uri_nula"
+                      }}
+                      asignaturaName={item.subject.abbreviation}
+                      asignaturaFullName={item.subject.name}
+                      asignaturaId={item.subject.id}
+                      videoId={item.id}
+                    />
+                  </View>
+                )}
+              />
+            )
+          ) : this.state.loadingSub ? (
+            <View style={styles.loadingCircleView}>
+              <ActivityIndicator size="large" />
+            </View>
           ) : (
             <FlatList
               data={this.state.subData}
-              onEndReached={() => this.getData()}
               renderItem={({ item }) => (
                 <View style={styles.subjectMargin}>
                   <ThumbnailAsignatura
                     navigation={this.props.navigation}
                     icon={{
-                      uri:
-                        item.university != null
-                          ? item.university.photo
-                          : "uri_nula"
+                      uri: item.university != null ? item.university.photo : "uri_nula"
                     }}
                     name={item.name}
                     id={item.id}
@@ -227,162 +233,7 @@ export default class Searching extends React.Component {
               )}
             />
           )}
-          {/* <ThumbnailAsignatura
-            navigation={this.props.navigation}
-            icon={require("../../../test/imagenes/perfil_uni.jpg")}
-            name="Una asignatura con nombre largo"
-          />
-          <ThumbnailAsignatura
-            navigation={this.props.navigation}
-            icon={require("../../../test/imagenes/perfil_uni.jpg")}
-            name="Proyecto software"
-          />
-          <ThumbnailAsignatura
-            navigation={this.props.navigation}
-            icon={require("../../../test/imagenes/perfil_uni.jpg")}
-            name="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="70%"
-            duracion="1:10"
-            title="Nombre bastante largo para ser un nombre de un video de prueba"
-            info="Hece 3 meses"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <ThumbnailAsignatura
-            navigation={this.props.navigation}
-            icon={require("../../../test/imagenes/perfil_uni.jpg")}
-            name="Multiprocesadores"
-          />
-          <ThumbnailAsignatura
-            navigation={this.props.navigation}
-            icon={require("../../../test/imagenes/perfil_uni.jpg")}
-            name="Multiprocesadores"
-          />
-          <ThumbnailAsignatura
-            navigation={this.props.navigation}
-            icon={require("../../../test/imagenes/perfil_uni.jpg")}
-            name="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="10%"
-            duracion="1:10:60"
-            title="Nombre corto"
-            info="Hece 1 día"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="70%"
-            duracion="0:50"
-            title="Nombre largooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
-            info="Hece 3 años"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <ThumbnailAsignatura
-            navigation={this.props.navigation}
-            icon={require("../../../test/imagenes/perfil_uni.jpg")}
-            name="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          />
-          <FullScreenThumbnail
-            navigation={this.props.navigation}
-            image={require("../../../test/imagenes/imagen.jpg")}
-            likes="55%"
-            duracion="5:10:60"
-            title="Nombre normal"
-            info="Hece 2 horas"
-            asignaturaIcon={require("../../../test/imagenes/perfil_uni.jpg")}
-            asignaturaName="Multiprocesadores"
-          /> */}
-        </ScrollView>
+        </View>
       </View>
     );
   }
