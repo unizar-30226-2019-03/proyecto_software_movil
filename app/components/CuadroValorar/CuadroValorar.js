@@ -32,16 +32,21 @@ export default class CuadroValorar extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
     //Enviar al servidor la puntuación actual
-    const voteid = new VoteId(this.props.videoId, this.props.usuario);
-    const vote = new Vote2(voteid, this.state.claridad, this.state.calidad, this.state.adecuacion);
+
     this.quitarPopUp();
-    this.voteApi.addVote(vote, (error, data, response) => {
-      if (error) {
-        console.error(error);
-      } else {
-        console.log(data);
+    this.voteApi.addVote(
+      this.props.videoId,
+      this.state.adecuacion,
+      this.state.claridad,
+      this.state.calidad,
+      (error, data, response) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log(data);
+        }
       }
-    });
+    );
   }
   quitarPopUp() {
     this.setState({ mostrar: false });
@@ -63,7 +68,9 @@ export default class CuadroValorar extends React.Component {
       <View style={styles.container}>
         <View style={styles.valorar}>
           <View style={styles.titulo}>
-            <Text style={{ flex: 0.8, fontSize: 20 }}>{this.props.tituloVideo}</Text>
+            <Text style={{ flex: 0.8, fontSize: 20 }}>
+              {this.props.tituloVideo}
+            </Text>
 
             <Text style={styles.valoracion}> {this.valoracion()}</Text>
           </View>
@@ -74,7 +81,10 @@ export default class CuadroValorar extends React.Component {
               alignItems: "center"
             }}
           >
-            <TouchableHighlight onPress={() => this.setState({ mostrar: true })} style={styles.botonValorar}>
+            <TouchableHighlight
+              onPress={() => this.setState({ mostrar: true })}
+              style={styles.botonValorar}
+            >
               <Text style={{ fontSize: 18 }}> Valorar vídeo</Text>
             </TouchableHighlight>
             <Icon
@@ -96,7 +106,11 @@ export default class CuadroValorar extends React.Component {
           </View>
         </View>
 
-        <Modal visible={this.state.mostrar} transparent={true} onRequestClose={() => null}>
+        <Modal
+          visible={this.state.mostrar}
+          transparent={true}
+          onRequestClose={() => null}
+        >
           <View style={styles.popUp}>
             <View style={styles.apartados}>
               <View style={styles.apartado}>

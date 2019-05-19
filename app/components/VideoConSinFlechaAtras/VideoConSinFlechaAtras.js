@@ -8,6 +8,9 @@ import { Video, ScreenOrientation } from "expo";
 
 import { ScreenWidth, FullScreen16_9_Height } from "../../constants";
 
+import ApiClient from "swagger_unicast/dist/ApiClient";
+import Auth from "../../config/Auth";
+import { DisplayApi } from "swagger_unicast";
 import styles from "./styles";
 
 /*
@@ -28,7 +31,12 @@ export default class VideoConSinFlechaAtras extends React.Component {
       duracion: 0,
       showControls: false
     };
+    let SwaggerUnicast = require("swagger_unicast");
+    this.displayApi = new SwaggerUnicast.DisplayApi();
+    let defaultClient = ApiClient.instance;
 
+    let bearerAuth = defaultClient.authentications["bearerAuth"];
+    bearerAuth.accessToken = Auth.getUserToken();
     this.controlTimeout = null;
   }
 
@@ -54,7 +62,23 @@ export default class VideoConSinFlechaAtras extends React.Component {
     this.clearTimeout();
   };
 
+  devuelveEstado = () => {
+    return this.state.posicion;
+  };
+
+  devuelveDuracion = () => {
+    return this.state.duracion;
+  };
+
+  devuelvePosicion = () => {
+    return this.state.posicion;
+  };
   componentWillUnmount = () => {
+    posicion = this.devuelvePosicion();
+    if (posicion >= this.devuelveDuracion()) {
+      posicion = 0;
+    }
+    this.displayApi.updateDisplay(posicion, this.props.videoId);
     this.clearTimeout();
   };
 
@@ -84,24 +108,44 @@ export default class VideoConSinFlechaAtras extends React.Component {
     }
   };
 
-  devuelveEstado = () => {
-    return this.state.posicion;
-  };
-
-  devuelveDuracion = () => {
-    return this.state.duracion;
-  };
-
   cambio = nuevo => {
-    let posicion = nuevo.positionMillis;
+    let posicion = Math.floor(nuevo.positionMillis / 1000);
     let duracion = Math.floor(nuevo.durationMillis / 1000 + 0.5);
-    this.setState({ posicion: posicion, duracion: duracion });
+    this.setState({
+      posicion: posicion,
+      duracion: duracion
+    });
   };
-
+  carga = () => {
+    const opts2 = {
+      cacheControl: "no-cache, no-store, must-revalidate",
+      pragma: "no-cache",
+      expires: "0",
+      projection: "displayWithVideo"
+    };
+    this.displayApi.findByUserIdAndVideoId(
+      3,
+      opts2,
+      (error, data, response) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(data);
+          if (data.secsFromBeg * 1000 < this.devuelveDuracion()) {
+            this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
+          }
+        }
+      }
+    );
+  };
   render() {
-    const maxWidth = this.props.width == undefined ? ScreenWidth : videoProps.width;
+    const maxWidth =
+      this.props.width == undefined ? ScreenWidth : videoProps.width;
 
-    const maxHeight = this.props.height == undefined ? FullScreen16_9_Height : videoProps.height;
+    const maxHeight =
+      this.props.height == undefined
+        ? FullScreen16_9_Height
+        : videoProps.height;
 
     const screenRatio = maxWidth / maxHeight;
     let videoHeight = maxHeight;
@@ -117,15 +161,24 @@ export default class VideoConSinFlechaAtras extends React.Component {
             ref={ref => {
               this.Video_ref = ref;
             }}
-            posterSource={{ uri: this.props.thumbnail }}
+            posterSource={{
+              uri: this.props.thumbnail
+            }}
+            onLoad={() => this.carga()}
             source={{ uri: this.props.source }}
             rate={1.0}
             volume={1.0}
             muted={false}
             resizeMode="contain"
-            useNativeControls={!this.props.flechaSi || (this.props.flechaSi && this.state.showControls)}
+            useNativeControls={
+              !this.props.flechaSi ||
+              (this.props.flechaSi && this.state.showControls)
+            }
             shouldPlay={this.props.autoplay}
-            style={{ width: videoWidth, height: videoHeight }}
+            style={{
+              width: videoWidth,
+              height: videoHeight
+            }}
             onFullscreenUpdate={() => this.orientationChange()}
             progressUpdateIntervalMillis={1000}
             onPlaybackStatusUpdate={tiempo => this.cambio(tiempo)}
@@ -136,7 +189,13 @@ export default class VideoConSinFlechaAtras extends React.Component {
               onPress={() => this.props.navigation.goBack()}
               style={styles.zonaFlechaAtras}
             >
-              <Icon type="octicon" size={35} name="chevron-left" color="white" iconStyle={styles.flechaAtras} />
+              <Icon
+                type="octicon"
+                size={35}
+                name="chevron-left"
+                color="white"
+                iconStyle={styles.flechaAtras}
+              />
             </TouchableOpacity>
           ) : null}
         </View>
