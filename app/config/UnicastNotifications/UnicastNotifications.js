@@ -43,8 +43,7 @@ export default class UnicastNotifications extends React.Component {
     };
     vidChannel = {
       name: "Nuevos vídeos en UniCast",
-      description:
-        "Notificaciones de UniCast de vídeos nuevos de asignaturas a las que sigues",
+      description: "Notificaciones de UniCast de vídeos nuevos de asignaturas a las que sigues",
       vibrate: [0, 250, 250],
       badge: true
     };
@@ -74,25 +73,22 @@ export default class UnicastNotifications extends React.Component {
       page: 0 //creo que es 0 porque cada vez que mires la pagina 0 se checkearán todas esas notis, con lo cual no haría falta llevar conteo de offset
     };
     do {
-      this.apiInstance.getUserUncheckedNotifications(
-        opts,
-        (error, data, response) => {
-          if (!error) {
-            this.totalPages = data.page.totalPages;
-            this.currentDate = ApiClient.parseDate(response.headers.date);
-            this.uncheckedNotifications = data._embedded.usersAreNotified;
-            console.log("notificaciones sin chequear : ", this.uncheckedNotifications);
-            console.log("num pags : ", this.totalPages);
-            this.managePage0();
-            if (this.totalPages == 1) {
-              this.renderNotifications();
-            }
-            console.log("he acabado la pagina")
-            // this.totalPages = data.page.totalPages;
-            // this.offset = this.totalPages > (this.offset + 1) ? ...
+      this.apiInstance.getUserUncheckedNotifications(opts, (error, data, response) => {
+        if (!error) {
+          this.totalPages = data.page.totalPages;
+          this.currentDate = ApiClient.parseDate(response.headers.date);
+          this.uncheckedNotifications = data._embedded.usersAreNotified;
+          console.log("notificaciones sin chequear : ", this.uncheckedNotifications);
+          console.log("num pags : ", this.totalPages);
+          this.managePage0();
+          if (this.totalPages == 1) {
+            this.renderNotifications();
           }
+          console.log("he acabado la pagina");
+          // this.totalPages = data.page.totalPages;
+          // this.offset = this.totalPages > (this.offset + 1) ? ...
         }
-      );
+      });
     } while (this.totalPages > 1);
 
     this.fetchingNotifications = false;
@@ -114,7 +110,9 @@ export default class UnicastNotifications extends React.Component {
 
       this.apiInstance.checkNotification(
         thisNoti.id,
-        () => {console.log("chequeo ", count);}
+        () => {
+          console.log("chequeo ", count);
+        }
         /* {
           if (error) {
             console.log("ERROR EN EL CHEQUEO");
@@ -136,9 +134,7 @@ export default class UnicastNotifications extends React.Component {
       Notifications.presentLocalNotificationAsync(
         {
           title: "Unicast",
-          body:
-            "Mensaje nuevo: " +
-            timeStampToFormat(this.lastMsgDate, this.currentDate)
+          body: "Mensaje nuevo: " + timeStampToFormat(this.lastMsgDate, this.currentDate)
         },
         "msg"
       );
@@ -148,9 +144,7 @@ export default class UnicastNotifications extends React.Component {
       Notifications.presentLocalNotificationAsync(
         {
           title: "Unicast",
-          body:
-            "Vídeo nuevo: " +
-            timeStampToFormat(this.lastVidDate, this.currentDate)
+          body: "Vídeo nuevo: " + timeStampToFormat(this.lastVidDate, this.currentDate)
         },
         "vid"
       );
@@ -191,51 +185,5 @@ export default class UnicastNotifications extends React.Component {
         navigation.navigate("Logged");
       }
     });
-  }
-
-  static async signOut(navigation) {
-    await AsyncStorage.clear();
-    userToken = undefined;
-    userId = undefined;
-    navigation.navigate("NotLogged");
-  }
-
-  static async signIn(token, id, navigation, response_callback) {
-    await AsyncStorage.multiSet(
-      [["userToken", token], ["userId", id.toString()]],
-      null
-    );
-    userToken = token;
-    userId = id;
-
-    this.getUserData(navigation, response_callback);
-  }
-
-  static async isSignedIn(navigation) {
-    await AsyncStorage.multiGet(["userToken", "userId"]).then(response => {
-      userToken = response[0][1];
-      userId = response[1][1];
-    });
-
-    console.log(userToken);
-    console.log(userId);
-
-    if (userToken) {
-      this.getUserData(navigation, null);
-    } else {
-      navigation.navigate("NotLogged");
-    }
-  }
-
-  static getUserId() {
-    return userId;
-  }
-
-  static isProfesor() {
-    return professor;
-  }
-
-  static getUserToken() {
-    return userToken;
   }
 }

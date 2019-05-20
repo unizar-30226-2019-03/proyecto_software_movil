@@ -3,8 +3,6 @@ import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 
 import { VideoApi, ApiClient } from "swagger_unicast";
 
-import UnicastNotifications from "../../config/UnicastNotifications";
-
 import Auth from "../../config/Auth";
 
 import UnicastNotifications from "../../config/UnicastNotifications";
@@ -40,7 +38,7 @@ export default class Inicio extends React.Component {
   componentDidMount() {
     this.getData();
     UnicastNotifications.fireSingleton();
-  };
+  }
 
   getData = () => {
     let opts = {
@@ -107,10 +105,7 @@ export default class Inicio extends React.Component {
                 title={item.title}
                 info={timeStampToFormat(item.timestamp, this.currentDate)}
                 asignaturaIcon={{
-                  uri:
-                    item.university != undefined
-                      ? item.university.photo
-                      : "uri_nula"
+                  uri: item.university != undefined ? item.university.photo : "uri_nula"
                 }}
                 asignaturaName={item.subject.abbreviation}
                 asignaturaFullName={item.subject.name}
