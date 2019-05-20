@@ -26,11 +26,12 @@ export default class VideoConSinFlechaAtras extends React.Component {
     super(props);
     this.state = {
       pantallaCompleta: false,
-      orientationChangeSecondCall: false, // onFullscreenUpdate llama dos veces seguidas.
       posicion: 0,
       duracion: 0,
       showControls: false
     };
+
+    this.orientationChangeSecondCall = false; // onFullscreenUpdate llama dos veces seguidas.
     let SwaggerUnicast = require("swagger_unicast");
     this.displayApi = new SwaggerUnicast.DisplayApi();
     let defaultClient = ApiClient.instance;
@@ -73,19 +74,22 @@ export default class VideoConSinFlechaAtras extends React.Component {
   devuelvePosicion = () => {
     return this.state.posicion;
   };
+
   componentWillUnmount = () => {
-    posicion = this.devuelvePosicion();
-    if (posicion >= this.devuelveDuracion()) {
-      posicion = 0;
+    let posicionAux = this.devuelvePosicion();
+    if (posicionAux >= this.devuelveDuracion()) {
+      posicionAux = 0;
     }
-    this.displayApi.updateDisplay(posicion, this.props.videoId);
+    if (this.props.videoId) {
+      this.displayApi.updateDisplay(posicionAux, this.props.videoId);
+    }
     this.clearTimeout();
   };
 
   orientationChange = () => {
-    if (this.state.orientationChangeSecondCall) {
+    if (this.orientationChangeSecondCall) {
+      this.orientationChangeSecondCall = false;
       this.setState({
-        orientationChangeSecondCall: false,
         pantallaCompleta: !this.state.pantallaCompleta
       });
 
@@ -123,29 +127,21 @@ export default class VideoConSinFlechaAtras extends React.Component {
       expires: "0",
       projection: "displayWithVideo"
     };
-    this.displayApi.findByUserIdAndVideoId(
-      3,
-      opts2,
-      (error, data, response) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log(data);
-          if (data.secsFromBeg * 1000 < this.devuelveDuracion()) {
-            this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
-          }
+    this.displayApi.findByUserIdAndVideoId(3, opts2, (error, data, response) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(data);
+        if (data.secsFromBeg * 1000 < this.devuelveDuracion()) {
+          this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
         }
       }
-    );
+    });
   };
   render() {
-    const maxWidth =
-      this.props.width == undefined ? ScreenWidth : videoProps.width;
+    const maxWidth = this.props.width == undefined ? ScreenWidth : videoProps.width;
 
-    const maxHeight =
-      this.props.height == undefined
-        ? FullScreen16_9_Height
-        : videoProps.height;
+    const maxHeight = this.props.height == undefined ? FullScreen16_9_Height : videoProps.height;
 
     const screenRatio = maxWidth / maxHeight;
     let videoHeight = maxHeight;
@@ -170,10 +166,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
             volume={1.0}
             muted={false}
             resizeMode="contain"
-            useNativeControls={
-              !this.props.flechaSi ||
-              (this.props.flechaSi && this.state.showControls)
-            }
+            useNativeControls={!this.props.flechaSi || (this.props.flechaSi && this.state.showControls)}
             shouldPlay={this.props.autoplay}
             style={{
               width: videoWidth,
@@ -189,13 +182,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
               onPress={() => this.props.navigation.goBack()}
               style={styles.zonaFlechaAtras}
             >
-              <Icon
-                type="octicon"
-                size={35}
-                name="chevron-left"
-                color="white"
-                iconStyle={styles.flechaAtras}
-              />
+              <Icon type="octicon" size={35} name="chevron-left" color="white" iconStyle={styles.flechaAtras} />
             </TouchableOpacity>
           ) : null}
         </View>
