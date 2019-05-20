@@ -6,6 +6,8 @@ import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import { VideoApi, ApiClient } from "swagger_unicast";
 
 import { timeStampToFormat, secToDuration } from "../../../components/Time";

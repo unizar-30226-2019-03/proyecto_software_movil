@@ -19,4 +19,6 @@ export const AzulNuevaLista = "#2E5FD4";
 export const GrisFondoBarraBusqueda = "#F4F4F4";
 export const Azul = "#235da9";
 
+export const PeriodoNotificaciones = 5000;
+
 export const HeaderHeight = Header.HEIGHT + StatusBar.currentHeight;

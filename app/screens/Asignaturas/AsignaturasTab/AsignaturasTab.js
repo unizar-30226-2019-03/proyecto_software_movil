@@ -6,6 +6,8 @@ import { UserApi, ApiClient } from "swagger_unicast";
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import ThumbnailAsignatura from "../../../components/ThumbnailAsignatura";
 import LoadingFooter from "../../../components/LoadingFooter";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";

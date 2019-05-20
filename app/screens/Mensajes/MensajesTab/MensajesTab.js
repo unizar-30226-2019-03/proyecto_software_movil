@@ -7,6 +7,8 @@ import { UserApi, MessageApi, ApiClient } from "swagger_unicast";
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import RippleTouchable from "../../../components/RippleTouchable";
 
 import LoadingFooter from "../../../components/LoadingFooter";

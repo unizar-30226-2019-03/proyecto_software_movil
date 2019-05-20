@@ -3,6 +3,8 @@ import { Text, View, Button, ActivityIndicator, FlatList, Alert } from "react-na
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import { VideoApi, DisplayApi, ApiClient, ReproductionListApi } from "swagger_unicast";
 
 import { timeStampToFormat, secToDuration } from "../../../components/Time";

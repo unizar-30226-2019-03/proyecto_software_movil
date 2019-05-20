@@ -7,6 +7,8 @@ import { ReproductionListApi, ApiClient } from "swagger_unicast";
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 
 import RippleTouchable from "../../../components/RippleTouchable";

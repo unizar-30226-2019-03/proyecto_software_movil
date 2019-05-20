@@ -68,7 +68,7 @@ export default class Auth {
 			userId = response[1][1];
 		});
 
-		console.log(userToken);
+		console.log("EL TOKEN: ",userToken);
 		console.log(userId);
 
 		if (userToken) {

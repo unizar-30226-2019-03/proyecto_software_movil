@@ -8,6 +8,8 @@ import Mensaje from "../../components/Mensaje";
 
 import Auth from "../../config/Auth"; // QUITAR CUANDO SE INTEGRE ESTA PANTALLA
 
+import UnicastNotifications from "../../config/UnicastNotifications";
+
 import { HeaderHeight } from "../../constants";
 
 export default class Chat extends React.Component {
