@@ -24,6 +24,10 @@ export default class Cuenta extends React.Component {
 		title: "Cuenta"
 	});
 
+	onComponentDidMount = () => {
+		UnicastNotifications.fireSingleton();
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>

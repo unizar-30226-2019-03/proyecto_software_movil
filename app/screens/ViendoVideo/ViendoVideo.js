@@ -273,6 +273,7 @@ export default class ViendoVideo extends React.Component {
   }
   componentDidMount() {
     this.interval = setInterval(() => this.pasaSegundo(), 1000);
+    UnicastNotifications.fireSingleton();
   }
   componentWillUnmount() {
     clearInterval(this.interval);

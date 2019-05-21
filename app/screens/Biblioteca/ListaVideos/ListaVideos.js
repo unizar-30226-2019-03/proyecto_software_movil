@@ -55,6 +55,7 @@ export default class ListaVideos extends React.Component {
 
 	componentDidMount = () => {
 		this.getData();
+		UnicastNotifications.fireSingleton();
 	};
 
 	getData = () => {
