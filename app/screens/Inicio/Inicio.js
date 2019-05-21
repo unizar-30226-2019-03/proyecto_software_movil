@@ -97,21 +97,23 @@ export default class Inicio extends React.Component {
             refreshing={this.state.refreshing}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item, index }) => (
-              <FullScreenThumbnail
-                navigation={this.props.navigation}
-                image={{ uri: item.thumbnailUrl }}
-                likes={item.score}
-                duracion={secToDuration(item.seconds)}
-                title={item.title}
-                info={timeStampToFormat(item.timestamp, this.currentDate)}
-                asignaturaIcon={{
-                  uri: item.university != undefined ? item.university.photo : "uri_nula"
-                }}
-                asignaturaName={item.subject.abbreviation}
-                asignaturaFullName={item.subject.name}
-                asignaturaId={item.subject.id}
-                videoId={item.id}
-              />
+              <View style={styles.videoContainer}>
+                <FullScreenThumbnail
+                  navigation={this.props.navigation}
+                  image={{ uri: item.thumbnailUrl }}
+                  likes={item.score}
+                  duracion={secToDuration(item.seconds)}
+                  title={item.title}
+                  info={timeStampToFormat(item.timestamp, this.currentDate)}
+                  asignaturaIcon={{
+                    uri: item.university != undefined ? item.university.photo : "uri_nula"
+                  }}
+                  asignaturaName={item.subject.abbreviation}
+                  asignaturaFullName={item.subject.name}
+                  asignaturaId={item.subject.id}
+                  videoId={item.id}
+                />
+              </View>
             )}
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
