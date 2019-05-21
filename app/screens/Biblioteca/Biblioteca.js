@@ -4,6 +4,8 @@ import { Text, Icon } from "react-native-elements";
 
 import Auth from "../../config/Auth";
 
+import UnicastNotifications from "../../config/UnicastNotifications";
+
 import RippleTouchable from "../../components/RippleTouchable";
 
 import styles from "./styles";

@@ -26,11 +26,12 @@ export default class VideoConSinFlechaAtras extends React.Component {
     super(props);
     this.state = {
       pantallaCompleta: false,
-      orientationChangeSecondCall: false, // onFullscreenUpdate llama dos veces seguidas.
       posicion: 0,
       duracion: 0,
       showControls: false
     };
+
+    this.orientationChangeSecondCall = false; // onFullscreenUpdate llama dos veces seguidas.
     let SwaggerUnicast = require("swagger_unicast");
     this.displayApi = new SwaggerUnicast.DisplayApi();
     let defaultClient = ApiClient.instance;
@@ -73,17 +74,22 @@ export default class VideoConSinFlechaAtras extends React.Component {
   devuelvePosicion = () => {
     return this.state.posicion;
   };
-  componentWillUnmount = () => {
-    posicion = this.devuelvePosicion();
 
-    this.displayApi.updateDisplay(posicion, this.props.videoId);
+  componentWillUnmount = () => {
+    let posicionAux = this.devuelvePosicion();
+    if (posicionAux >= this.devuelveDuracion()) {
+      posicionAux = 0;
+    }
+    if (this.props.videoId) {
+      this.displayApi.updateDisplay(posicionAux, this.props.videoId);
+    }
     this.clearTimeout();
   };
 
   orientationChange = () => {
-    if (this.state.orientationChangeSecondCall) {
+    if (this.orientationChangeSecondCall) {
+      this.orientationChangeSecondCall = false;
       this.setState({
-        orientationChangeSecondCall: false,
         pantallaCompleta: !this.state.pantallaCompleta
       });
 

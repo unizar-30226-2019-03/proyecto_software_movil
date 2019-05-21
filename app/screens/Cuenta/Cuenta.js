@@ -4,6 +4,8 @@ import { Text, Icon } from "react-native-elements";
 
 import Auth from "../../config/Auth";
 
+import UnicastNotifications from "../../config/UnicastNotifications";
+
 import { UserApi, ApiClient } from "swagger_unicast";
 
 import ImagenPerfil from "../../components/ImagenPerfil";

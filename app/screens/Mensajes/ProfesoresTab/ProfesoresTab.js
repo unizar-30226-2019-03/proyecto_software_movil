@@ -9,6 +9,8 @@ import RippleTouchable from "../../../components/RippleTouchable";
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import LoadingFooter from "../../../components/LoadingFooter";
 
 import styles from "./styles";

@@ -40,6 +40,7 @@ export default class SignIn extends React.Component {
           });
         } else {
           await Auth.signIn(data.token, data.id, this.props.navigation, () => this.setState({ loginIn: false }));
+          console.log("EL TOKEN: ", data.token);
         }
       });
     }

@@ -59,7 +59,7 @@ export default StyleSheet.create({
     shadowRadius: 2.22 */
   },
   loadingCircleView: {
-    paddingTop: 50
+    paddingTop: 240
   },
   headerContainer: {
     width: ScreenWidth - 56

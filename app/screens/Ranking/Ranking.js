@@ -6,6 +6,8 @@ import Auth from "../../config/Auth";
 
 import RippleTouchable from "../../components/RippleTouchable";
 
+import UnicastNotifications from "../../config/UnicastNotifications";
+
 import { SubjectApi, ApiClient } from "swagger_unicast";
 
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
@@ -38,6 +40,7 @@ export default class Ranking extends React.Component {
 
   componentDidMount = () => {
     this.getData();
+    UnicastNotifications.fireSingleton();
   };
 
   getData = () => {

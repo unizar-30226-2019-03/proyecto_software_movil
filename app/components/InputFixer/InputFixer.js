@@ -22,8 +22,12 @@ export default class InputFixer extends React.Component {
 
 	componentWillUnmount = () => {
 		this.pause();
-		this.focusListener.remove();
-		this.blurListener.remove();
+		if (this.focusListener) {
+			this.focusListener.remove();
+		}
+		if (this.blurListener) {
+			this.blurListener.remove();
+		}
 	};
 
 	handleDidFocus = () => {
@@ -53,8 +57,12 @@ export default class InputFixer extends React.Component {
 
 	pause() {
 		this.setState({ scrollY: 0, keyboardOpen: false });
-		this.keyboardDidShowSub.remove();
-		this.keyboardDidHideSub.remove();
+		if (this.keyboardDidShowSub) {
+			this.keyboardDidShowSub.remove();
+		}
+		if (this.keyboardDidHideSub) {
+			this.keyboardDidHideSub.remove();
+		}
 	}
 
 	_onLayout = (event: ViewLayoutEvent) => {

@@ -15,6 +15,8 @@ import { createAppContainer, createStackNavigator } from "react-navigation";
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import { VideoApi, ApiClient, SubjectApi } from "swagger_unicast";
 
 import { timeStampToFormat, secToDuration } from "../../../components/Time";

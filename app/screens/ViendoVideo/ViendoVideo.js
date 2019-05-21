@@ -31,6 +31,8 @@ import {
 } from "swagger_unicast";
 import Auth from "../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
 
 export default class ViendoVideo extends React.Component {

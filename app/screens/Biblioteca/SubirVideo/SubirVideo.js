@@ -9,6 +9,8 @@ import { VideoApi, UserApi, ApiClient } from "swagger_unicast";
 
 import Auth from "../../../config/Auth";
 
+import UnicastNotifications from "../../../config/UnicastNotifications";
+
 import VideoConSinFlechaAtras from "../../../components/VideoConSinFlechaAtras";
 import InputFixer from "../../../components/InputFixer";
 import LoadingModal from "../../../components/LoadingModal";
