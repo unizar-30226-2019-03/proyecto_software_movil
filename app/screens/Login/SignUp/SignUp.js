@@ -27,8 +27,8 @@ export default class SignUp extends React.Component {
       openDegModal: false,
       onUniEndReachedManaged: false,
       onDegEndReachedManaged: false,
-      uniData: [{}],
-      degData: [{}],
+      uniData: [],
+      degData: [],
       loadingUni: true,
       loadingDeg: true,
       fetchingNewUniData: false,
@@ -303,16 +303,26 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
+      <InputFixer
+        navigation={this.props.navigation}
+        ref={InputFixer => (this.InputFixer = InputFixer)}
+      >
         <View style={styles.logoView}>
-          <Image source={require("../../../assets/icon.png")} style={styles.appLogo} />
+          <Image
+            source={require("../../../assets/icon.png")}
+            style={styles.appLogo}
+          />
         </View>
 
         <View style={styles.inputBoxSeparation}>
           <Input
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Nombre de usuario*"
-            errorMessage={this.state.usernameLengthErr ? "El nombre de usuario no puede ser vacío" : null}
+            errorMessage={
+              this.state.usernameLengthErr
+                ? "El nombre de usuario no puede ser vacío"
+                : null
+            }
             onChangeText={username => this.setState({ username: username })}
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -323,7 +333,9 @@ export default class SignUp extends React.Component {
           <Input
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Correo electrónico*"
-            errorMessage={this.state.emailErr ? "Correo electrónico no válido" : null}
+            errorMessage={
+              this.state.emailErr ? "Correo electrónico no válido" : null
+            }
             onChangeText={email => this.setState({ email: email })}
             leftIcon={{ type: "font-awesome", name: "at" }}
             leftIconContainerStyle={styles.inputSeparation}
@@ -335,7 +347,11 @@ export default class SignUp extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Contraseña*"
             secureTextEntry={true}
-            errorMessage={this.state.passwordLengthErr ? "La contraseña no puede ser vacía" : null}
+            errorMessage={
+              this.state.passwordLengthErr
+                ? "La contraseña no puede ser vacía"
+                : null
+            }
             leftIcon={{ type: "font-awesome", name: "lock" }}
             onChangeText={password => this.comparePasswords(password, 1)}
             leftIconContainerStyle={styles.inputSeparation}
@@ -346,7 +362,11 @@ export default class SignUp extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             placeholder="Repita la contraseña*"
             secureTextEntry={true}
-            errorMessage={this.state.passwordsMatch ? null : "Las contraseñas no coinciden"}
+            errorMessage={
+              this.state.passwordsMatch
+                ? null
+                : "Las contraseñas no coinciden"
+            }
             leftIcon={{ type: "font-awesome", name: "lock" }}
             onChangeText={checkpw => this.comparePasswords(checkpw, 2)}
             leftIconContainerStyle={styles.inputSeparation}
@@ -357,7 +377,10 @@ export default class SignUp extends React.Component {
           {this.state.imageErr ? (
             <Text style={styles.imageErrText}>{imageErrText}</Text>
           ) : (
-            <Image source={{ uri: this.state.image }} style={styles.profPic} />
+            <Image
+              source={{ uri: this.state.image }}
+              style={styles.profPic}
+            />
           )}
 
           <Button
@@ -372,7 +395,11 @@ export default class SignUp extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             onChangeText={name => this.setState({ name: name })}
             placeholder="Nombre*"
-            errorMessage={this.state.nameLengthErr ? "El nombre no puede ser vacío" : null}
+            errorMessage={
+              this.state.nameLengthErr
+                ? "El nombre no puede ser vacío"
+                : null
+            }
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
@@ -382,16 +409,31 @@ export default class SignUp extends React.Component {
             onFocus={() => this.InputFixer.onFocus()}
             onChangeText={surname => this.setState({ surname: surname })}
             placeholder="Apellidos*"
-            errorMessage={this.state.surnameLengthErr ? "Los apellidos no pueden ser vacíos" : null}
+            errorMessage={
+              this.state.surnameLengthErr
+                ? "Los apellidos no pueden ser vacíos"
+                : null
+            }
             leftIcon={{ type: "font-awesome", name: "id-card" }}
             leftIconContainerStyle={styles.inputSeparation}
           />
         </View>
 
         <View style={styles.viewSelectAsign}>
-          <Text style={this.state.universityErr ? styles.textAsignaturaErr : styles.textAsignatura}>Universidad:</Text>
+          <Text
+            style={
+              this.state.universityErr
+                ? styles.textAsignaturaErr
+                : styles.textAsignatura
+            }
+          >
+            Universidad:
+          </Text>
 
-          <Text style={styles.collegeName} onPress={() => this.setState({ openUniModal: true })}>
+          <Text
+            style={styles.collegeName}
+            onPress={() => this.setState({ openUniModal: true })}
+          >
             {this.state.universityName}
           </Text>
 
@@ -402,8 +444,13 @@ export default class SignUp extends React.Component {
             onBackdropPress={() => this.setState({ openUniModal: false })}
           >
             <View style={styles.listElements}>
+              <View style={styles.headerView}>
+                <Text style={styles.header}>UNIVERSIDAD</Text>
+              </View>
               <FlatList
-                data={this.state.uniData}
+                data={
+                  this.state.uniData.length < 1 ? [{}] : this.state.uniData
+                }
                 onEndReached={() => this.onEndReached("uni")}
                 renderItem={({ item }) => (
                   <RippleTouchable
@@ -429,9 +476,20 @@ export default class SignUp extends React.Component {
         </View>
 
         <View style={styles.viewSelectAsign}>
-          <Text style={this.state.degreeErr ? styles.textAsignaturaErr : styles.textAsignatura}>Estudios:</Text>
+          <Text
+            style={
+              this.state.degreeErr
+                ? styles.textAsignaturaErr
+                : styles.textAsignatura
+            }
+          >
+            Estudios:
+          </Text>
 
-          <Text style={styles.collegeName} onPress={() => this.setState({ openDegModal: true })}>
+          <Text
+            style={styles.collegeName}
+            onPress={() => this.setState({ openDegModal: true })}
+          >
             {this.state.degreeName}
           </Text>
 
@@ -442,8 +500,13 @@ export default class SignUp extends React.Component {
             onBackdropPress={() => this.setState({ openDegModal: false })}
           >
             <View style={styles.listElements}>
+              <View style={styles.headerView}>
+                <Text style={styles.header}>CARRERA</Text>
+              </View>
               <FlatList
-                data={this.state.degData}
+                data={
+                  this.state.degData.length < 1 ? [{}] : this.state.degData
+                }
                 onEndReached={() => this.onEndReached("deg")}
                 renderItem={({ item }) => (
                   <RippleTouchable
@@ -472,9 +535,15 @@ export default class SignUp extends React.Component {
           <Input
             onCharge
             onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={description => this.updateDescriptionAndFocus(description)}
+            onChangeText={description =>
+              this.updateDescriptionAndFocus(description)
+            }
             placeholder="Escriba su descripción..."
-            errorMessage={this.state.descriptionLengthErr ? "La descripción no puede ser vacía" : null}
+            errorMessage={
+              this.state.descriptionLengthErr
+                ? "La descripción no puede ser vacía"
+                : null
+            }
             leftIcon={{ type: "font-awesome", name: "info" }}
             leftIconContainerStyle={styles.inputSeparationInfo}
             multiline={true}

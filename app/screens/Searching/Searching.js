@@ -248,6 +248,7 @@ export default class Searching extends React.Component {
             ) : (
               <FlatList
                 data={this.state.vidData}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                   <View style={styles.videoMargin}>
                     <FullScreenThumbnail
@@ -282,6 +283,7 @@ export default class Searching extends React.Component {
           ) : (
             <FlatList
               data={this.state.subData}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <View style={styles.subjectMargin}>
                   <ThumbnailAsignatura

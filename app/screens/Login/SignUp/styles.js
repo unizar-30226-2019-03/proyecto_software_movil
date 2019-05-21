@@ -69,12 +69,28 @@ export default StyleSheet.create({
   collegeName: {
     fontSize: 16,
     color: "blue",
-    textAlign: "left",
-    maxWidth: 160
+    textAlign: "right",
+    width: 180,
+  },
+  listElements: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+  },
+  headerView: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Azul,
+    borderRadius: 4,
+    marginVertical: 10,
+    paddingVertical: 5,
+  },
+  header: {
+    fontSize: 19,
+    color: "white",
   },
   listRow: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
     borderBottomWidth: 1,
     borderColor: "lightgrey",
@@ -83,7 +99,9 @@ export default StyleSheet.create({
     paddingBottom: 12
   },
   rowText: {
-    fontSize: 17
+    fontSize: 17,
+    textAlign: "center",
+    minWidth: 250,
   },
   overlayStyle: {
     justifyContent: "center",
