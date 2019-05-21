@@ -1,5 +1,12 @@
 import React from "react";
-import { Text, View, Animated, TouchableOpacity, Image } from "react-native";
+import {
+  Text,
+  View,
+  Animated,
+  TouchableOpacity,
+  Image,
+  ListView
+} from "react-native";
 import styles from "./styles";
 import { ScrollView } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
@@ -8,9 +15,16 @@ import { ScreenWidth, GrisClaro } from "../../constants/constants";
 export default class Descripcion extends React.Component {
   constructor() {
     super();
-    this.state = {
-      desplegado: false
-    };
+
+    this.setState({ desplegado: false });
+  }
+
+  componentWillMount() {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    vacio = [];
+    this.setState({ dataSource: ds.cloneWithRows(vacio) });
   }
   _animatedHeight = new Animated.Value(0);
   _animatedOpacity = new Animated.Value(0);
@@ -27,6 +41,14 @@ export default class Descripcion extends React.Component {
       Animated.timing(this._animatedOpacity, { toValue: 0 }).start();
       this.setState({ desplegado: false });
     }
+  };
+  profesor = profesor => {
+    <View style={styles.iconAndNameView}>
+      <Image source={profesor.foto} style={styles.userIcon} margin={20} />
+      <Text style={styles.userName}>
+        {profesor.nombre + " " + profesor.apellidos}
+      </Text>
+    </View>;
   };
   render() {
     return (
@@ -82,38 +104,15 @@ export default class Descripcion extends React.Component {
                 })
               }
             >
-              <ScrollView
+              <ListView
                 style={styles.profesores}
                 horizontal={true}
                 ref={ref => {
                   this._listaProfesores = ref;
                 }}
-              >
-                <View style={styles.iconAndNameView}>
-                  <Image
-                    source={require("../../../test/imagenes/perfil.jpg")}
-                    style={styles.userIcon}
-                    margin={20}
-                  />
-                  <Text style={styles.userName}>Recesvinto W.</Text>
-                </View>
-                <View style={styles.iconAndNameView}>
-                  <Image
-                    source={require("../../../test/imagenes/perfil.jpg")}
-                    style={styles.userIcon}
-                    margin={20}
-                  />
-                  <Text style={styles.userName}>Recesvinto W.</Text>
-                </View>
-                <View style={styles.iconAndNameView}>
-                  <Image
-                    source={require("../../../test/imagenes/perfil.jpg")}
-                    style={styles.userIcon}
-                    margin={20}
-                  />
-                  <Text style={styles.userName}>Recesvinto W.</Text>
-                </View>
-              </ScrollView>
+                dataSource={this.state.dataSource}
+                renderRow={rowData => this.profesor(rowData)}
+              />
             </TouchableOpacity>
           </ScrollView>
         </Animated.View>

@@ -89,9 +89,9 @@ export default class ViendoVideo extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
 
-    //const id = this.props.navigation.getParam("id");
+    id = this.props.navigation.getParam("id");
 
-    const id = 3;
+    //const id = 3;
     //console.log(id);
     const opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
@@ -238,7 +238,7 @@ export default class ViendoVideo extends React.Component {
           }
         );
         this.subjectApi.getProfessorsFromSubject(
-          id,
+          this.state.asig.id,
           opts,
           (error, data, response) => {
             if (error) {
@@ -266,7 +266,8 @@ export default class ViendoVideo extends React.Component {
   }
 
   componentWillMount() {
-    this.obtenerAsignaturaUni(3);
+    id = this.props.navigation.getParam("id");
+    this.obtenerAsignaturaUni(id);
   }
   componentDidMount() {
     this.interval = setInterval(() => this.pasaSegundo(), 1000);
@@ -316,8 +317,7 @@ export default class ViendoVideo extends React.Component {
     this.setState({ segundo: nuevo });
     let añadir = this.state.comentariosMostrar;
     let i = this.state.ultimoAñadido + 1;
-    console.log("Comentario");
-    console.log(this.state.comentarios[i].tiempo);
+
     if (i < this.state.comentarios.length) {
       while (
         i < this.state.comentarios.length &&
