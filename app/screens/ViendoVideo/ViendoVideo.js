@@ -31,7 +31,7 @@ import {
 } from "swagger_unicast";
 import Auth from "../../config/Auth";
 
-import UnicastNotifications from "../../../config/UnicastNotifications";
+import UnicastNotifications from "../../config/UnicastNotifications";
 
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
 

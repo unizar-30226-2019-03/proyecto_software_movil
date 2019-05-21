@@ -21,14 +21,17 @@ import PerfilStore from "../../config/PerfilStore";
 
 import Auth from "../../config/Auth";
 
-import UnicastNotifications from "../../../config/UnicastNotifications";
+import UnicastNotifications from "../../config/UnicastNotifications";
 
 import { observer } from "mobx-react/native";
 
 @observer
 export default class VerPerfil extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.getParam("userId") == Auth.getUserId() ? "Mi perfil" : "Perfil de " + navigation.getParam("name")
+    title:
+      navigation.getParam("userId") == Auth.getUserId()
+        ? "Mi perfil"
+        : "Perfil de " + navigation.getParam("name")
   });
 
   constructor(props) {
@@ -128,7 +131,10 @@ export default class VerPerfil extends React.Component {
         photo: this.state.imageHasChanged
           ? {
               uri: this.state.imagen,
-              name: this.state.imagen.substring(this.state.imagen.lastIndexOf("/") + 1, this.state.imagen.length),
+              name: this.state.imagen.substring(
+                this.state.imagen.lastIndexOf("/") + 1,
+                this.state.imagen.length
+              ),
               type: "imagen/png"
             }
           : null,
@@ -146,9 +152,14 @@ export default class VerPerfil extends React.Component {
           );
         } else {
           PerfilStore.setImagenPerfil(data.photo);
-          Alert.alert("Bien!", "Tu información ha sido actualizada con éxito", [{ text: "Vale" }], {
-            cancelable: false
-          });
+          Alert.alert(
+            "Bien!",
+            "Tu información ha sido actualizada con éxito",
+            [{ text: "Vale" }],
+            {
+              cancelable: false
+            }
+          );
         }
         this.setState({
           actualizandoDatos: false
@@ -158,13 +169,23 @@ export default class VerPerfil extends React.Component {
   };
 
   render() {
-    let rightIcon = this.isPerfilPropio ? { type: "font-awesome", name: "edit", color: "grey" } : {};
+    let rightIcon = this.isPerfilPropio
+      ? { type: "font-awesome", name: "edit", color: "grey" }
+      : {};
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
-          <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
+          <InputFixer
+            navigation={this.props.navigation}
+            ref={InputFixer => (this.InputFixer = InputFixer)}
+          >
             <View style={styles.viewProfPic}>
               <ImagenDePerfilConIcono
                 source={this.state.imagen}
@@ -220,7 +241,10 @@ export default class VerPerfil extends React.Component {
                   color: Azul
                 }}
                 onFocus={() => this.InputFixer.onFocus()}
-                onChangeText={text => this.setState({ descripcion: text }) || this.InputFixer.onFocus()}
+                onChangeText={text =>
+                  this.setState({ descripcion: text }) ||
+                  this.InputFixer.onFocus()
+                }
                 rightIcon={rightIcon}
                 leftIconContainerStyle={styles.leftIconDescr}
                 rightIconContainerStyle={styles.rightIcon}

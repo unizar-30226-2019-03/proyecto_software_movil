@@ -73,11 +73,19 @@ export default class Asignatura extends React.Component {
   };
 
   someOneLoading = () => {
-    return this.state.loadingVideos || this.state.loadingProfesores || this.state.loadingSeguir;
+    return (
+      this.state.loadingVideos ||
+      this.state.loadingProfesores ||
+      this.state.loadingSeguir
+    );
   };
 
   someOneRefreshing = () => {
-    return this.state.refreshingVideos || this.state.refreshingProfesores || this.state.refreshingSeguir;
+    return (
+      this.state.refreshingVideos ||
+      this.state.refreshingProfesores ||
+      this.state.refreshingSeguir
+    );
   };
 
   getData = () => {
@@ -96,26 +104,34 @@ export default class Asignatura extends React.Component {
         sort: ["timestamp", "desc"],
         projection: "videoWithSubjectAndUniversity"
       };
-      this.videosInstance.getVideosFromSubject(this.id, opts, (error, data, response) => {
-        console.log(data);
-        if (error) {
-          if (error.status == 403) {
-            Auth.signOut(this.props.navigation);
+      this.videosInstance.getVideosFromSubject(
+        this.id,
+        opts,
+        (error, data, response) => {
+          console.log(data);
+          if (error) {
+            if (error.status == 403) {
+              Auth.signOut(this.props.navigation);
+            }
+          } else {
+            this.offset = this.offset + 1;
+            this.totalPages = data.page.totalPages;
+            this.currentDate = ApiClient.parseDate(response.headers.date);
+            this.setState({
+              videos: [...this.state.videos, ...data._embedded.videos],
+              loadingVideos: false,
+              refreshingVideos: false,
+              fetchingNewVideos: false
+            });
           }
-        } else {
-          this.offset = this.offset + 1;
-          this.totalPages = data.page.totalPages;
-          this.currentDate = ApiClient.parseDate(response.headers.date);
-          this.setState({
-            videos: [...this.state.videos, ...data._embedded.videos],
-            loadingVideos: false,
-            refreshingVideos: false,
-            fetchingNewVideos: false
-          });
         }
-      });
+      );
     } else {
-      this.setState({ fetchingNewVideos: false, refreshingVideos: false, loadingVideos: false });
+      this.setState({
+        fetchingNewVideos: false,
+        refreshingVideos: false,
+        loadingVideos: false
+      });
     }
   };
 
@@ -125,15 +141,23 @@ export default class Asignatura extends React.Component {
       pragma: "'no-cache'",
       expires: "'0'"
     };
-    this.subjectInstance.getProfessorsFromSubject(this.id, opts, (error, data, response) => {
-      if (error) {
-        if (error.status == 403) {
-          Auth.signOut(this.props.navigation);
+    this.subjectInstance.getProfessorsFromSubject(
+      this.id,
+      opts,
+      (error, data, response) => {
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          }
+        } else {
+          this.setState({
+            profesores: [...data._embedded.users],
+            loadingProfesores: false,
+            refreshingProfesores: false
+          });
         }
-      } else {
-        this.setState({ profesores: [...data._embedded.users], loadingProfesores: false, refreshingProfesores: false });
       }
-    });
+    );
   };
 
   getSeguir = () => {
@@ -142,15 +166,23 @@ export default class Asignatura extends React.Component {
       pragma: "'no-cache'",
       expires: "'0'"
     };
-    this.subjectInstance.existsUserInSubject(this.id, opts, (error, data, response) => {
-      if (error) {
-        if (error.status == 403) {
-          Auth.signOut(this.props.navigation);
+    this.subjectInstance.existsUserInSubject(
+      this.id,
+      opts,
+      (error, data, response) => {
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          }
+        } else {
+          this.setState({
+            asignaturaSeguida: data,
+            loadingSeguir: false,
+            refreshingSeguir: false
+          });
         }
-      } else {
-        this.setState({ asignaturaSeguida: data, loadingSeguir: false, refreshingSeguir: false });
       }
-    });
+    );
   };
 
   changeSeguirState = () => {
@@ -158,19 +190,28 @@ export default class Asignatura extends React.Component {
       this.setState({ changingStateSeguir: true });
 
       if (this.state.asignaturaSeguida) {
-        this.subjectInstance.unfollowSubject(this.id, (error, data, response) => {
-          if (error) {
-            if (error.status == 403) {
-              Auth.signOut(this.props.navigation);
+        this.subjectInstance.unfollowSubject(
+          this.id,
+          (error, data, response) => {
+            if (error) {
+              if (error.status == 403) {
+                Auth.signOut(this.props.navigation);
+              }
+            } else {
+              this.setState({
+                asignaturaSeguida: false,
+                changingStateSeguir: false
+              });
             }
-          } else {
-            this.setState({ asignaturaSeguida: false, changingStateSeguir: false });
           }
-        });
+        );
       } else {
         this.subjectInstance.followSubject(this.id, (error, data, response) => {
           if (!error) {
-            this.setState({ asignaturaSeguida: true, changingStateSeguir: false });
+            this.setState({
+              asignaturaSeguida: true,
+              changingStateSeguir: false
+            });
           }
         });
       }
@@ -185,7 +226,11 @@ export default class Asignatura extends React.Component {
   };
 
   onRefresh = () => {
-    if (!this.state.fetchingNewVideos && !this.someOneRefreshing() && !this.state.changingStateSeguir) {
+    if (
+      !this.state.fetchingNewVideos &&
+      !this.someOneRefreshing() &&
+      !this.state.changingStateSeguir
+    ) {
       this.offset = 0;
       this.totalPages = null;
       this.setState({
@@ -199,19 +244,35 @@ export default class Asignatura extends React.Component {
   };
 
   render() {
-    console.log(this.state.loadingProfesores, this.state.loadingSeguir, this.state.loadingVideos);
+    console.log(
+      this.state.loadingProfesores,
+      this.state.loadingSeguir,
+      this.state.loadingVideos
+    );
     return (
-      <View style={[styles.container, { justifyContent: this.someOneLoading() ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.someOneLoading() ? "center" : "flex-start" }
+        ]}
+      >
         {this.someOneLoading() ? (
           <ActivityIndicator size="large" />
         ) : (
           <ScrollView
             showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={this.someOneRefreshing()} onRefresh={() => this.onRefresh()} />}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.someOneRefreshing()}
+                onRefresh={() => this.onRefresh()}
+              />
+            }
           >
             <View style={styles.viewSeguirAsignatura}>
               <BotonSeguirAsignatura
-                disabled={this.someOneRefreshing() || this.state.changingStateSeguir}
+                disabled={
+                  this.someOneRefreshing() || this.state.changingStateSeguir
+                }
                 asignaturaSeguida={this.state.asignaturaSeguida}
                 callback={this.changeSeguirState}
               />
@@ -234,7 +295,10 @@ export default class Asignatura extends React.Component {
                     }
                   >
                     <View style={styles.iconAndNameView}>
-                      <Image source={{ uri: item.photo }} style={styles.userIcon} />
+                      <Image
+                        source={{ uri: item.photo }}
+                        style={styles.userIcon}
+                      />
                       <Text numberOfLines={1} style={styles.userName}>
                         {item.name}
                       </Text>
@@ -262,7 +326,12 @@ export default class Asignatura extends React.Component {
                       duracion={secToDuration(item.seconds)}
                       title={item.title}
                       info={timeStampToFormat(item.timestamp, this.currentDate)}
-                      asignaturaIcon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
+                      asignaturaIcon={{
+                        uri:
+                          item.university != undefined
+                            ? item.university.photo
+                            : "uri_nula"
+                      }}
                       asignaturaName={item.subject.abbreviation}
                       asignaturaFullName={item.subject.name}
                       asignaturaId={item.subject.id}

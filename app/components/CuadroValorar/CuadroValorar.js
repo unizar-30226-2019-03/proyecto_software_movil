@@ -68,7 +68,7 @@ export default class CuadroValorar extends React.Component {
       <View style={styles.container}>
         <View style={styles.valorar}>
           <View style={styles.titulo}>
-            <Text style={{ flex: 0.8, fontSize: 20 }}>
+            <Text style={{ flex: 0.8, fontSize: 19, maxHeight: 40 }}>
               {this.props.tituloVideo}
             </Text>
 

@@ -13,7 +13,7 @@ import { VideoApi, SubjectApi, ApiClient } from "swagger_unicast";
 
 import Auth from "../../config/Auth";
 
-import UnicastNotifications from "../../../config/UnicastNotifications";
+import UnicastNotifications from "../../config/UnicastNotifications";
 
 import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 import ThumbnailAsignatura from "../../components/ThumbnailAsignatura";
