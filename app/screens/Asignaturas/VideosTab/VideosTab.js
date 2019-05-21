@@ -41,6 +41,7 @@ export default class VideosTab extends React.Component {
 
 	componentDidMount = () => {
 		this.getData();
+		UnicastNotifications.fireSingleton();
 	};
 
 	getData = () => {

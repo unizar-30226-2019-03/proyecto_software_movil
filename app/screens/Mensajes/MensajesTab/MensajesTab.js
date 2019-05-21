@@ -43,6 +43,7 @@ export default class MensajesTab extends React.Component {
 
   componentDidMount = () => {
     this.getData();
+    UnicastNotifications.fireSingleton();
   };
 
   getData = () => {

@@ -53,6 +53,7 @@ export default class SubirVideo extends React.Component {
 
   componentDidMount = () => {
     this.getAsignaturas();
+    UnicastNotifications.fireSingleton();
   };
 
   getAsignaturas = () => {

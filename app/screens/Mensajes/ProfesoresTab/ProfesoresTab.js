@@ -38,6 +38,7 @@ export default class ProfesorTab extends React.Component {
 
   componentDidMount = () => {
     this.getData();
+    UnicastNotifications.fireSingleton();
   };
 
   getData = () => {
