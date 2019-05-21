@@ -1,6 +1,6 @@
 import React from "react";
 
-const timeToString = (antes, ahora, singular, plural) => {
+const timeToHace = (antes, ahora, singular, plural) => {
 	if (antes < ahora) {
 		if (ahora - antes == 1) {
 			return "Hace 1 " + singular;
@@ -12,23 +12,23 @@ const timeToString = (antes, ahora, singular, plural) => {
 };
 
 export const timeStampToFormat = (timestamp, currentTime) => {
-	let resultado = timeToString(timestamp.getFullYear(), currentTime.getFullYear(), "año", "años");
+	let resultado = timeToHace(timestamp.getFullYear(), currentTime.getFullYear(), "año", "años");
 	if (resultado) {
 		return resultado;
 	}
-	resultado = timeToString(timestamp.getMonth(), currentTime.getMonth(), "mes", "meses");
+	resultado = timeToHace(timestamp.getMonth(), currentTime.getMonth(), "mes", "meses");
 	if (resultado) {
 		return resultado;
 	}
-	resultado = timeToString(timestamp.getDate(), currentTime.getDate(), "día", "días");
+	resultado = timeToHace(timestamp.getDate(), currentTime.getDate(), "día", "días");
 	if (resultado) {
 		return resultado;
 	}
-	resultado = timeToString(timestamp.getHours(), currentTime.getHours(), "hora", "horas");
+	resultado = timeToHace(timestamp.getHours(), currentTime.getHours(), "hora", "horas");
 	if (resultado) {
 		return resultado;
 	}
-	resultado = timeToString(timestamp.getMinutes(), currentTime.getMinutes(), "minuto", "minutos");
+	resultado = timeToHace(timestamp.getMinutes(), currentTime.getMinutes(), "minuto", "minutos");
 	if (resultado) {
 		return resultado;
 	}
@@ -43,10 +43,41 @@ export const secToDuration = secs => {
 	let seconds = secs - minutes * 60;
 
 	let cero = "00";
-	let hoursStr = (hoursStr =
-		hours > 0 ? cero.substring(0, cero.length - hours.toString().length) + hours.toString() + ":" : "");
+	let hoursStr = hours > 0 ? cero.substring(0, cero.length - hours.toString().length) + hours.toString() + ":" : "";
 	let minutesStr = cero.substring(0, cero.length - minutes.toString().length) + minutes.toString() + ":";
 	let secondsStr = cero.substring(0, cero.length - seconds.toString().length) + seconds.toString();
 
 	return hoursStr + minutesStr + secondsStr;
+};
+
+export const timeStampToChatDate = (timestamp, currentTime) => {
+	if (timestamp.getDate() < currentTime.getDate()) {
+		if (currentTime.getDate() - timestamp.getDate() == 1) {
+			return "Ayer";
+		} else {
+			return (
+				timestamp.getDate() +
+				"/" +
+				(timestamp.getMonth() + 1) +
+				"/" +
+				timestamp
+					.getFullYear()
+					.toString()
+					.slice(-2)
+			);
+		}
+	} else {
+		console.log("AQUI");
+		let cero = "00";
+
+		let hours = timestamp.getHours().toString();
+		console.log(hours);
+		let hoursStr = cero.substring(0, cero.length - hours.length) + hours;
+		console.log(hoursStr);
+
+		let minutes = timestamp.getMinutes().toString();
+		let minutesStr = cero.substring(0, cero.length - minutes.length) + minutes;
+
+		return hoursStr + ":" + minutesStr;
+	}
 };

@@ -65,7 +65,6 @@ export default class Ranking extends React.Component {
           this.totalPages = data.page.totalPages;
           this.setState({
             data: [...this.state.data, ...data._embedded.subjects],
-            currentDate: ApiClient.parseDate(response.headers.date),
             loading: false,
             refreshing: false,
             fetchingNewData: false

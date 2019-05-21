@@ -3,14 +3,15 @@ import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react
 
 import { Image } from "react-native-elements";
 
-import { UserApi, MessageApi, ApiClient } from "swagger_unicast";
+import { MessageApi, ApiClient } from "swagger_unicast";
 
 import Auth from "../../../config/Auth";
 
 import UnicastNotifications from "../../../config/UnicastNotifications";
 
-import RippleTouchable from "../../../components/RippleTouchable";
+import { timeStampToChatDate } from "../../../components/Time";
 
+import RippleTouchable from "../../../components/RippleTouchable";
 import LoadingFooter from "../../../components/LoadingFooter";
 
 import styles from "./styles";
@@ -25,20 +26,16 @@ export default class MensajesTab extends React.Component {
     this.state = {
       data: [],
       loading: true,
-      fetchingNewData: false,
       refreshing: false
     };
 
-    this.barrier = 0;
-    this.offset = 0;
-    this.totalPages = undefined;
+    this.currentDate = null;
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
 
-    this.userApiInstance = new UserApi();
-    this.messageApiInstance = new MessageApi();
+    this.apiInstance = new MessageApi();
   }
 
   componentDidMount = () => {
@@ -46,60 +43,36 @@ export default class MensajesTab extends React.Component {
   };
 
   getData = () => {
-    if (this.totalPages == undefined || this.offset < this.totalPages) {
-      let opts = {
-        cacheControl: "no-cache, no-store, must-revalidate",
-        pragma: "no-cache",
-        expires: 0,
-        page: this.offset,
-        sort: ["desc"]
-      };
-      this.userApiInstance.findUserProfessors(opts, (error, data, response) => {
-        if (error) {
-          if (error.status == 403) {
-            Auth.signOut(this.props.navigation);
-          } else {
-            HaOcurridoUnError(this.getData);
-          }
+    let opts = {
+      cacheControl: "no-cache, no-store, must-revalidate",
+      pragma: "no-cache",
+      expires: 0
+    };
+    this.apiInstance.getLastMessages(opts, (error, data, response) => {
+      if (error) {
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
         } else {
-          console.log(data);
-          let newData = [];
-          data._embedded.users.forEach(item => console.log(item));
-
-          // ultimo mensaje de cada profesor
-
-          // BARERRA
-
-          this.offset = this.offset + 1;
-          this.totalPages = data.page.totalPages;
-          this.setState({
-            data: [...this.state.data, ...data._embedded.users],
-            loading: false,
-            fetchingNewData: false,
-            refreshing: false
-          });
+          HaOcurridoUnError(this.getData);
         }
-      });
-    } else {
-      this.setState({ fetchingNewData: false, refreshing: false, loading: false });
-    }
-  };
-
-  onEndReached = () => {
-    if (!this.state.fetchingNewData && !this.state.refreshing) {
-      this.setState({ fetchingNewData: true });
-      this.getData();
-    }
+      } else {
+        console.log("DMENAJES    DAWDAWDAW");
+        console.log(data);
+        this.currentDate = ApiClient.parseDate(response.headers.date);
+        this.setState({
+          data: [...data._embedded.messages],
+          loading: false,
+          refreshing: false
+        });
+      }
+    });
   };
 
   onRefresh = () => {
-    if (!this.state.fetchingNewData && !this.state.refreshing) {
-      this.offset = 0;
-      this.totalPages = undefined;
+    if (!this.state.refreshing) {
       this.setState({
         refreshing: true,
         data: [],
-        fetchingNewData: false,
         loading: false
       });
       this.getData();
@@ -115,27 +88,28 @@ export default class MensajesTab extends React.Component {
           <FlatList
             data={this.state.data}
             refreshing={this.state.refreshing}
-            onEndReached={() => this.onEndReached()}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item }) => (
               <RippleTouchable
                 onPress={() =>
                   this.props.navigation.navigate("Chat", {
-                    title: "Matilde P."
+                    title: item.sender.name,
+                    photo: item.sender.photo,
+                    id: item.sender.id
                   })
                 }
               >
                 <View style={styles.chatContainer}>
-                  <Image source={{ uri: samplePic }} style={styles.profilePic} />
+                  <Image source={{ uri: item.sender.photo }} style={styles.profilePic} />
                   <View style={styles.nameAndMsgContainer}>
                     <Text numberOfLines={1} style={styles.nameText}>
-                      Luis Fonsi
+                      {item.sender.name + ", " + item.sender.surnames}
                     </Text>
                     <Text numberOfLines={1} style={styles.msgText}>
-                      Las notas de aprendizaje automático ya se han subido, puedes consultarlas donde te plazca
+                      {item.text}
                     </Text>
                   </View>
-                  <Text style={styles.hourText}>12:58</Text>
+                  <Text style={styles.hourText}>{timeStampToChatDate(item.timestamp, this.currentDate)}</Text>
                 </View>
               </RippleTouchable>
             )}

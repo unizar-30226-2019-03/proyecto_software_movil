@@ -25,7 +25,6 @@ export default class Searching extends React.Component {
     this.state = {
       searchText: "",
       viewingVideos: true,
-      currentDate: undefined,
       vidData: [],
       subData: [],
       onVidEndReachedManaged: false,
@@ -35,6 +34,8 @@ export default class Searching extends React.Component {
       fetchingNewVidData: false,
       fetchingNewSubData: false
     };
+
+    this.currentDate = undefined;
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -62,12 +63,12 @@ export default class Searching extends React.Component {
       };
       this.videoApiInstance.findVideosContainingTitle(opts, (error, data, response) => {
         if (!error) {
+          this.currentDate = ApiClient.parseDate(response.headers.date);
           this.setState({
             vidData: data._embedded.videos,
             loadingVid: false,
             fetchingNewVidData: false,
-            onVidEndReachedManaged: false,
-            currentDate: ApiClient.parseDate(response.headers.date)
+            onVidEndReachedManaged: false
           });
         } else {
           if (error.status == 403) {
@@ -221,7 +222,7 @@ export default class Searching extends React.Component {
                     likes={item.score}
                     duracion={secToDuration(item.seconds)}
                     title={item.title}
-                    info={timeStampToFormat(item.timestamp, this.state.currentDate)}
+                    info={timeStampToFormat(item.timestamp, this.currentDate)}
                     asignaturaIcon={{
                       uri: item.university != null ? item.university.photo : "uri_nula"
                     }}

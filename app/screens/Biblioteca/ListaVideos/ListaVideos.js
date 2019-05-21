@@ -27,11 +27,12 @@ export default class ListaVideos extends React.Component {
 		this.state = {
 			data: [],
 			loading: true,
-			currentDate: null,
 			refreshing: false,
 			fetchingNewData: false,
 			deleting: false
 		};
+
+		this.currentDate = null;
 
 		this.offset = 0;
 		this.totalPages = null;
@@ -91,11 +92,11 @@ export default class ListaVideos extends React.Component {
 					HaOcurridoUnError(this.getVideosDeLista);
 				}
 			} else {
+				this.currentDate = ApiClient.parseDate(response.headers.date);
 				this.offset = this.offset + 1;
 				this.totalPages = data.page.totalPages;
 				this.setState({
 					data: [...this.state.data, ...data._embedded.videos],
-					currentDate: ApiClient.parseDate(response.headers.date),
 					loading: false,
 					refreshing: false,
 					fetchingNewData: false
@@ -122,11 +123,11 @@ export default class ListaVideos extends React.Component {
 					HaOcurridoUnError(this.getVideosOfUser);
 				}
 			} else {
+				this.currentDate = ApiClient.parseDate(response.headers.date);
 				this.offset = this.offset + 1;
 				this.totalPages = data.page.totalPages;
 				this.setState({
 					data: [...this.state.data, ...data._embedded.videos],
-					currentDate: ApiClient.parseDate(response.headers.date),
 					loading: false,
 					refreshing: false,
 					fetchingNewData: false
@@ -153,11 +154,11 @@ export default class ListaVideos extends React.Component {
 					HaOcurridoUnError(this.getHistorial);
 				}
 			} else {
+				this.currentDate = ApiClient.parseDate(response.headers.date);
 				this.offset = this.offset + 1;
 				this.totalPages = data.page.totalPages;
 				this.setState({
 					data: [...this.state.data, ...data._embedded.displays],
-					currentDate: ApiClient.parseDate(response.headers.date),
 					loading: false,
 					refreshing: false,
 					fetchingNewData: false
@@ -284,7 +285,7 @@ export default class ListaVideos extends React.Component {
 									likes={_item.score}
 									duracion={secToDuration(_item.seconds)}
 									title={_item.title}
-									info={timeStampToFormat(_item.timestamp, this.state.currentDate)}
+									info={timeStampToFormat(_item.timestamp, this.currentDate)}
 									itemId={_item.id}
 									type={this.tipoLista}
 									index={index}
