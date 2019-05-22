@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Dimensions } from 'react-native'
+
 import { TouchableNativeFeedback, View } from "react-native";
 
 import {
@@ -175,7 +177,7 @@ const DownMenu = createBottomTabNavigator(
 				return <IconComponent name={iconName} style={styles.downMenuIcon} color={tintColor} />;
 			},
 			tabBarButtonComponent: props => {
-				return <RippleTouchable {...props} round={true} />;
+				return <RippleTouchable {...props}  round={true} />;
 			}
 		}),
 		navigationOptions: {
@@ -188,7 +190,12 @@ const DownMenu = createBottomTabNavigator(
 		},
 		tabBarOptions: {
 			activeTintColor: Azul,
-			inactiveTintColor: "gray"
+			inactiveTintColor: "gray",
+			tabStyle:{
+				width: (Dimensions.get('window').width)/5
+			},
+			
+			
 		}
 	}
 );

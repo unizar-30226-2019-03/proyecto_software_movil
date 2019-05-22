@@ -1,5 +1,7 @@
 import React from "react";
 
+import {Platform, TouchableHighlight} from "react-native";
+
 import { View, TouchableNativeFeedback } from "react-native";
 
 export default class RippleTouchable extends React.Component {
@@ -8,10 +10,20 @@ export default class RippleTouchable extends React.Component {
 		if (this.props.round) {
 			optional_props.background = TouchableNativeFeedback.Ripple("ThemeAttrAndroid", true);
 		}
-		return (
-			<TouchableNativeFeedback onPress={this.props.onPress} disabled={this.props.disabled} {...optional_props}>
-				<View {...this.props}>{this.props.children}</View>
-			</TouchableNativeFeedback>
-		);
+		if(Platform.OS==='android'){
+			return (
+				<TouchableNativeFeedback onPress={this.props.onPress} disabled={this.props.disabled} {...optional_props}>
+					<View {...this.props}>{this.props.children}</View>
+				</TouchableNativeFeedback>
+			);	
+		}
+		else {
+			return (
+				<TouchableHighlight onPress={this.props.onPress} disabled={this.props.disabled} {...optional_props}>
+					<View {...this.props}>{this.props.children}</View>
+				</TouchableHighlight>
+			);
+
+		}
 	}
 }

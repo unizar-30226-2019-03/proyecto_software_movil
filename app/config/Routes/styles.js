@@ -5,16 +5,18 @@ export const TopTabBarOptions = {
 		activeTintColor: "black",
 		inactiveTintColor: "black",
 		style: {
-			backgroundColor: "white"
+			backgroundColor: "white",
 		},
 		indicatorStyle: {
 			backgroundColor: "black"
-		}
+		},
 	}
 };
 
 export default StyleSheet.create({
 	downMenuIcon: {
-		fontSize: 25
+		fontSize: 25,
 	}
+		
+	
 });
