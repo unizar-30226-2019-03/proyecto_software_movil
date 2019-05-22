@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Dimensions } from 'react-native'
+
 import { TouchableNativeFeedback, View } from "react-native";
 
 import {
@@ -188,7 +190,10 @@ const DownMenu = createBottomTabNavigator(
 		},
 		tabBarOptions: {
 			activeTintColor: Azul,
-			inactiveTintColor: "gray"
+			inactiveTintColor: "gray",
+			tabStyle:{
+				width: (Dimensions.get('window').width)/5
+			},
 		}
 	}
 );
