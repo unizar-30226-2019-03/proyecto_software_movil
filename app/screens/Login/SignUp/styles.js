@@ -67,31 +67,23 @@ export default StyleSheet.create({
     color: "red"
   },
   collegeName: {
+    marginLeft: 10,
     fontSize: 16,
     color: "blue",
-    textAlign: "left",
-    maxWidth: 160
+    textAlign: "right",
+    flex: 1
+  },
+  header: {
+    fontSize: 19,
+    color: "white"
   },
   listRow: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "lightgrey",
-    width: 270,
-    paddingTop: 6,
-    paddingBottom: 12
+    flex: 1,
+    paddingVertical: 9
   },
   rowText: {
+    marginLeft: 5,
     fontSize: 17
-  },
-  overlayStyle: {
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  pickerAsign: {
-    width: 200,
-    color: Azul
   },
   descriptionContainer: {
     paddingHorizontal: 40,

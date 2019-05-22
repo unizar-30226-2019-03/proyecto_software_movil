@@ -9,20 +9,7 @@ export default StyleSheet.create({
   buttonRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.32,
-    shadowRadius: 2.22
-  },
-  videoMargin: {
-    marginBottom: 10
-  },
-  subjectMargin: {
-    marginBottom: 5
+    justifyContent: "center"
   },
   activeTab: {
     fontSize: 13,
@@ -38,28 +25,15 @@ export default StyleSheet.create({
     flex: 0.5,
     borderBottomWidth: 1.5,
     borderColor: "black"
-    /*     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22 */
   },
   inactiveSwap: {
     flex: 0.5,
     borderBottomWidth: 1.5,
     borderColor: "lightgray"
-    /*     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22 */
   },
   loadingCircleView: {
-    paddingTop: 240
+    justifyContent: "center",
+    flex: 1
   },
   headerContainer: {
     width: ScreenWidth - 56
@@ -71,5 +45,8 @@ export default StyleSheet.create({
     backgroundColor: "white",
     borderTopWidth: 0,
     borderBottomWidth: 0
+  },
+  videoContainer: {
+    marginBottom: 10
   }
 });

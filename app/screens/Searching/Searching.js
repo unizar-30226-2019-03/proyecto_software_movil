@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  ScrollView,
-  FlatList,
-  ActivityIndicator,
-  TouchableOpacity
-} from "react-native";
+import { View, ScrollView, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
 
 import { SearchBar, Button, Text } from "react-native-elements";
 
@@ -31,7 +25,6 @@ export default class Searching extends React.Component {
     this.state = {
       searchText: "",
       viewingVideos: true,
-      currentDate: undefined,
       vidData: [],
       subData: [],
       onVidEndReachedManaged: false,
@@ -41,6 +34,8 @@ export default class Searching extends React.Component {
       fetchingNewVidData: false,
       fetchingNewSubData: false
     };
+
+    this.currentDate = undefined;
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -66,26 +61,23 @@ export default class Searching extends React.Component {
         title: this.state.searchText,
         projection: "videoWithSubjectAndUniversity"
       };
-      this.videoApiInstance.findVideosContainingTitle(
-        opts,
-        (error, data, response) => {
-          if (!error) {
-            this.setState({
-              vidData: data._embedded.videos,
-              loadingVid: false,
-              fetchingNewVidData: false,
-              onVidEndReachedManaged: false,
-              currentDate: ApiClient.parseDate(response.headers.date)
-            });
+      this.videoApiInstance.findVideosContainingTitle(opts, (error, data, response) => {
+        if (!error) {
+          this.currentDate = ApiClient.parseDate(response.headers.date);
+          this.setState({
+            vidData: data._embedded.videos,
+            loadingVid: false,
+            fetchingNewVidData: false,
+            onVidEndReachedManaged: false
+          });
+        } else {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
           } else {
-            if (error.status == 403) {
-              Auth.signOut(this.props.navigation);
-            } else {
-              HaOcurridoUnError(null);
-            }
+            HaOcurridoUnError(null);
           }
         }
-      );
+      });
     } else {
       this.setState({ loadingVid: false, fetchingNewVidData: false });
     }
@@ -97,25 +89,22 @@ export default class Searching extends React.Component {
         name: this.state.searchText,
         projection: "subjectWithUniversity"
       };
-      this.subjectApiInstance.findSubjectsContainingName(
-        opts,
-        (error, data, response) => {
-          if (!error) {
-            this.setState({
-              subData: data._embedded.subjects,
-              loadingSub: false,
-              fetchingNewSubData: false,
-              onSubEndReachedManaged: false
-            });
+      this.subjectApiInstance.findSubjectsContainingName(opts, (error, data, response) => {
+        if (!error) {
+          this.setState({
+            subData: data._embedded.subjects,
+            loadingSub: false,
+            fetchingNewSubData: false,
+            onSubEndReachedManaged: false
+          });
+        } else {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
           } else {
-            if (error.status == 403) {
-              Auth.signOut(this.props.navigation);
-            } else {
-              HaOcurridoUnError(null);
-            }
+            HaOcurridoUnError(null);
           }
         }
-      );
+      });
     } else {
       this.setState({ loadingSub: false, fetchingNewSubData: false });
     }
@@ -199,107 +188,74 @@ export default class Searching extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View showsVerticalScrollIndicator={false}>
-          <View style={styles.buttonRow}>
-            <TouchableOpacity
-              activeOpacity={1}
-              style={
-                this.state.viewingVideos
-                  ? styles.inactiveSwap
-                  : styles.activeSwap
-              }
-              onPress={() => this.changeTabThenGetData(false)}
-            >
-              <Text
-                style={
-                  this.state.viewingVideos
-                    ? styles.inactiveTab
-                    : styles.activeTab
-                }
-              >
-                ASIGNATURAS
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={1}
-              style={
-                this.state.viewingVideos
-                  ? styles.activeSwap
-                  : styles.inactiveSwap
-              }
-              onPress={() => this.changeTabThenGetData(true)}
-            >
-              <Text
-                style={
-                  this.state.viewingVideos
-                    ? styles.activeTab
-                    : styles.inactiveTab
-                }
-              >
-                VÍDEOS
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {this.state.viewingVideos ? (
-            this.state.loadingVid ? (
-              <View style={styles.loadingCircleView}>
-                <ActivityIndicator size="large" />
-              </View>
-            ) : (
-              <FlatList
-                data={this.state.vidData}
-                renderItem={({ item }) => (
-                  <View style={styles.videoMargin}>
-                    <FullScreenThumbnail
-                      navigation={this.props.navigation}
-                      image={{ uri: item.thumbnailUrl }}
-                      likes={item.score}
-                      duracion={secToDuration(item.seconds)}
-                      title={item.title}
-                      info={timeStampToFormat(
-                        item.timestamp,
-                        this.state.currentDate
-                      )}
-                      asignaturaIcon={{
-                        uri:
-                          item.university != null
-                            ? item.university.photo
-                            : "uri_nula"
-                      }}
-                      asignaturaName={item.subject.abbreviation}
-                      asignaturaFullName={item.subject.name}
-                      asignaturaId={item.subject.id}
-                      videoId={item.id}
-                    />
-                  </View>
-                )}
-              />
-            )
-          ) : this.state.loadingSub ? (
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={this.state.viewingVideos ? styles.inactiveSwap : styles.activeSwap}
+            onPress={() => this.changeTabThenGetData(false)}
+          >
+            <Text style={this.state.viewingVideos ? styles.inactiveTab : styles.activeTab}>ASIGNATURAS</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={this.state.viewingVideos ? styles.activeSwap : styles.inactiveSwap}
+            onPress={() => this.changeTabThenGetData(true)}
+          >
+            <Text style={this.state.viewingVideos ? styles.activeTab : styles.inactiveTab}>VÍDEOS</Text>
+          </TouchableOpacity>
+        </View>
+        {this.state.viewingVideos ? (
+          this.state.loadingVid ? (
             <View style={styles.loadingCircleView}>
               <ActivityIndicator size="large" />
             </View>
           ) : (
             <FlatList
-              data={this.state.subData}
+              showsVerticalScrollIndicator={false}
+              data={this.state.vidData}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
-                <View style={styles.subjectMargin}>
-                  <ThumbnailAsignatura
+                <View style={styles.videoContainer}>
+                  <FullScreenThumbnail
                     navigation={this.props.navigation}
-                    icon={{
-                      uri:
-                        item.university != null
-                          ? item.university.photo
-                          : "uri_nula"
+                    image={{ uri: item.thumbnailUrl }}
+                    likes={item.score}
+                    duracion={secToDuration(item.seconds)}
+                    title={item.title}
+                    info={timeStampToFormat(item.timestamp, this.currentDate)}
+                    asignaturaIcon={{
+                      uri: item.university != null ? item.university.photo : "uri_nula"
                     }}
-                    name={item.name}
-                    id={item.id}
+                    asignaturaName={item.subject.abbreviation}
+                    asignaturaFullName={item.subject.name}
+                    asignaturaId={item.subject.id}
+                    videoId={item.id}
                   />
                 </View>
               )}
             />
-          )}
-        </View>
+          )
+        ) : this.state.loadingSub ? (
+          <View style={styles.loadingCircleView}>
+            <ActivityIndicator size="large" />
+          </View>
+        ) : (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={this.state.subData}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <ThumbnailAsignatura
+                navigation={this.props.navigation}
+                icon={{
+                  uri: item.university != null ? item.university.photo : "uri_nula"
+                }}
+                name={item.name}
+                id={item.id}
+              />
+            )}
+          />
+        )}
       </View>
     );
   }

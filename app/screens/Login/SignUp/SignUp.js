@@ -14,6 +14,8 @@ import InputFixer from "../../../components/InputFixer";
 
 import LoadingFooter from "../../../components/LoadingFooter";
 
+import LoadingModal from "../../../components/LoadingModal";
+
 import styles from "./styles";
 
 const imageErrText = "Falta una\nimagen de perfil";
@@ -27,8 +29,8 @@ export default class SignUp extends React.Component {
       openDegModal: false,
       onUniEndReachedManaged: false,
       onDegEndReachedManaged: false,
-      uniData: [{}],
-      degData: [{}],
+      uniData: [],
+      degData: [],
       loadingUni: true,
       loadingDeg: true,
       fetchingNewUniData: false,
@@ -38,7 +40,7 @@ export default class SignUp extends React.Component {
       email: "",
       password: "",
       passwordCheck: "",
-      image: undefined,
+      image: "uri_nula",
       name: "",
       surname: "",
       universityName: "Seleccione una...",
@@ -55,7 +57,8 @@ export default class SignUp extends React.Component {
       degreeErr: false,
       nameLengthErr: false,
       surnameLengthErr: false,
-      descriptionLengthErr: false
+      descriptionLengthErr: false,
+      registering: false
     };
 
     this.universityApiInstance = new UniversityApi();
@@ -265,40 +268,44 @@ export default class SignUp extends React.Component {
   };
 
   tryRegister = () => {
-    const photo = {
-      uri: this.state.image,
-      name: this.state.image.substring(this.state.image.lastIndexOf("/") + 1, this.state.image.length),
-      type: "imagen/png"
-    };
-    let apiInstance = new UserApi();
-    console.log("username ", this.state.username);
-    console.log("pw ", this.state.password);
-    console.log("name ", this.state.name);
-    console.log("surname ", this.state.surname);
-    console.log("email ", this.state.email);
-    console.log("descr ", this.state.description);
-    console.log("univer ", this.state.universityId);
-    console.log("degre ", this.state.degreeId);
-    console.log("image ", this.state.image);
-    apiInstance.addUser(
-      this.state.username,
-      this.state.password,
-      this.state.name,
-      this.state.surname,
-      this.state.email,
-      this.state.description,
-      this.state.universityId,
-      this.state.degreeId,
-      photo,
-      (error, data, response) => {
-        if (error) {
-          this.showConnectionErrorAlert();
-        } else {
-          this.showSuccessfulRegister();
-          this.props.navigation.navigate("SignIn");
+    if (!this.state.registering) {
+      this.setState({ registering: true });
+      const photo = {
+        uri: this.state.image,
+        name: this.state.image.substring(this.state.image.lastIndexOf("/") + 1, this.state.image.length),
+        type: "imagen/png"
+      };
+      let apiInstance = new UserApi();
+      console.log("username ", this.state.username);
+      console.log("pw ", this.state.password);
+      console.log("name ", this.state.name);
+      console.log("surname ", this.state.surname);
+      console.log("email ", this.state.email);
+      console.log("descr ", this.state.description);
+      console.log("univer ", this.state.universityId);
+      console.log("degre ", this.state.degreeId);
+      console.log("image ", this.state.image);
+      apiInstance.addUser(
+        this.state.username,
+        this.state.password,
+        this.state.name,
+        this.state.surname,
+        this.state.email,
+        this.state.description,
+        this.state.universityId,
+        this.state.degreeId,
+        photo,
+        (error, data, response) => {
+          if (error) {
+            this.showConnectionErrorAlert();
+          } else {
+            this.showSuccessfulRegister();
+            this.props.navigation.navigate("SignIn");
+          }
+          this.setState({ registering: false });
         }
-      }
-    );
+      );
+    }
   };
 
   render() {
@@ -397,13 +404,12 @@ export default class SignUp extends React.Component {
 
           <Overlay
             isVisible={this.state.openUniModal}
-            overlayStyle={styles.overlayStyle}
             animationType="fade"
             onBackdropPress={() => this.setState({ openUniModal: false })}
           >
-            <View style={styles.listElements}>
+            <View>
               <FlatList
-                data={this.state.uniData}
+                data={this.state.uniData.length < 1 ? [{}] : this.state.uniData}
                 onEndReached={() => this.onEndReached("uni")}
                 renderItem={({ item }) => (
                   <RippleTouchable
@@ -441,9 +447,9 @@ export default class SignUp extends React.Component {
             animationType="fade"
             onBackdropPress={() => this.setState({ openDegModal: false })}
           >
-            <View style={styles.listElements}>
+            <View>
               <FlatList
-                data={this.state.degData}
+                data={this.state.degData.length < 1 ? [{}] : this.state.degData}
                 onEndReached={() => this.onEndReached("deg")}
                 renderItem={({ item }) => (
                   <RippleTouchable
@@ -496,6 +502,7 @@ export default class SignUp extends React.Component {
           />
         </View>
         <View style={{ height: 60 }} />
+        <LoadingModal visible={this.state.registering} />
       </InputFixer>
     );
   }

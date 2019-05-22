@@ -13,6 +13,7 @@ import { VideoApi, ApiClient } from "swagger_unicast";
 import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
 import LoadingFooter from "../../../components/LoadingFooter";
+import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 
 import styles from "./styles";
 
@@ -26,6 +27,8 @@ export default class VideosTab extends React.Component {
 			fetchingNewData: false,
 			refreshing: false
 		};
+
+		this.currentDate = null;
 
 		this.offset = 0;
 		this.totalPages = null;
@@ -41,6 +44,7 @@ export default class VideosTab extends React.Component {
 
 	componentDidMount = () => {
 		this.getData();
+		UnicastNotifications.fireSingleton();
 	};
 
 	getData = () => {
@@ -64,9 +68,9 @@ export default class VideosTab extends React.Component {
 				} else {
 					this.offset = this.offset + 1;
 					this.totalPages = data.page.totalPages;
+					this.currentDate = ApiClient.parseDate(response.headers.date);
 					this.setState({
 						data: [...this.state.data, ...data._embedded.videos],
-						currentDate: ApiClient.parseDate(response.headers.date),
 						loading: false,
 						refreshing: false,
 						fetchingNewData: false
@@ -117,7 +121,7 @@ export default class VideosTab extends React.Component {
 									likes={item.score}
 									duracion={secToDuration(item.seconds)}
 									title={item.title}
-									info={timeStampToFormat(item.timestamp, this.state.currentDate)}
+									info={timeStampToFormat(item.timestamp, this.currentDate)}
 									asignaturaIcon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
 									asignaturaName={item.subject.abbreviation}
 									asignaturaFullName={item.subject.name}
