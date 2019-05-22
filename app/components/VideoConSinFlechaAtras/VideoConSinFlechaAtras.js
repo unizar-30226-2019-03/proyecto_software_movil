@@ -26,8 +26,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
     super(props);
     this.state = {
       pantallaCompleta: false,
-      posicion: 0,
-      duracion: 0,
+
       showControls: false
     };
 
@@ -39,6 +38,8 @@ export default class VideoConSinFlechaAtras extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
     this.controlTimeout = null;
+    this.duracion = this.props.duracion;
+    this.posicion = 0;
   }
 
   showControls = () => {
@@ -64,15 +65,15 @@ export default class VideoConSinFlechaAtras extends React.Component {
   };
 
   devuelveEstado = () => {
-    return this.state.posicion;
+    return this.posicion;
   };
 
   devuelveDuracion = () => {
-    return this.state.duracion;
+    return this.duracion;
   };
 
   devuelvePosicion = () => {
-    return this.state.posicion;
+    return this.posicion;
   };
 
   componentWillUnmount = () => {
@@ -114,13 +115,12 @@ export default class VideoConSinFlechaAtras extends React.Component {
 
   cambio = nuevo => {
     let posicion = Math.floor(nuevo.positionMillis / 1000);
-    let duracion = Math.floor(nuevo.durationMillis / 1000);
-    this.setState({
-      posicion: posicion,
-      duracion: duracion
-    });
+
+    this.posicion = posicion;
   };
-  carga = () => {
+
+  componentDidMount = () => {
+    id = this.props.videoId;
     const opts2 = {
       cacheControl: "no-cache, no-store, must-revalidate",
       pragma: "no-cache",
@@ -128,16 +128,15 @@ export default class VideoConSinFlechaAtras extends React.Component {
       projection: "displayWithVideo"
     };
     this.displayApi.findByUserIdAndVideoId(
-      3,
+      id,
       opts2,
       (error, data, response) => {
         if (error) {
           console.log(error);
         } else {
           console.log(data);
-          if (data.secsFromBeg * 1000 < this.devuelveDuracion()) {
-            this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
-          }
+
+          this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
         }
       }
     );
@@ -168,7 +167,6 @@ export default class VideoConSinFlechaAtras extends React.Component {
             posterSource={{
               uri: this.props.thumbnail
             }}
-            onLoad={() => this.carga()}
             source={{ uri: this.props.source }}
             rate={1.0}
             volume={1.0}

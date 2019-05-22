@@ -26,6 +26,16 @@ export default class Descripcion extends React.Component {
     vacio = [];
     this.setState({ dataSource: ds.cloneWithRows(vacio) });
   }
+
+  componentWillReceiveProps(props) {
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    console.log(props);
+    if (props.profesores) {
+      this.setState({ dataSource: ds.cloneWithRows(props.profesores) });
+    }
+  }
   _animatedHeight = new Animated.Value(0);
   _animatedOpacity = new Animated.Value(0);
   alternarDescripcion = () => {
@@ -43,12 +53,28 @@ export default class Descripcion extends React.Component {
     }
   };
   profesor = profesor => {
-    <View style={styles.iconAndNameView}>
-      <Image source={profesor.foto} style={styles.userIcon} margin={20} />
-      <Text style={styles.userName}>
-        {profesor.nombre + " " + profesor.apellidos}
-      </Text>
-    </View>;
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate("Chat", {
+            title: profesor.nombre,
+            photo: profesor.foto,
+            id: profesor.id
+          })
+        }
+      >
+        <View style={styles.iconAndNameView}>
+          <Image
+            source={{ uri: profesor.foto }}
+            style={styles.userIcon}
+            margin={20}
+          />
+          <Text style={styles.userName}>
+            {profesor.nombre + " " + profesor.apellidos}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
   };
   render() {
     return (
@@ -97,23 +123,16 @@ export default class Descripcion extends React.Component {
             <Text style={styles.profesoresTitulo}>
               Profesores de la asignatura
             </Text>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Chat", {
-                  title: "Juancho Provisional"
-                })
-              }
-            >
-              <ListView
-                style={styles.profesores}
-                horizontal={true}
-                ref={ref => {
-                  this._listaProfesores = ref;
-                }}
-                dataSource={this.state.dataSource}
-                renderRow={rowData => this.profesor(rowData)}
-              />
-            </TouchableOpacity>
+
+            <ListView
+              style={styles.profesores}
+              horizontal={true}
+              ref={ref => {
+                this._listaProfesores = ref;
+              }}
+              dataSource={this.state.dataSource}
+              renderRow={rowData => this.profesor(rowData)}
+            />
           </ScrollView>
         </Animated.View>
       </View>

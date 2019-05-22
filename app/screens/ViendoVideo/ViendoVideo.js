@@ -52,7 +52,7 @@ export default class ViendoVideo extends React.Component {
       comentarios: vacio,
       comentariosMostrar: vacio,
       seguida: false,
-
+      profesores: false,
       dataSource: ds,
       largo: false,
       ultimoAñadido: -1,
@@ -112,7 +112,7 @@ export default class ViendoVideo extends React.Component {
           timeNow: now
         });
         // Alert.alert(this.state.video.url);
-
+        this.obtenerAsignaturaUni(id);
         this.obtenerComentarios(data);
       }
     });
@@ -248,7 +248,7 @@ export default class ViendoVideo extends React.Component {
             } else {
               let prof = data._embedded.users.map(c => {
                 t = c.secondsFromBeginning;
-
+                const id = c.id;
                 const name = c.name;
                 const photo = c.photo;
                 const surnames = c.surnames;
@@ -256,7 +256,8 @@ export default class ViendoVideo extends React.Component {
                 return {
                   nombre: name,
                   foto: photo,
-                  apellidos: surnames
+                  apellidos: surnames,
+                  id: id
                 };
               });
               this.setState({ profesores: prof });
@@ -268,8 +269,8 @@ export default class ViendoVideo extends React.Component {
   }
 
   componentWillMount() {
-    id = this.props.navigation.getParam("id");
-    this.obtenerAsignaturaUni(id);
+    //id = this.props.navigation.getParam("id");
+    //this.obtenerAsignaturaUni(id);
   }
   componentDidMount() {
     this.interval = setInterval(() => this.pasaSegundo(), 1000);
@@ -402,7 +403,7 @@ export default class ViendoVideo extends React.Component {
             ref={ref => {
               this.VideoFlechaRef = ref;
             }}
-            videoId={this.state.video.id}
+            videoId={this.props.navigation.getParam("id")}
           />
         </View>
         <View style={{ flex: 1 }}>

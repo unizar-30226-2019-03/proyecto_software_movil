@@ -7,7 +7,8 @@ export default StyleSheet.create({
     borderWidth: 2
   },
   valorar: {
-    height: 100
+    height: 130,
+    maxHeight: 130
   },
 
   titulo: {

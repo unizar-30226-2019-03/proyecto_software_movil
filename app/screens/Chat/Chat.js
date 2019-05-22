@@ -1,5 +1,13 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Image, ListView, TextInput, KeyboardAvoidingView } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ListView,
+  TextInput,
+  KeyboardAvoidingView
+} from "react-native";
 
 import styles from "./styles";
 
@@ -11,6 +19,7 @@ import Auth from "../../config/Auth"; // QUITAR CUANDO SE INTEGRE ESTA PANTALLA
 import UnicastNotifications from "../../config/UnicastNotifications";
 
 import { HeaderHeight } from "../../constants";
+import { MessageApi } from "swagger_unicast";
 
 export default class Chat extends React.Component {
   constructor() {
@@ -51,7 +60,7 @@ export default class Chat extends React.Component {
     };
   }
   componentDidMount = () => {
-    //lamar aqui a get data NUNCA EN EL CONSTRUCTOR
+    this.messageApi = new MessageApi();
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -66,7 +75,10 @@ export default class Chat extends React.Component {
         activeOpacity={0.6}
       >
         <View style={styles.headerContainer}>
-          <Image source={{ uri: navigation.getParam("photo") }} style={styles.userIcon} />
+          <Image
+            source={{ uri: navigation.getParam("photo") }}
+            style={styles.userIcon}
+          />
           <Text style={styles.userName}>{navigation.getParam("title")}</Text>
         </View>
       </TouchableOpacity>
@@ -94,7 +106,10 @@ export default class Chat extends React.Component {
     var mins = new Date().getMinutes();
     var date = "" + hours + ":" + mins;
 
-    nuevoDatos = [...this.state.datos, { texto: this.state.text, tipo: tipo, fecha: date }];
+    nuevoDatos = [
+      ...this.state.datos,
+      { texto: this.state.text, tipo: tipo, fecha: date }
+    ];
     this.setState({ datos: nuevoDatos });
     nuevoDs = this.state.dataSource.cloneWithRows(nuevoDatos);
     this.setState({ dataSource: nuevoDs });
@@ -102,7 +117,11 @@ export default class Chat extends React.Component {
   };
   render() {
     return (
-      <KeyboardAvoidingView style={styles.vista} behavior="padding" keyboardVerticalOffset={HeaderHeight}>
+      <KeyboardAvoidingView
+        style={styles.vista}
+        behavior="padding"
+        keyboardVerticalOffset={HeaderHeight}
+      >
         <ListView
           style={styles.lista}
           keyboardShouldPersistTaps="never"
@@ -110,8 +129,16 @@ export default class Chat extends React.Component {
             this.ListView_Ref = ref;
           }}
           dataSource={this.state.dataSource}
-          renderRow={rowData => <Mensaje tipo={rowData.tipo} mensaje={rowData.texto} fecha={rowData.fecha} />}
-          onContentSizeChange={() => this.ListView_Ref.scrollToEnd({ animated: true })}
+          renderRow={rowData => (
+            <Mensaje
+              tipo={rowData.tipo}
+              mensaje={rowData.texto}
+              fecha={rowData.fecha}
+            />
+          )}
+          onContentSizeChange={() =>
+            this.ListView_Ref.scrollToEnd({ animated: true })
+          }
         />
         <View style={styles.entradaTexto}>
           <TextInput

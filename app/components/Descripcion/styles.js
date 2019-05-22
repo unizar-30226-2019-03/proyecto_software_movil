@@ -42,6 +42,10 @@ export default StyleSheet.create({
   userName: {
     color: "black",
     //fontWeight: "bold",
-    fontSize: 20
+    fontSize: 20,
+    width: 100
+  },
+  profesores: {
+    marginVertical: 2
   }
 });
