@@ -134,7 +134,7 @@ export default class UnicastNotifications extends React.Component {
       Notifications.presentLocalNotificationAsync(
         {
           title: "Unicast",
-          body: "Mensaje nuevo: " + timeStampToFormat(this.lastMsgDate, this.currentDate)
+          body: "Nuevo mensaje recibido: " + timeStampToFormat(this.lastMsgDate, this.currentDate)
         },
         "msg"
       );
@@ -144,7 +144,7 @@ export default class UnicastNotifications extends React.Component {
       Notifications.presentLocalNotificationAsync(
         {
           title: "Unicast",
-          body: "Vídeo nuevo: " + timeStampToFormat(this.lastVidDate, this.currentDate)
+          body: "Nuevo vídeo subido: " + timeStampToFormat(this.lastVidDate, this.currentDate)
         },
         "vid"
       );
