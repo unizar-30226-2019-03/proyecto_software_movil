@@ -4,6 +4,8 @@ import { AsyncStorage } from "react-native";
 
 import { UserApi, ApiClient } from "swagger_unicast";
 
+import UnicastNotifications from "../UnicastNotifications";
+
 import { observer } from "mobx-react/native";
 
 import PerfilStore from "../PerfilStore";
@@ -48,6 +50,7 @@ export default class Auth {
 	}
 
 	static async signOut(navigation) {
+		UnicastNotifications.killSingleton();
 		await AsyncStorage.clear();
 		userToken = undefined;
 		userId = undefined;

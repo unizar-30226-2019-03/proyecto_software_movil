@@ -68,6 +68,11 @@ export default class UnicastNotifications extends React.Component {
     }
   }
 
+  static killSingleton() {
+    clearInterval(this.timer);
+    this.timer = null;
+  }
+
   static fetchNewNotifications() {
     let opts = {
       page: 0 //creo que es 0 porque cada vez que mires la pagina 0 se checkearán todas esas notis, con lo cual no haría falta llevar conteo de offset
@@ -124,6 +129,8 @@ export default class UnicastNotifications extends React.Component {
           }
         } */
       );
+
+      console.log("todas las ", this.uncheckedNotifications.length, " chequeadas");
     }
   }
 
