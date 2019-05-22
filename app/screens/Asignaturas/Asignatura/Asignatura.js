@@ -28,6 +28,7 @@ import BotonSeguirAsignatura from "../../../components/BotonSeguirAsignatura";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 import LoadingModal from "../../../components/LoadingModal";
 import LoadingFooter from "../../../components/LoadingFooter";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
@@ -295,6 +296,7 @@ export default class Asignatura extends React.Component {
               ListFooterComponent={LoadingFooter({
                 show: this.state.fetchingNewData
               })}
+              ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
               keyExtractor={(item, index) => index.toString()}
             />
           </ScrollView>

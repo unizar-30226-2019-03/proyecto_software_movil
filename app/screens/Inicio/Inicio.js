@@ -9,6 +9,7 @@ import UnicastNotifications from "../../config/UnicastNotifications";
 
 import FullScreenThumbnail from "../../components/FullScreenThumbnail";
 import LoadingFooter from "../../components/LoadingFooter";
+import NoHayContenidoQueMostrar from "../../components/NoHayContenidoQueMostrar";
 
 import { timeStampToFormat, secToDuration } from "../../components/Time";
 
@@ -118,6 +119,7 @@ export default class Inicio extends React.Component {
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
             })}
+            ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
             keyExtractor={(item, index) => index.toString()}
           />
         )}

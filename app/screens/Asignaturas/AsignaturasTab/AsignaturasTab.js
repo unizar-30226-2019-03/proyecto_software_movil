@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, FlatList, ActivityIndicator } from "react-native";
+import { View, FlatList, ActivityIndicator, Text } from "react-native";
 
 import { UserApi, ApiClient } from "swagger_unicast";
 
@@ -11,6 +11,7 @@ import UnicastNotifications from "../../../config/UnicastNotifications";
 import ThumbnailAsignatura from "../../../components/ThumbnailAsignatura";
 import LoadingFooter from "../../../components/LoadingFooter";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
@@ -93,6 +94,7 @@ export default class AsignaturasTab extends React.Component {
               />
             )}
             keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={<NoHayContenidoQueMostrar what="asignaturas" />}
           />
         )}
       </View>

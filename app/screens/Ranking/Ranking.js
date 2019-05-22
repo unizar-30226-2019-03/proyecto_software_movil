@@ -12,10 +12,12 @@ import { SubjectApi, ApiClient } from "swagger_unicast";
 
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 
+import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
+
 import LoadingFooter from "../../components/LoadingFooter";
+import NoHayContenidoQueMostrar from "../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
 
 export default class Ranking extends React.Component {
   constructor(props) {
@@ -157,6 +159,7 @@ export default class Ranking extends React.Component {
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
             })}
+            ListEmptyComponent={<NoHayContenidoQueMostrar what="asignaturas" />}
             keyExtractor={(item, index) => index.toString()}
           />
         )}

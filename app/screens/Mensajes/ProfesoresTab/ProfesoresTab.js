@@ -12,6 +12,7 @@ import Auth from "../../../config/Auth";
 import UnicastNotifications from "../../../config/UnicastNotifications";
 
 import LoadingFooter from "../../../components/LoadingFooter";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
@@ -129,6 +130,7 @@ export default class ProfesorTab extends React.Component {
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
             })}
+            ListEmptyComponent={<NoHayContenidoQueMostrar what="profesores" />}
             keyExtractor={(item, index) => index.toString()}
           />
         )}

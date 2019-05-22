@@ -14,6 +14,7 @@ import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
 import LoadingFooter from "../../../components/LoadingFooter";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
@@ -133,6 +134,7 @@ export default class VideosTab extends React.Component {
 						ListFooterComponent={LoadingFooter({
 							show: this.state.fetchingNewData
 						})}
+						ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				)}

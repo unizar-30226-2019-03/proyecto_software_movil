@@ -13,6 +13,7 @@ import { timeStampToChatDate } from "../../../components/Time";
 
 import RippleTouchable from "../../../components/RippleTouchable";
 import LoadingFooter from "../../../components/LoadingFooter";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
@@ -25,8 +26,7 @@ export default class MensajesTab extends React.Component {
 
     this.state = {
       data: [],
-      loading: true,
-      refreshing: false
+      loading: true
     };
 
     this.currentDate = null;
@@ -62,22 +62,10 @@ export default class MensajesTab extends React.Component {
         this.currentDate = ApiClient.parseDate(response.headers.date);
         this.setState({
           data: [...data._embedded.messages],
-          loading: false,
-          refreshing: false
+          loading: false
         });
       }
     });
-  };
-
-  onRefresh = () => {
-    if (!this.state.refreshing) {
-      this.setState({
-        refreshing: true,
-        data: [],
-        loading: false
-      });
-      this.getData();
-    }
   };
 
   render() {
@@ -88,35 +76,34 @@ export default class MensajesTab extends React.Component {
         ) : (
           <FlatList
             data={this.state.data}
-            refreshing={this.state.refreshing}
-            onRefresh={() => this.onRefresh()}
-            renderItem={({ item }) => (
-              <RippleTouchable
-                onPress={() =>
-                  this.props.navigation.navigate("Chat", {
-                    title: item.sender.name,
-                    photo: item.sender.photo,
-                    id: item.sender.id
-                  })
-                }
-              >
-                <View style={styles.chatContainer}>
-                  <Image source={{ uri: item.sender.photo }} style={styles.profilePic} />
-                  <View style={styles.nameAndMsgContainer}>
-                    <Text numberOfLines={1} style={styles.nameText}>
-                      {item.sender.name + ", " + item.sender.surnames}
-                    </Text>
-                    <Text numberOfLines={1} style={styles.msgText}>
-                      {item.text}
-                    </Text>
+            renderItem={({ item }) => {
+              let usuario = item.sender.id == Auth.getUserId() ? item.receiver : item.sender;
+              return (
+                <RippleTouchable
+                  onPress={() =>
+                    this.props.navigation.navigate("Chat", {
+                      title: item.sender.name,
+                      photo: item.sender.photo,
+                      id: usuario.id
+                    })
+                  }
+                >
+                  <View style={styles.chatContainer}>
+                    <Image source={{ uri: usuario.photo }} style={styles.profilePic} />
+                    <View style={styles.nameAndMsgContainer}>
+                      <Text numberOfLines={1} style={styles.nameText}>
+                        {usuario.name + ", " + usuario.surnames}
+                      </Text>
+                      <Text numberOfLines={1} style={styles.msgText}>
+                        {item.text}
+                      </Text>
+                    </View>
+                    <Text style={styles.hourText}>{timeStampToChatDate(item.timestamp, this.currentDate)}</Text>
                   </View>
-                  <Text style={styles.hourText}>{timeStampToChatDate(item.timestamp, this.currentDate)}</Text>
-                </View>
-              </RippleTouchable>
-            )}
-            ListFooterComponent={LoadingFooter({
-              show: this.state.fetchingNewData
-            })}
+                </RippleTouchable>
+              );
+            }}
+            ListEmptyComponent={<NoHayContenidoQueMostrar what="mensajes" />}
             keyExtractor={(item, index) => index.toString()}
           />
         )}

@@ -16,8 +16,11 @@ import { timeStampToFormat, secToDuration } from "../../components/Time";
 
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 
-import styles from "./styles";
 import RippleTouchable from "../../components/RippleTouchable";
+
+import NoHayContenidoQueMostrar from "../../components/NoHayContenidoQueMostrar";
+
+import styles from "./styles";
 
 export default class Searching extends React.Component {
   constructor(props) {
@@ -214,7 +217,6 @@ export default class Searching extends React.Component {
             <FlatList
               showsVerticalScrollIndicator={false}
               data={this.state.vidData}
-              keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <View style={styles.videoContainer}>
                   <FullScreenThumbnail
@@ -234,6 +236,8 @@ export default class Searching extends React.Component {
                   />
                 </View>
               )}
+              keyExtractor={(item, index) => index.toString()}
+              ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
             />
           )
         ) : this.state.loadingSub ? (
@@ -244,7 +248,6 @@ export default class Searching extends React.Component {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={this.state.subData}
-            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <ThumbnailAsignatura
                 navigation={this.props.navigation}
@@ -255,6 +258,8 @@ export default class Searching extends React.Component {
                 id={item.id}
               />
             )}
+            keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={<NoHayContenidoQueMostrar what="asignaturas" />}
           />
         )}
       </View>
