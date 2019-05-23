@@ -82,8 +82,8 @@ export default class MensajesTab extends React.Component {
                 <RippleTouchable
                   onPress={() =>
                     this.props.navigation.navigate("Chat", {
-                      title: item.sender.name,
-                      photo: item.sender.photo,
+                      title: usuario.name,
+                      photo: usuario.photo,
                       id: usuario.id
                     })
                   }
