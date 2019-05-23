@@ -22,6 +22,8 @@ import NoHayContenidoQueMostrar from "../../components/NoHayContenidoQueMostrar"
 
 import styles from "./styles";
 
+import {Platform} from "react-native";
+
 export default class Searching extends React.Component {
   constructor(props) {
     super(props);
@@ -159,25 +161,50 @@ export default class Searching extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
 
-    return {
-      headerTitle: (
-        <View style={styles.headerContainer}>
-          <SearchBar
-            autoFocus
-            value={params.searchText}
-            placeholder="Buscar..."
-            inputContainerStyle={styles.searchBarIn}
-            searchIcon={false}
-            containerStyle={styles.searchBarOut}
-            onChangeText={text => params.changeSearchText(text)}
-            onSubmitEditing={event => params.getData()}
-          />
-        </View>
-      ),
-      headerStyle: {
-        elevation: 0
+    
+      if(Platform.OS==='android'){
+        return {
+          headerTitle: (
+            <View style={styles.headerContainerAndroid}>
+              <SearchBar
+                autoFocus
+                value={params.searchText}
+                placeholder="Buscar..."
+                inputContainerStyle={styles.searchBarIn}
+                searchIcon={false}
+                containerStyle={styles.searchBarOut}
+                onChangeText={text => params.changeSearchText(text)}
+                onSubmitEditing={event => params.getData()}
+              />
+            </View>
+          ),
+          headerStyle: {
+            elevation: 0
+          }
+        };
       }
-    };
+      else{
+        return {
+          headerTitle: (
+            <View style={styles.headerContainerIos}>
+              <SearchBar
+                autoFocus
+                value={params.searchText}
+                placeholder="Buscar..."
+                inputContainerStyle={styles.searchBarIn}
+                searchIcon={false}
+                containerStyle={styles.searchBarOut}
+                onChangeText={text => params.changeSearchText(text)}
+                onSubmitEditing={event => params.getData()}
+              />
+            </View>
+          ),
+          headerStyle: {
+            elevation: 0
+          }
+        }
+      }
+    
   };
 
   changeSearchText = value => {

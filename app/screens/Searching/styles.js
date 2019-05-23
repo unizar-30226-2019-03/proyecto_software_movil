@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
-import { ScreenWidth, GrisFondoBarraBusqueda } from "../../constants";
+
+import { ScreenWidth, GrisFondoBarraBusqueda, HeaderHeight } from "../../constants";
 
 export default StyleSheet.create({
   container: {
@@ -35,8 +36,12 @@ export default StyleSheet.create({
     justifyContent: "center",
     flex: 1
   },
-  headerContainer: {
-    width: ScreenWidth - 56
+  headerContainerAndroid: {
+    width: ScreenWidth - 56,
+  },
+  headerContainerIos: {
+    width: ScreenWidth - 70,
+    marginLeft: 65,
   },
   searchBarIn: {
     backgroundColor: 0x00f
