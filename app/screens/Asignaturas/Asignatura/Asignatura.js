@@ -252,11 +252,12 @@ export default class Asignatura extends React.Component {
                         photo: item.photo
                       })
                     }
+                    disabled={item.id == Auth.getUserId()}
                   >
                     <View style={styles.iconAndNameView}>
                       <Image source={{ uri: item.photo }} style={styles.userIcon} />
                       <Text numberOfLines={1} style={styles.userName}>
-                        {item.name}
+                        {item.id == Auth.getUserId() ? "Yo" : item.name}
                       </Text>
                     </View>
                   </RippleTouchable>

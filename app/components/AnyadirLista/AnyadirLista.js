@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Modal, Text, TouchableWithoutFeedback } from "react-native";
+import { View, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
 
 import { Input } from "react-native-elements";
 
@@ -20,7 +20,9 @@ export default class AnyadirLista extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			nuevaListaInput: ""
+			nuevaListaInput: "",
+			showInputError: false,
+			addingLista: false
 		};
 
 		let defaultClient = ApiClient.instance;
@@ -31,26 +33,29 @@ export default class AnyadirLista extends React.Component {
 	}
 
 	crearLista = () => {
-		let name = this.state.nuevaListaInput;
-		this.props.hide();
-		if (this.props.onAddingLista) {
-			this.props.onAddingLista();
-		}
-		this.apiInstance.addReproductionList(name, (error, data, response) => {
-			if (error) {
-				this.setState({ updatingChanges: false });
-				if (error.status == 403) {
-					Auth.signOut(this.props.navigation);
+		if (!this.state.addingLista) {
+			this.setState({ addingLista: true });
+			let name = this.state.nuevaListaInput;
+			this.apiInstance.addReproductionList(name, (error, data, response) => {
+				this.setState({ addingLista: false });
+				if (error) {
+					if (error.status == 403) {
+						this.props.hide();
+						Auth.signOut(this.props.navigation);
+					} else if (error.status == 500 || error.status == 400 || error.status == 409) {
+						this.setState({ showInputError: true });
+					} else {
+						this.props.hide();
+						HaOcurridoUnError(null);
+					}
 				} else {
-					HaOcurridoUnError(null);
+					this.props.hide();
+					if (this.props.onListaAdded) {
+						this.props.onListaAdded(data ? data.id : null);
+					}
 				}
-			} else {
-				this.setState({ updatingChanges: false });
-				if (this.props.onListaAdded) {
-					this.props.onListaAdded(data.id);
-				}
-			}
-		});
+			});
+		}
 	};
 
 	render() {
@@ -66,12 +71,23 @@ export default class AnyadirLista extends React.Component {
 					<TouchableOpacity style={styles.container} onPress={this.props.hide} activeOpacity={1}>
 						<TouchableWithoutFeedback>
 							<View style={styles.anyadirListaContainer}>
-								<Text style={styles.nuevaListaModalTexto}>Nueva lista</Text>
+								<View style={styles.row}>
+									<Text style={styles.nuevaListaModalTexto}>Nueva lista</Text>
+									{this.state.addingLista ? (
+										<View style={styles.activityIndicator}>
+											<ActivityIndicator size="small" />
+										</View>
+									) : null}
+								</View>
 								<View style={styles.nuevaListaInputContainer}>
 									<Input
 										placeholder="Nombre"
 										autoFocus
-										onChangeText={nuevaListaInput => this.setState({ nuevaListaInput })}
+										onChangeText={nuevaListaInput =>
+											this.setState({ nuevaListaInput: nuevaListaInput, showInputError: false })
+										}
+										errorStyle={{ color: "red" }}
+										errorMessage={this.state.showInputError ? "Ya existe una lista con este nombre" : null}
 									/>
 								</View>
 								<View style={styles.crearCancelarContainer}>
