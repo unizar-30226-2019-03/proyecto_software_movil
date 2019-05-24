@@ -1,6 +1,14 @@
 import React from "react";
 
-import { View, Text, TouchableHighlight, Modal, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableHighlight,
+  Modal,
+  Alert,
+  Share,
+  Linking
+} from "react-native";
 import { Icon, AirbnbRating } from "react-native-elements";
 import styles from "./styles";
 import { ScreenWidth, GrisClaro } from "../../constants/constants";
@@ -9,12 +17,13 @@ import { VoteApi } from "swagger_unicast";
 import Auth from "../../config/Auth";
 import VoteId from "swagger_unicast/dist/model/VoteId";
 import Vote2 from "swagger_unicast/dist/model/Vote2";
+import AnyadirALista from "../AnyadirALista";
 export default class CuadroValorar extends React.Component {
   constructor() {
     super();
     this.state = {
       mostrar: false,
-      guardado: false,
+      mostrarGuardar: false,
       claridad: 3,
       calidad: 3,
       adecuacion: 3
@@ -26,6 +35,32 @@ export default class CuadroValorar extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
   }
+  hideAnyadirALista = () => {
+    this.setState({
+      mostrarGuardar: false
+    });
+  };
+  onShare = () => {
+    try {
+      const result = Share.share({
+        message: Expo.Linking.makeUrl("www.localhost:3000/video",{id:this.props.videoId}),
+        title: "Que pasa loco",
+        
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   puntuar() {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
@@ -51,12 +86,8 @@ export default class CuadroValorar extends React.Component {
   quitarPopUp() {
     this.setState({ mostrar: false });
   }
-  cambiarIcono() {
-    if (this.state.guardado == true) {
-      this.setState({ guardado: false });
-    } else {
-      this.setState({ guardado: true });
-    }
+  mostrarGuardar() {
+    this.setState({ mostrarGuardar: true });
   }
   valoracion() {
     if (!isNaN(this.props.puntuacion) && this.props.puntuacion > 0) {
@@ -88,11 +119,11 @@ export default class CuadroValorar extends React.Component {
               <Text style={{ fontSize: 18 }}> Valorar vídeo</Text>
             </TouchableHighlight>
             <Icon
-              name={[this.state.guardado == true ? "bookmark" : "bookmark-o"]}
+              name={"bookmark-o"}
               type="font-awesome"
               size={35}
               iconStyle={{ marginLeft: 100 }}
-              onPress={() => this.cambiarIcono()}
+              onPress={() => this.mostrarGuardar()}
               color={GrisClaro}
             />
             <Icon
@@ -100,7 +131,7 @@ export default class CuadroValorar extends React.Component {
               type="font-awesome"
               size={35}
               iconStyle={{ marginLeft: 20 }}
-              onPress={() => null}
+              onPress={() => this.onShare()}
               color={GrisClaro}
             />
           </View>
@@ -162,6 +193,11 @@ export default class CuadroValorar extends React.Component {
             </View>
           </View>
         </Modal>
+        <AnyadirALista
+          visible={this.state.mostrarGuardar}
+          hide={this.hideAnyadirALista}
+          videoId={this.props.videoId}
+        />
       </View>
     );
   }

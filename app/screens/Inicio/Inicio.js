@@ -1,5 +1,13 @@
 import React from "react";
-import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  FlatList,
+  ActivityIndicator,
+  Linking,
+  Alert
+} from "react-native";
 
 import { VideoApi, ApiClient } from "swagger_unicast";
 
@@ -38,6 +46,14 @@ export default class Inicio extends React.Component {
   componentDidMount() {
     this.getData();
     UnicastNotifications.fireSingleton();
+
+    Linking.getInitialURL()
+      .then(url => {
+        if (url) {
+          Alert.alert("Initial url is: " + url);
+        }
+      })
+      .catch(err => console.error("An error occurred", err));
   }
 
   getData = () => {
@@ -106,7 +122,10 @@ export default class Inicio extends React.Component {
                   title={item.title}
                   info={timeStampToFormat(item.timestamp, this.currentDate)}
                   asignaturaIcon={{
-                    uri: item.university != undefined ? item.university.photo : "uri_nula"
+                    uri:
+                      item.university != undefined
+                        ? item.university.photo
+                        : "uri_nula"
                   }}
                   asignaturaName={item.subject.abbreviation}
                   asignaturaFullName={item.subject.name}
