@@ -21,14 +21,15 @@ export default StyleSheet.create({
     marginRight: 15
   },
   userIcon: {
-    width: 30,
-    height: 30,
-    borderRadius: 50,
+    width: 35,
+    height: 35,
+    borderRadius: 30,
     alignSelf: "center"
   },
   searchButton: {
     marginRight: 30,
-    alignSelf: "center"
+    alignSelf: "center",
+    marginLeft: 30
   },
   searchIcon: {
     color: "#000",

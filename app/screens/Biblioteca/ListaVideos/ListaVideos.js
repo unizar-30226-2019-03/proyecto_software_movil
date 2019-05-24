@@ -13,6 +13,7 @@ import HalfScreenThumbnail from "../../../components/HalfScreenThumbnail";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 import LoadingModal from "../../../components/LoadingModal";
 import LoadingFooter from "../../../components/LoadingFooter";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
@@ -301,6 +302,9 @@ export default class ListaVideos extends React.Component {
 								<View style={styles.videosBottomMargin} />
 								<LoadingFooter show={this.state.fetchingNewData} />
 							</View>
+						}
+						ListEmptyComponent={
+							this.state.fetchingNewData || this.state.refreshing ? null : <NoHayContenidoQueMostrar what="vídeos" />
 						}
 						keyExtractor={(item, index) => index.toString()}
 					/>

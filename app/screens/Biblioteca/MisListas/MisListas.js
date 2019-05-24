@@ -16,6 +16,7 @@ import RippleTouchable from "../../../components/RippleTouchable";
 import LoadingModal from "../../../components/LoadingModal";
 import AnyadirLista from "../../../components/AnyadirLista";
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import { Azul } from "../../../constants";
 
@@ -157,6 +158,9 @@ export default class MisListas extends React.Component {
 							<View>
 								<View style={styles.videosBottomMargin} />
 							</View>
+						}
+						ListEmptyComponent={
+							this.state.changingVideo || this.state.refreshing ? null : <NoHayContenidoQueMostrar what="listas" />
 						}
 						keyExtractor={(item, index) => index.toString()}
 					/>

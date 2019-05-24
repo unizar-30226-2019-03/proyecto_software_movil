@@ -5,10 +5,11 @@ export const TopTabBarOptions = {
 		activeTintColor: "black",
 		inactiveTintColor: "black",
 		style: {
-			backgroundColor: "white"
+			backgroundColor: "white",
 		},
 		indicatorStyle: {
-			backgroundColor: "black"
+			backgroundColor: "black",
+			
 		}
 	}
 };

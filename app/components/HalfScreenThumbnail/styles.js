@@ -53,14 +53,14 @@ export default StyleSheet.create({
     backgroundColor: "black",
     borderRadius: 5,
     marginLeft: "auto",
-    marginRight: 5,
+    marginRight: 4,
     paddingHorizontal: 5
   },
   likes: {
     fontSize: 15,
     backgroundColor: "black",
     borderRadius: 5,
-    marginLeft: 5,
+    marginLeft: 4,
     paddingHorizontal: 5
   },
   popUpMenuText: {

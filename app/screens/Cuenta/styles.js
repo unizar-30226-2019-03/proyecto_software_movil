@@ -1,5 +1,8 @@
 import { StyleSheet } from "react-native";
 
+import { Dimensions } from 'react-native'
+
+
 export default StyleSheet.create({
 	container: {
 		flex: 1
@@ -20,7 +23,7 @@ export default StyleSheet.create({
 	boton: {
 		backgroundColor: "white",
 		height: 60,
-		width: "100%",
+		width: (Dimensions.get('window').width),
 		borderBottomWidth: 1,
 		borderColor: "lightgrey",
 		flexDirection: "row",

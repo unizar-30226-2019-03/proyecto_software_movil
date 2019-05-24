@@ -16,7 +16,8 @@ export default StyleSheet.create({
     width: 35,
     height: 35,
     alignSelf: "center",
-    borderRadius: 50
+    borderRadius: 30
+
   },
   asignaturaNombre: {
     fontSize: 14,

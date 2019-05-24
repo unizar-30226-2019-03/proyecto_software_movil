@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, ScrollView, FlatList, ActivityIndicator, TouchableOpacity, Platform } from "react-native";
 
 import { SearchBar, Button, Text } from "react-native-elements";
 
@@ -16,8 +16,11 @@ import { timeStampToFormat, secToDuration } from "../../components/Time";
 
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 
-import styles from "./styles";
 import RippleTouchable from "../../components/RippleTouchable";
+
+import NoHayContenidoQueMostrar from "../../components/NoHayContenidoQueMostrar";
+
+import styles from "./styles";
 
 export default class Searching extends React.Component {
   constructor(props) {
@@ -27,12 +30,8 @@ export default class Searching extends React.Component {
       viewingVideos: true,
       vidData: [],
       subData: [],
-      onVidEndReachedManaged: false,
-      onSubEndReachedManaged: false,
       loadingVid: false,
-      loadingSub: false,
-      fetchingNewVidData: false,
-      fetchingNewSubData: false
+      loadingSub: false
     };
 
     this.currentDate = undefined;
@@ -53,101 +52,70 @@ export default class Searching extends React.Component {
       getData: this.getData,
       searchText: this.state.searchText
     });
+    UnicastNotifications.fireSingleton();
   }
 
   getVideoData = () => {
-    if (!this.state.onVidEndReachedManaged) {
-      let opts = {
-        title: this.state.searchText,
-        projection: "videoWithSubjectAndUniversity"
-      };
-      this.videoApiInstance.findVideosContainingTitle(opts, (error, data, response) => {
-        if (!error) {
-          this.currentDate = ApiClient.parseDate(response.headers.date);
-          this.setState({
-            vidData: data._embedded.videos,
-            loadingVid: false,
-            fetchingNewVidData: false,
-            onVidEndReachedManaged: false
-          });
+    let opts = {
+      title: this.state.searchText,
+      projection: "videoWithSubjectAndUniversity"
+    };
+    this.videoApiInstance.findVideosContainingTitle(opts, (error, data, response) => {
+      if (!error) {
+        this.currentDate = ApiClient.parseDate(response.headers.date);
+        this.setState({
+          vidData: data._embedded.videos,
+          loadingVid: false
+        });
+      } else {
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
         } else {
-          if (error.status == 403) {
-            Auth.signOut(this.props.navigation);
-          } else {
-            HaOcurridoUnError(null);
-          }
+          HaOcurridoUnError(null);
         }
-      });
-    } else {
-      this.setState({ loadingVid: false, fetchingNewVidData: false });
-    }
+      }
+    });
   };
 
   getSubjectData = () => {
-    if (!this.state.onSubEndReachedManaged) {
-      let opts = {
-        name: this.state.searchText,
-        projection: "subjectWithUniversity"
-      };
-      this.subjectApiInstance.findSubjectsContainingName(opts, (error, data, response) => {
-        if (!error) {
-          this.setState({
-            subData: data._embedded.subjects,
-            loadingSub: false,
-            fetchingNewSubData: false,
-            onSubEndReachedManaged: false
-          });
+    let opts = {
+      name: this.state.searchText,
+      projection: "subjectWithUniversity"
+    };
+    this.subjectApiInstance.findSubjectsContainingName(opts, (error, data, response) => {
+      if (!error) {
+        this.setState({
+          subData: data._embedded.subjects,
+          loadingSub: false
+        });
+      } else {
+        if (error.status == 403) {
+          Auth.signOut(this.props.navigation);
         } else {
-          if (error.status == 403) {
-            Auth.signOut(this.props.navigation);
-          } else {
-            HaOcurridoUnError(null);
-          }
+          HaOcurridoUnError(null);
         }
-      });
-    } else {
-      this.setState({ loadingSub: false, fetchingNewSubData: false });
-    }
+      }
+    });
   };
 
   changeTabThenGetData = viewingVideo => {
     if (viewingVideo) {
-      if (this.state.searchText != "") {
-        this.setState({
-          loadingVid: true,
-          viewingVideos: viewingVideo,
-          fetchingNewVidData: true
-        });
-        this.getVideoData();
-      } else {
-        this.setState({
-          viewingVideos: viewingVideo,
-          fetchingNewVidData: true
-        });
-      }
+      this.setState({
+        viewingVideos: viewingVideo
+      });
     } else {
-      if (this.state.searchText != "") {
-        this.setState({
-          loadingSub: true,
-          viewingVideos: viewingVideo,
-          fetchingNewSubData: true
-        });
-        this.getSubjectData();
-      } else {
-        this.setState({
-          viewingVideos: viewingVideo,
-          fetchingNewSubData: true
-        });
-      }
+      this.setState({
+        viewingVideos: viewingVideo
+      });
     }
   };
 
   getData = () => {
     if (this.state.viewingVideos) {
-      this.setState({ fetchingNewVidData: true, loadingVid: true });
+      this.setState({ loadingVid: true });
       if (this.state.searchText != "") this.getVideoData();
     } else {
-      this.setState({ fetchingNewSubData: true, loadingSub: true });
+      this.setState({ loadingSub: true });
       if (this.state.searchText != "") this.getSubjectData();
     }
   };
@@ -155,25 +123,47 @@ export default class Searching extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
 
-    return {
-      headerTitle: (
-        <View style={styles.headerContainer}>
-          <SearchBar
-            autoFocus
-            value={params.searchText}
-            placeholder="Buscar..."
-            inputContainerStyle={styles.searchBarIn}
-            searchIcon={false}
-            containerStyle={styles.searchBarOut}
-            onChangeText={text => params.changeSearchText(text)}
-            onSubmitEditing={event => params.getData()}
-          />
-        </View>
-      ),
-      headerStyle: {
-        elevation: 0
-      }
-    };
+    if (Platform.OS === "android") {
+      return {
+        headerTitle: (
+          <View style={styles.headerContainerAndroid}>
+            <SearchBar
+              autoFocus
+              value={params.searchText}
+              placeholder="Buscar..."
+              inputContainerStyle={styles.searchBarIn}
+              searchIcon={false}
+              containerStyle={styles.searchBarOut}
+              onChangeText={text => params.changeSearchText(text)}
+              onSubmitEditing={event => params.getData()}
+            />
+          </View>
+        ),
+        headerStyle: {
+          elevation: 0
+        }
+      };
+    } else {
+      return {
+        headerTitle: (
+          <View style={styles.headerContainerIos}>
+            <SearchBar
+              autoFocus
+              value={params.searchText}
+              placeholder="Buscar..."
+              inputContainerStyle={styles.searchBarIn}
+              searchIcon={false}
+              containerStyle={styles.searchBarOut}
+              onChangeText={text => params.changeSearchText(text)}
+              onSubmitEditing={event => params.getData()}
+            />
+          </View>
+        ),
+        headerStyle: {
+          elevation: 0
+        }
+      };
+    }
   };
 
   changeSearchText = value => {
@@ -213,7 +203,6 @@ export default class Searching extends React.Component {
             <FlatList
               showsVerticalScrollIndicator={false}
               data={this.state.vidData}
-              keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <View style={styles.videoContainer}>
                   <FullScreenThumbnail
@@ -233,6 +222,8 @@ export default class Searching extends React.Component {
                   />
                 </View>
               )}
+              keyExtractor={(item, index) => index.toString()}
+              ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
             />
           )
         ) : this.state.loadingSub ? (
@@ -243,7 +234,6 @@ export default class Searching extends React.Component {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={this.state.subData}
-            keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
               <ThumbnailAsignatura
                 navigation={this.props.navigation}
@@ -254,6 +244,12 @@ export default class Searching extends React.Component {
                 id={item.id}
               />
             )}
+            keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={
+              this.state.fetchingNewData || this.state.refreshing ? null : (
+                <NoHayContenidoQueMostrar what="asignaturas" />
+              )
+            }
           />
         )}
       </View>
