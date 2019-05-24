@@ -109,26 +109,28 @@ export default class ProfesorTab extends React.Component {
             refreshing={this.state.refreshing}
             onEndReached={() => this.onEndReached()}
             onRefresh={() => this.onRefresh()}
-            renderItem={({ item }) => (
-              <RippleTouchable
-                onPress={() =>
-                  this.props.navigation.navigate("Chat", {
-                    title: item.name,
-                    photo: item.photo,
-                    id: item.id
-                  })
-                }
-              >
-                <View style={styles.chatContainer}>
-                  <Image source={{ uri: item.photo }} style={styles.profilePic} />
-                  <View style={styles.nameAndMsgContainer}>
-                    <Text numberOfLines={1} style={styles.nameText}>
-                      {item.name + ", " + item.surnames}
-                    </Text>
+            renderItem={({ item }) => {
+              return item.id == Auth.getUserId() ? null : (
+                <RippleTouchable
+                  onPress={() =>
+                    this.props.navigation.navigate("Chat", {
+                      title: item.name,
+                      photo: item.photo,
+                      id: item.id
+                    })
+                  }
+                >
+                  <View style={styles.chatContainer}>
+                    <Image source={{ uri: item.photo }} style={styles.profilePic} />
+                    <View style={styles.nameAndMsgContainer}>
+                      <Text numberOfLines={1} style={styles.nameText}>
+                        {item.name + ", " + item.surnames}
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </RippleTouchable>
-            )}
+                </RippleTouchable>
+              );
+            }}
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
             })}
