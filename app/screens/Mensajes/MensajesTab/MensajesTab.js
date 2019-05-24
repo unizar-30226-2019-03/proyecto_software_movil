@@ -11,6 +11,8 @@ import UnicastNotifications from "../../../config/UnicastNotifications";
 
 import { timeStampToChatDate } from "../../../components/Time";
 
+import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
+
 import RippleTouchable from "../../../components/RippleTouchable";
 import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
@@ -50,6 +52,7 @@ export default class MensajesTab extends React.Component {
       expires: 0
     };
     this.apiInstance.getLastMessages(opts, (error, data, response) => {
+      console.log(data);
       if (error) {
         if (error.status == 403) {
           Auth.signOut(this.props.navigation);

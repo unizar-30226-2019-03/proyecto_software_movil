@@ -1,24 +1,25 @@
 import React from "react";
-import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
-
-import { Image } from "react-native-elements";
-
-import { UserApi, ApiClient } from "swagger_unicast";
-
-import RippleTouchable from "../../../components/RippleTouchable";
+import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
+import { Icon } from "react-native-elements";
 
 import Auth from "../../../config/Auth";
 
+import RippleTouchable from "../../../components/RippleTouchable";
+
 import UnicastNotifications from "../../../config/UnicastNotifications";
 
+import { SubjectApi, ApiClient } from "swagger_unicast";
+
 import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
+
+import IconoAsignaturaUniversidad from "../../../components/IconoAsignaturaUniversidad";
 
 import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
-export default class ProfesorTab extends React.Component {
+export default class RankingAsignaturas extends React.Component {
   constructor(props) {
     super(props);
 
@@ -30,13 +31,13 @@ export default class ProfesorTab extends React.Component {
     };
 
     this.offset = 0;
-    this.totalPages = undefined;
+    this.totalPages = null;
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
 
-    this.apiInstance = new UserApi();
+    this.apiInstance = new SubjectApi();
   }
 
   componentDidMount = () => {
@@ -51,9 +52,10 @@ export default class ProfesorTab extends React.Component {
         pragma: "no-cache",
         expires: 0,
         page: this.offset,
-        sort: ["desc"]
+        projection: "subjectWithUniversity"
       };
-      this.apiInstance.findUserProfessors(opts, (error, data, response) => {
+      this.apiInstance.getSubjectRanking(opts, (error, data, response) => {
+        console.log(error);
         if (error) {
           if (error.status == 403) {
             Auth.signOut(this.props.navigation);
@@ -61,14 +63,13 @@ export default class ProfesorTab extends React.Component {
             HaOcurridoUnError(this.getData);
           }
         } else {
-          console.log(data);
           this.offset = this.offset + 1;
           this.totalPages = data.page.totalPages;
           this.setState({
-            data: [...this.state.data, ...data._embedded.users],
+            data: [...this.state.data, ...data._embedded.subjects],
             loading: false,
-            fetchingNewData: false,
-            refreshing: false
+            refreshing: false,
+            fetchingNewData: false
           });
         }
       });
@@ -87,14 +88,34 @@ export default class ProfesorTab extends React.Component {
   onRefresh = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.offset = 0;
-      this.totalPages = undefined;
+      this.totalPages = null;
       this.setState({
         refreshing: true,
-        data: [],
-        fetchingNewData: false,
-        loading: false
+        data: []
       });
       this.getData();
+    }
+  };
+
+  icon = index => {
+    let color = "white";
+
+    if (index == 0) {
+      color = "gold";
+    } else if (index == 1) {
+      color = "silver";
+    } else if (index == 2) {
+      color = "brown";
+    }
+
+    if (index < 3) {
+      return (
+        <View style={styles.trophyView}>
+          <Icon name="trophy" type="font-awesome" color={color} />
+        </View>
+      );
+    } else {
+      <View style={styles.trophyView} />;
     }
   };
 
@@ -105,27 +126,33 @@ export default class ProfesorTab extends React.Component {
           <ActivityIndicator size="large" />
         ) : (
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={this.state.data}
             refreshing={this.state.refreshing}
             onEndReached={() => this.onEndReached()}
             onRefresh={() => this.onRefresh()}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <RippleTouchable
                 onPress={() =>
-                  this.props.navigation.navigate("Chat", {
+                  this.props.navigation.navigate("Asignatura", {
                     title: item.name,
-                    photo: item.photo,
                     id: item.id
                   })
                 }
+                style={styles.rankingPlace}
               >
-                <View style={styles.chatContainer}>
-                  <Image source={{ uri: item.photo }} style={styles.profilePic} />
-                  <View style={styles.nameAndMsgContainer}>
-                    <Text numberOfLines={1} style={styles.nameText}>
-                      {item.name + ", " + item.surnames}
-                    </Text>
-                  </View>
+                <View style={styles.rankNumberView}>
+                  <Text style={styles.rankNumber}>{index + 1 + "."}</Text>
+                </View>
+                <View style={styles.iconoAsignaturaUniversidad}>
+                  <IconoAsignaturaUniversidad
+                    name={item.abbreviation}
+                    image={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
+                  />
+                </View>
+                {this.icon(index)}
+                <View style={styles.rankScoreView}>
+                  <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
                 </View>
               </RippleTouchable>
             )}
@@ -134,7 +161,7 @@ export default class ProfesorTab extends React.Component {
             })}
             ListEmptyComponent={
               this.state.fetchingNewData || this.state.refreshing ? null : (
-                <NoHayContenidoQueMostrar what="profesores" />
+                <NoHayContenidoQueMostrar what="asignaturas" />
               )
             }
             keyExtractor={(item, index) => index.toString()}

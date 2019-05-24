@@ -303,7 +303,9 @@ export default class ListaVideos extends React.Component {
 								<LoadingFooter show={this.state.fetchingNewData} />
 							</View>
 						}
-						ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
+						ListEmptyComponent={
+							this.state.fetchingNewData || this.state.refreshing ? null : <NoHayContenidoQueMostrar what="vídeos" />
+						}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				)}

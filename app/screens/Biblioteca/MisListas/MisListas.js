@@ -159,7 +159,9 @@ export default class MisListas extends React.Component {
 								<View style={styles.videosBottomMargin} />
 							</View>
 						}
-						ListEmptyComponent={<NoHayContenidoQueMostrar what="listas" />}
+						ListEmptyComponent={
+							this.state.changingVideo || this.state.refreshing ? null : <NoHayContenidoQueMostrar what="listas" />
+						}
 						keyExtractor={(item, index) => index.toString()}
 					/>
 				)}

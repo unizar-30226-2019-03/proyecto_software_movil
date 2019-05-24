@@ -15,13 +15,13 @@ import styles from "./styles";
 const SearchMenuBar = ({ navigation }) => {
   const { routeName } = navigation.state;
   let elevation = 5;
-  if (routeName === "Mensajes" || routeName === "Asignaturas") {
+  if (routeName === "Mensajes" || routeName === "Asignaturas" || routeName === "Ranking") {
     elevation = 0;
   }
 
   return {
     headerTitle: (
-      <TouchableOpacity onPress={() => navigation.navigate("Inicio")} style={styles.flexContainer} activeOpacity={1}>
+      <TouchableOpacity onPress={() => navigation.navigate("Inicio")} activeOpacity={1}>
         <View style={styles.container}>
           <Image source={require("../../assets/icon.png")} style={styles.appLogo} />
           <Image source={require("../../assets/unicast.png")} style={styles.appText} />

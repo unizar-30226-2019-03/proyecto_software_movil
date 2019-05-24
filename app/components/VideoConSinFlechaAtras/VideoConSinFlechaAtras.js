@@ -120,35 +120,28 @@ export default class VideoConSinFlechaAtras extends React.Component {
   };
 
   componentDidMount = () => {
-    id = this.props.videoId;
-    const opts2 = {
-      cacheControl: "no-cache, no-store, must-revalidate",
-      pragma: "no-cache",
-      expires: "0",
-      projection: "displayWithVideo"
-    };
-    this.displayApi.findByUserIdAndVideoId(
-      id,
-      opts2,
-      (error, data, response) => {
+    let id = this.props.videoId;
+    if (id) {
+      const opts2 = {
+        cacheControl: "no-cache, no-store, must-revalidate",
+        pragma: "no-cache",
+        expires: "0",
+        projection: "displayWithVideo"
+      };
+      this.displayApi.findByUserIdAndVideoId(id, opts2, (error, data, response) => {
         if (error) {
           console.log(error);
         } else {
           console.log(data);
-
           this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
         }
-      }
-    );
+      });
+    }
   };
   render() {
-    const maxWidth =
-      this.props.width == undefined ? ScreenWidth : videoProps.width;
+    const maxWidth = this.props.width == undefined ? ScreenWidth : videoProps.width;
 
-    const maxHeight =
-      this.props.height == undefined
-        ? FullScreen16_9_Height
-        : videoProps.height;
+    const maxHeight = this.props.height == undefined ? FullScreen16_9_Height : videoProps.height;
 
     const screenRatio = maxWidth / maxHeight;
     let videoHeight = maxHeight;
@@ -172,10 +165,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
             volume={1.0}
             muted={false}
             resizeMode="contain"
-            useNativeControls={
-              !this.props.flechaSi ||
-              (this.props.flechaSi && this.state.showControls)
-            }
+            useNativeControls={!this.props.flechaSi || (this.props.flechaSi && this.state.showControls)}
             shouldPlay={this.props.autoplay}
             style={{
               width: videoWidth,
@@ -191,13 +181,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
               onPress={() => this.props.navigation.goBack()}
               style={styles.zonaFlechaAtras}
             >
-              <Icon
-                type="octicon"
-                size={35}
-                name="chevron-left"
-                color="white"
-                iconStyle={styles.flechaAtras}
-              />
+              <Icon type="octicon" size={35} name="chevron-left" color="white" iconStyle={styles.flechaAtras} />
             </TouchableOpacity>
           ) : null}
         </View>

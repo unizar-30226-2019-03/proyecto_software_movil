@@ -1,37 +1,33 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-  flexContainer: {
-    flex: 1,
-  },
   container: {
-    //flex: 1,
+    flex: 1,
     flexDirection: "row",
-    alignItems: "center",
-    
+    alignItems: "center"
   },
   appLogo: {
     width: 35,
     height: 35,
-    marginLeft: 5,
+    marginLeft: 5
   },
   appText: {
     width: 99,
     height: 30,
     marginLeft: 5,
-    marginBottom: 10,
+    marginBottom: 10
   },
   userButton: {
-    marginRight: 15,
+    marginRight: 15
   },
   userIcon: {
     width: 35,
     height: 35,
     borderRadius: 30,
-    alignSelf: "center",
+    alignSelf: "center"
   },
   searchButton: {
-    marginRight: 15,
+    marginRight: 30,
     alignSelf: "center",
     marginLeft: 30
   },

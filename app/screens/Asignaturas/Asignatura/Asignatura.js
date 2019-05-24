@@ -296,7 +296,15 @@ export default class Asignatura extends React.Component {
               ListFooterComponent={LoadingFooter({
                 show: this.state.fetchingNewData
               })}
-              ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
+              ListEmptyComponent={
+                this.state.refreshingVideos ||
+                this.state.refreshingProfesores ||
+                this.state.refreshingSeguir ||
+                this.state.fetchingNewVideos ||
+                this.state.changingStateSeguir ? null : (
+                  <NoHayContenidoQueMostrar what="vídeos" />
+                )
+              }
               keyExtractor={(item, index) => index.toString()}
             />
           </ScrollView>

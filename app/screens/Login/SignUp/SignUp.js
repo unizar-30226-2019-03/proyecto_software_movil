@@ -12,8 +12,8 @@ import RippleTouchable from "../../../components/RippleTouchable";
 
 import InputFixer from "../../../components/InputFixer";
 
+import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 import LoadingFooter from "../../../components/LoadingFooter";
-
 import LoadingModal from "../../../components/LoadingModal";
 
 import styles from "./styles";
@@ -250,15 +250,6 @@ export default class SignUp extends React.Component {
     }
   };
 
-  showConnectionErrorAlert = () => {
-    Alert.alert("Error en el registro", "Posiblemente se deba a un error de conexión", [
-      {
-        text: "Cerrar",
-        style: "cancel"
-      }
-    ]);
-  };
-
   showSuccessfulRegister = () => {
     Alert.alert("¡Registro completado!", "Ya puede usar la aplicación introduciendo sus datos", [
       {
@@ -297,7 +288,7 @@ export default class SignUp extends React.Component {
         photo,
         (error, data, response) => {
           if (error) {
-            this.showConnectionErrorAlert();
+            HaOcurridoUnError(null);
           } else {
             this.showSuccessfulRegister();
             this.props.navigation.navigate("SignIn");

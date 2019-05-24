@@ -21,7 +21,7 @@ export default StyleSheet.create({
   duracionYLikesContainer: {
     flexDirection: "row",
     marginTop: "auto",
-    marginBottom: 7
+    marginBottom: 5
   },
   asignaturaContainer: {
     marginLeft: 10,

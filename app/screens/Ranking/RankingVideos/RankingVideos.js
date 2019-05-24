@@ -2,24 +2,24 @@ import React from "react";
 import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 import { Icon } from "react-native-elements";
 
-import Auth from "../../config/Auth";
+import Auth from "../../../config/Auth";
 
-import RippleTouchable from "../../components/RippleTouchable";
+import UnicastNotifications from "../../../config/UnicastNotifications";
 
-import UnicastNotifications from "../../config/UnicastNotifications";
+import { VideoApi, ApiClient } from "swagger_unicast";
 
-import { SubjectApi, ApiClient } from "swagger_unicast";
+import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 
-import HaOcurridoUnError from "../../components/HaOcurridoUnError";
+import { timeStampToFormat, secToDuration } from "../../../components/Time";
 
-import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversidad";
+import FullScreenThumbnail from "../../../components/FullScreenThumbnail";
 
-import LoadingFooter from "../../components/LoadingFooter";
-import NoHayContenidoQueMostrar from "../../components/NoHayContenidoQueMostrar";
+import LoadingFooter from "../../../components/LoadingFooter";
+import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
 
-export default class Ranking extends React.Component {
+export default class RankingVideos extends React.Component {
   constructor(props) {
     super(props);
 
@@ -30,6 +30,8 @@ export default class Ranking extends React.Component {
       refreshing: false
     };
 
+    this.currentDate = null;
+
     this.offset = 0;
     this.totalPages = null;
 
@@ -37,7 +39,7 @@ export default class Ranking extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
 
-    this.apiInstance = new SubjectApi();
+    this.apiInstance = new VideoApi();
   }
 
   componentDidMount = () => {
@@ -52,10 +54,10 @@ export default class Ranking extends React.Component {
         pragma: "no-cache",
         expires: 0,
         page: this.offset,
-        projection: "subjectWithUniversity"
+        projection: "videoWithSubjectAndUniversity"
       };
-      this.apiInstance.getSubjectRanking(opts, (error, data, response) => {
-        console.log(error);
+      this.apiInstance.findMostPopularLastWeekVideos(opts, (error, data, response) => {
+        console.log(data);
         if (error) {
           if (error.status == 403) {
             Auth.signOut(this.props.navigation);
@@ -63,10 +65,11 @@ export default class Ranking extends React.Component {
             HaOcurridoUnError(this.getData);
           }
         } else {
+          this.currentDate = ApiClient.parseDate(response.headers.date);
           this.offset = this.offset + 1;
           this.totalPages = data.page.totalPages;
           this.setState({
-            data: [...this.state.data, ...data._embedded.subjects],
+            data: [...this.state.data, ...data._embedded.videos],
             loading: false,
             refreshing: false,
             fetchingNewData: false
@@ -97,28 +100,6 @@ export default class Ranking extends React.Component {
     }
   };
 
-  icon = index => {
-    let color = "white";
-
-    if (index == 0) {
-      color = "gold";
-    } else if (index == 1) {
-      color = "silver";
-    } else if (index == 2) {
-      color = "brown";
-    }
-
-    if (index < 3) {
-      return (
-        <View style={styles.trophyView}>
-          <Icon name="trophy" type="font-awesome" color={color} />
-        </View>
-      );
-    } else {
-      <View style={styles.trophyView} />;
-    }
-  };
-
   render() {
     return (
       <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
@@ -132,34 +113,30 @@ export default class Ranking extends React.Component {
             onEndReached={() => this.onEndReached()}
             onRefresh={() => this.onRefresh()}
             renderItem={({ item, index }) => (
-              <RippleTouchable
-                onPress={() =>
-                  this.props.navigation.navigate("Asignatura", {
-                    title: item.name,
-                    id: item.id
-                  })
-                }
-                style={styles.rankingPlace}
-              >
-                <View style={styles.rankNumberView}>
-                  <Text style={styles.rankNumber}>{index + 1 + "."}</Text>
-                </View>
-                <View style={styles.iconoAsignaturaUniversidad}>
-                  <IconoAsignaturaUniversidad
-                    name={item.abbreviation}
-                    image={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
-                  />
-                </View>
-                {this.icon(index)}
-                <View style={styles.rankScoreView}>
-                  <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
-                </View>
-              </RippleTouchable>
+              <View style={styles.videoContainer}>
+                <FullScreenThumbnail
+                  navigation={this.props.navigation}
+                  image={{ uri: item.thumbnailUrl }}
+                  likes={item.score}
+                  duracion={secToDuration(item.seconds)}
+                  title={item.title}
+                  info={timeStampToFormat(item.timestamp, this.currentDate)}
+                  asignaturaIcon={{
+                    uri: item.university != undefined ? item.university.photo : "uri_nula"
+                  }}
+                  asignaturaName={item.subject.abbreviation}
+                  asignaturaFullName={item.subject.name}
+                  asignaturaId={item.subject.id}
+                  videoId={item.id}
+                />
+              </View>
             )}
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
             })}
-            ListEmptyComponent={<NoHayContenidoQueMostrar what="asignaturas" />}
+            ListEmptyComponent={
+              this.state.fetchingNewData || this.state.refreshing ? null : <NoHayContenidoQueMostrar what="vídeos" />
+            }
             keyExtractor={(item, index) => index.toString()}
           />
         )}

@@ -94,7 +94,7 @@ export default class AsignaturasTab extends React.Component {
               />
             )}
             keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={<NoHayContenidoQueMostrar what="asignaturas" />}
+            ListEmptyComponent={this.state.refreshing ? null : <NoHayContenidoQueMostrar what="asignaturas" />}
           />
         )}
       </View>

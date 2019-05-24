@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Dimensions } from 'react-native'
+import { Dimensions } from "react-native";
 
 import { TouchableNativeFeedback, View } from "react-native";
 
@@ -25,7 +25,8 @@ import ListaVideosScreen from "../../screens/Biblioteca/ListaVideos";
 import MisListasScreen from "../../screens/Biblioteca/MisListas";
 import SubirVideoScreen from "../../screens/Biblioteca/SubirVideo";
 
-import RankingScreen from "../../screens/Ranking";
+import RankingAsignaturasScreen from "../../screens/Ranking/RankingAsignaturas";
+import RankingVideosScreen from "../../screens/Ranking/RankingVideos";
 
 import MensajesTabScreen from "../../screens/Mensajes/MensajesTab";
 import ProfesoresTabScreen from "../../screens/Mensajes/ProfesoresTab";
@@ -76,7 +77,7 @@ const AsignaturasTopNav = createMaterialTopTabNavigator(
 		VideosTab: {
 			screen: VideosTabScreen,
 			navigationOptions: {
-				tabBarLabel: "VIDEOS"
+				tabBarLabel: "VÍDEOS"
 			}
 		}
 	},
@@ -106,11 +107,28 @@ const Biblioteca = createStackNavigator({
 
 // Ranking
 
-const Ranking = createStackNavigator({
-	Ranking: {
-		screen: RankingScreen,
-		navigationOptions: SearchMenu
+const RankingTopNav = createMaterialTopTabNavigator(
+	{
+		AsignaturasTab: {
+			screen: RankingAsignaturasScreen,
+			navigationOptions: {
+				tabBarLabel: "ASIGNATURAS"
+			}
+		},
+		VideosTab: {
+			screen: RankingVideosScreen,
+			navigationOptions: {
+				tabBarLabel: "VÍDEOS"
+			}
+		}
 	},
+	TopTabBarOptions
+);
+
+RankingTopNav.navigationOptions = SearchMenu;
+
+const Ranking = createStackNavigator({
+	Ranking: RankingTopNav,
 	Searching: SearchingScreen,
 	Asignatura: AsignaturaScreen
 });
@@ -181,19 +199,14 @@ const DownMenu = createBottomTabNavigator(
 			}
 		}),
 		navigationOptions: {
-			tabBarOnPress: ev => {
-				Alert.alert("Test", "Tab selected");
-				// Your logic before jumping to the screen
-				ev.jumpToIndex(ev.scene.index); // This actually allow you to jump to your screen
-			},
 			header: null
 		},
 		tabBarOptions: {
 			activeTintColor: Azul,
 			inactiveTintColor: "gray",
-			tabStyle:{
-				width: (Dimensions.get('window').width)/5
-			},
+			tabStyle: {
+				width: Dimensions.get("window").width / 5
+			}
 		}
 	}
 );

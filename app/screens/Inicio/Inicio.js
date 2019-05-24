@@ -119,7 +119,7 @@ export default class Inicio extends React.Component {
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
             })}
-            ListEmptyComponent={<NoHayContenidoQueMostrar what="vídeos" />}
+            ListEmptyComponent={this.state.refreshing ? null : <NoHayContenidoQueMostrar what="vídeos" />}
             keyExtractor={(item, index) => index.toString()}
           />
         )}
