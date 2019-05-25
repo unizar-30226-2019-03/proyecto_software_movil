@@ -34,7 +34,6 @@ export default class AsignaturasTab extends React.Component {
 
   componentDidMount = () => {
     this.getData();
-    UnicastNotifications.fireSingleton();
   };
 
   getData = () => {

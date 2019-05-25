@@ -12,10 +12,6 @@ import styles from "./styles";
 
 export default class Biblioteca extends React.Component {
 
-	componentDidMount = () => {
-		UnicastNotifications.fireSingleton();
-	}
-
 	render() {
 		return (
 			<View style={styles.container}>

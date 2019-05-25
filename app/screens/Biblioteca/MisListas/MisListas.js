@@ -59,7 +59,6 @@ export default class MisListas extends React.Component {
 			openAnyadirLista: this.openAnyadirLista
 		});
 		this.getData();
-		UnicastNotifications.fireSingleton();
 	};
 
 	openAnyadirLista = () => {
