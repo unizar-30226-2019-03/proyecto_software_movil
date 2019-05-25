@@ -162,35 +162,4 @@ export default class UnicastNotifications extends React.Component {
     this.lastMsgDate = null;
     this.lastVidDate = null;
   }
-
-  static getUserData(navigation, response_callback) {
-    let defaultClient = ApiClient.instance;
-    let bearerAuth = defaultClient.authentications["bearerAuth"];
-    bearerAuth.accessToken = userToken;
-
-    let apiInstance = new UserApi();
-    let opts = {
-      cacheControl: "no-cache, no-store, must-revalidate",
-      pragma: "no-cache",
-      expires: 0
-    };
-    apiInstance.getUser(userId, opts, (error, data, response) => {
-      if (response_callback) {
-        response_callback();
-      }
-      if (error) {
-        if (error.status == 403) {
-          navigation.navigate("NotLogged");
-        } else {
-          HaOcurridoUnError(getUserData(navigation, response_callback));
-        }
-      } else {
-        professor = data.role == "ROLE_PROFESSOR" ? true : false;
-        console.log(data);
-        PerfilStore.setImagenPerfil(data.photo);
-        PerfilStore.setUserName(data.username);
-        navigation.navigate("Logged");
-      }
-    });
-  }
 }

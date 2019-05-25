@@ -36,12 +36,14 @@ export default class SubirVideo extends React.Component {
       titulo: "",
       descripción: "",
       noThumbnailErr: false,
-      tituloVacioErr: false,
+      tituloErr: false,
       noVideoErr: false,
       noAsignaturaErr: false,
       loading: true,
       subiendoVideo: false
     };
+
+    this.tituloErrText = "";
 
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
@@ -116,7 +118,8 @@ export default class SubirVideo extends React.Component {
       someError = true;
     }
     if (this.state.titulo == "") {
-      this.setState({ tituloVacioErr: true });
+      this.tituloErrText = "El título del vídeo no puede ser vacío";
+      this.setState({ tituloErr: true });
       someError = true;
     }
     if (this.state.thumbnail == "nula") {
@@ -148,15 +151,13 @@ export default class SubirVideo extends React.Component {
         let description = this.state.descripción;
         let subjectId = this.state.asignatura;
         this.videoApiInstance.addVideo(file, thumbnail, title, description, subjectId, (error, data, response) => {
-          this.setState({
-            subiendoVideo: false
-          });
+          this.setState({ subiendoVideo: false });
           if (error) {
-            console.log(error);
-            console.log(data);
-
             if (error.status == 403) {
               Auth.signOut(this.props.navigation);
+            } else if (error.status == 500 || error.status == 400 || error.status == 409) {
+              this.tituloErrText = "Ya existe un vídeo con este título";
+              this.setState({ tituloErr: true });
             } else {
               HaOcurridoUnError(null);
             }
@@ -227,9 +228,9 @@ export default class SubirVideo extends React.Component {
                 placeholder="Escriba un título..."
                 label="Título"
                 onFocus={() => this.InputFixer.onFocus()}
-                onChangeText={text => this.setState({ titulo: text, tituloVacioErr: false })}
+                onChangeText={text => this.setState({ titulo: text, tituloErr: false })}
                 errorStyle={{ color: "red" }}
-                errorMessage={this.state.tituloVacioErr ? "El título no puede ser vacío" : null}
+                errorMessage={this.state.tituloErr ? this.tituloErrText : null}
               />
             </View>
 

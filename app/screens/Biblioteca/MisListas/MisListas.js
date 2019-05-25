@@ -168,8 +168,7 @@ export default class MisListas extends React.Component {
 				<AnyadirLista
 					visible={this.state.anyadirListaOpen}
 					hide={this.hideAnyadirLista}
-					onListaAdded={() => this.setState({ changingVideo: false }) || this.onRefresh()}
-					onAddingLista={() => this.setState({ changingVideo: true })}
+					onListaAdded={() => this.onRefresh()}
 				/>
 				<LoadingModal visible={this.state.changingVideo} />
 			</View>

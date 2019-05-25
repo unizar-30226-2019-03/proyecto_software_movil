@@ -181,19 +181,24 @@ export default class AnyadirALista extends React.Component {
 	};
 
 	onListaAdded = id_lista => {
-		let videoId = this.props.videoId;
-		this.apiInstance.addVideotoReproductionList(id_lista, videoId, (error, data, response) => {
-			if (error) {
-				if (error.status == 403) {
-					Auth.signOut(this.props.navigation);
-				} else {
-					HaOcurridoUnError(null);
-				}
-			}
+		if (id_lista) {
 			this.setState({
-				addingVideoToNewList: false
+				addingVideoToNewList: true
 			});
-		});
+			let videoId = this.props.videoId;
+			this.apiInstance.addVideotoReproductionList(id_lista, videoId, (error, data, response) => {
+				if (error) {
+					if (error.status == 403) {
+						Auth.signOut(this.props.navigation);
+					} else {
+						HaOcurridoUnError(null);
+					}
+				}
+				this.setState({
+					addingVideoToNewList: false
+				});
+			});
+		}
 	};
 
 	render() {
@@ -263,7 +268,6 @@ export default class AnyadirALista extends React.Component {
 					hide={this.hideAnyadirLista}
 					videoId={this.props.videoId}
 					onListaAdded={this.onListaAdded}
-					onAddingLista={() => this.setState({ addingVideoToNewList: true })}
 				/>
 				<LoadingModal visible={this.state.addingVideoToNewList} />
 			</View>

@@ -7,11 +7,19 @@ export default StyleSheet.create({
 		flex: 1,
 		backgroundColor: "rgba(0, 0, 0, 0.5)"
 	},
+	row: {
+		flexDirection: "row"
+	},
 	anyadirListaContainer: {
 		marginTop: ScreenhHeight * 0.1,
 		marginHorizontal: 20,
 		backgroundColor: "#fff",
 		borderRadius: 3
+	},
+	activityIndicator: {
+		alignItems: "center",
+		justifyContent: "center",
+		marginLeft: 5
 	},
 	nuevaListaTexto: {
 		fontSize: 16,
