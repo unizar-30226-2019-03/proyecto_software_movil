@@ -144,7 +144,7 @@ export default class SubirVideo extends React.Component {
         const thumbnail = {
           uri: this.state.thumbnail,
           name: this.state.thumbnail.substring(this.state.thumbnail.lastIndexOf("/") + 1, this.state.thumbnail.length),
-          type: "imagen/png"
+          type: "image/png"
         };
         let title = this.state.titulo;
         let description = this.state.descripción;
