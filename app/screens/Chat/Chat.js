@@ -27,28 +27,7 @@ import {
 export default class Chat extends React.Component {
   constructor() {
     super();
-    var datos = [
-      {
-        fromMe: false,
-        text: "PEEEEEEEZ",
-        timestamp: "2019-05-25T09:10:27.904Z"
-      },
-      {
-        fromMe: true,
-        text: "PEEEEEEEEEEEEEEEEEEEEEEEEEEEZ",
-        timestamp: "2019-05-25T09:10:27.904Z"
-      },
-      {
-        fromMe: true,
-        text: "PEEEEEEEEEEEEEEEEEEEEEEEEEEEZ",
-        timestamp: "2019-05-24T09:10:27.904Z"
-      },
-      {
-        fromMe: true,
-        text: "PEEEEEEEEEEEEEEEEEEEEEEEEEEEZ",
-        timestamp: "2019-05-22T09:10:27.904Z"
-      }
-    ];
+    var datos = [];
 
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
