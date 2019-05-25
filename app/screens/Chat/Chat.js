@@ -190,8 +190,9 @@ export default class Chat extends React.Component {
     }
   }
 
-  sendHandler(message) {
-    this.addMessage(message);
+  sendHandler() {
+    this.addMessage(this.state.text);
+    this.setState({ text: "" });
   }
 
   addMessage(message) {

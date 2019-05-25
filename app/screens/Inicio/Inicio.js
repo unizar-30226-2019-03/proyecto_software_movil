@@ -44,7 +44,9 @@ export default class Inicio extends React.Component {
     this.navigation = this.props.navigation;
     this.apiInstance = new VideoApi();
   }
-
+  componentWillUnmount() {
+    Linking.removeEventListener("url", this._handleOpenURL);
+  }
   componentDidMount() {
     //this.props.navigation.navigate("Chat", {
     //title: "PRUEBA",
