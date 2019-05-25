@@ -135,7 +135,7 @@ export default class VerPerfil extends React.Component {
                 this.state.imagen.lastIndexOf("/") + 1,
                 this.state.imagen.length
               ),
-              type: "imagen/png"
+              type: "image/png"
             }
           : null,
         name: this.state.nombre,

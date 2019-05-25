@@ -264,7 +264,7 @@ export default class SignUp extends React.Component {
       const photo = {
         uri: this.state.image,
         name: this.state.image.substring(this.state.image.lastIndexOf("/") + 1, this.state.image.length),
-        type: "imagen/png"
+        type: "image/png"
       };
       let apiInstance = new UserApi();
       console.log("username ", this.state.username);
@@ -287,7 +287,10 @@ export default class SignUp extends React.Component {
         this.state.degreeId,
         photo,
         (error, data, response) => {
-          if (error) {
+          if (error.status == 403) {
+            HaOcurridoUnError(null);
+            Auth.signOut(this.props.navigation);
+          } else if (error.status == 500 ||error.status == 400 || error.status == 409) {
             HaOcurridoUnError(null);
           } else {
             this.showSuccessfulRegister();
