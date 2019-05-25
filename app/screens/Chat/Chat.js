@@ -71,7 +71,6 @@ export default class Chat extends React.Component {
   };
   componentDidMount = () => {
     //lamar aqui a get data NUNCA EN EL CONSTRUCTOR
-    UnicastNotifications.fireSingleton();
   };
 
   getAllFromSender(page, messages) {

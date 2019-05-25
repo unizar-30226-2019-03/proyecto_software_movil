@@ -44,7 +44,6 @@ export default class RankingVideos extends React.Component {
 
   componentDidMount = () => {
     this.getData();
-    UnicastNotifications.fireSingleton();
   };
 
   getData = () => {

@@ -71,7 +71,6 @@ export default class Asignatura extends React.Component {
 
   componentDidMount = () => {
     this.getData();
-    UnicastNotifications.fireSingleton();
   };
 
   someOneLoading = () => {

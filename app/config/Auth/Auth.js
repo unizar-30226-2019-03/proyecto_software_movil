@@ -61,7 +61,8 @@ export default class Auth {
 		await AsyncStorage.multiSet([["userToken", token], ["userId", id.toString()]], null);
 		userToken = token;
 		userId = id;
-
+		
+		UnicastNotifications.fireSingleton();
 		this.getUserData(navigation, response_callback);
 	}
 
@@ -71,9 +72,11 @@ export default class Auth {
 			userId = response[1][1];
 		});
 
+		
 		console.log("EL TOKEN: ",userToken);
-		console.log(userId);
-
+		console.log("USER ID: ",userId);
+		
+		UnicastNotifications.fireSingleton();
 		if (userToken) {
 			this.getUserData(navigation, null);
 		} else {
