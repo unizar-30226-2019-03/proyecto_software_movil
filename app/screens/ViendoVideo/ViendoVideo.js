@@ -51,14 +51,13 @@ export default class ViendoVideo extends React.Component {
     this.state = {
       comentarios: vacio,
       comentariosMostrar: vacio,
-      seguida: false,
       profesores: false,
       dataSource: ds,
       largo: false,
       ultimoAñadido: -1,
       text: "",
-      nombreUsuario: "Juan Asensio",
       video: aux,
+      focus: false,
       asig: {
         abbreviation: "dummy",
         university: { photo2: require("../../../test/imagenes/perfil_uni.jpg") }
@@ -316,8 +315,8 @@ export default class ViendoVideo extends React.Component {
     });
     let nuevo = this.VideoFlechaRef.devuelveEstado();
     nuevo = Math.floor(nuevo);
-    console.log("Nuevo");
-    console.log(nuevo);
+    //console.log("Nuevo");
+    //console.log(nuevo);
     this.setState({ segundo: nuevo });
     let añadir = this.state.comentariosMostrar;
     let i = this.state.ultimoAñadido + 1;
@@ -388,10 +387,11 @@ export default class ViendoVideo extends React.Component {
           title="IR ASIGNATURA"
         /> */
       //QUITO TODO LO ANTERIOR?????????
+
       <KeyboardAvoidingView
         style={styles.container}
         behavior="padding"
-        keyboardVerticalOffset={HeaderHeight - 50}
+        keyboardVerticalOffset={0}
       >
         <View style={styles.videoContainer}>
           <VideoConSinFlechaAtras
@@ -455,6 +455,7 @@ export default class ViendoVideo extends React.Component {
             texto={this.state.video.description}
             navigation={this.props.navigation}
             profesores={this.state.profesores}
+            focus={this.state.focus}
           />
           <View style={{ flex: 1 }}>
             <View style={{ maxHeight: 300 }}>
@@ -480,16 +481,16 @@ export default class ViendoVideo extends React.Component {
               />
             </View>
           </View>
-          <View style={styles.entradaTexto}>
-            <TextInput
-              placeholder="Escribe un Comentario"
-              onChangeText={text => this.setState({ text })}
-              value={this.state.text}
-              multiline={true}
-              style={[styles.textInput, { maxHeight: 80 }]}
-            />
-            {this.boton()}
-          </View>
+        </View>
+        <View style={styles.entradaTexto}>
+          <TextInput
+            placeholder="Escribe un Comentario"
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+            multiline={true}
+            style={[styles.textInput, { maxHeight: 80 }]}
+          />
+          {this.boton()}
         </View>
       </KeyboardAvoidingView>
     );

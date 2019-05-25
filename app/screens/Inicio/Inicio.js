@@ -6,7 +6,8 @@ import {
   FlatList,
   ActivityIndicator,
   Linking,
-  Alert
+  Alert,
+  InteractionManager
 } from "react-native";
 
 import { VideoApi, ApiClient } from "swagger_unicast";
@@ -40,23 +41,48 @@ export default class Inicio extends React.Component {
     let defaultClient = ApiClient.instance;
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
-
+    this.navigation = this.props.navigation;
     this.apiInstance = new VideoApi();
   }
 
   componentDidMount() {
+    //this.props.navigation.navigate("Chat", {
+    //title: "PRUEBA",
+    //photo: "../../assets/icon_unicast.jpg",
+    // id: 1
+    // });
     this.getData();
     UnicastNotifications.fireSingleton();
 
-    Linking.getInitialURL()
-      .then(url => {
-        if (url) {
-          Alert.alert("Initial url is: " + url);
-        }
-      })
-      .catch(err => console.error("An error occurred", err));
-  }
+    Linking.addEventListener("url", this._handleOpenURL);
 
+    Linking.getInitialURL().then(url => {
+      if (url.length > 7) {
+        //Descarta si la url es http:// ( si se entra sin pulsar enlace)
+        //Alert.alert("Initial url is: " + url);
+
+        let { path, queryParams } = Expo.Linking.parse(url);
+
+        //Alert.alert(queryParams.id.toString(10));
+        id = queryParams.id;
+        //Alert.alert(id.toString(10));
+        // id = 1;
+
+        //this.props.navigation.navigate("ViendoVideo", {
+        // id: id
+        //});
+      }
+    });
+  }
+  _handleOpenURL(event) {
+    Alert.alert(event.url);
+    let { path, queryParams } = Expo.Linking.parse(event.url);
+    id = queryParams.id;
+    Alert.alert(id.toString(10));
+    //this.navigation.navigate("ViendoVideo", {
+    // id: id
+    //});
+  }
   getData = () => {
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
@@ -138,7 +164,11 @@ export default class Inicio extends React.Component {
             ListFooterComponent={LoadingFooter({
               show: this.state.fetchingNewData
             })}
-            ListEmptyComponent={this.state.refreshing ? null : <NoHayContenidoQueMostrar what="vídeos" />}
+            ListEmptyComponent={
+              this.state.refreshing ? null : (
+                <NoHayContenidoQueMostrar what="vídeos" />
+              )
+            }
             keyExtractor={(item, index) => index.toString()}
           />
         )}

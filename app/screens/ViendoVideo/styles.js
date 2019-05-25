@@ -1,5 +1,10 @@
 import { StyleSheet } from "react-native";
-import { FullScreenWidth, FullScreen16_9_Height, Azul, GrisClaro } from "../../constants";
+import {
+  FullScreenWidth,
+  FullScreen16_9_Height,
+  Azul,
+  GrisClaro
+} from "../../constants";
 
 import { StatusBar } from "react-native";
 
@@ -36,11 +41,13 @@ export default StyleSheet.create({
   entradaTexto: {
     borderWidth: 1,
     borderRadius: 25,
+    backgroundColor: "white",
     marginHorizontal: 7,
     borderColor: GrisClaro,
     padding: 5,
     marginBottom: 7,
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
+    zIndex: 2
   }
 });

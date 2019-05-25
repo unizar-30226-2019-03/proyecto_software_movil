@@ -76,24 +76,37 @@ export default class Descripcion extends React.Component {
       </TouchableOpacity>
     );
   };
+  icono() {
+    if (this.state.desplegado) {
+      return (
+        <Icon
+          name={"keyboard-arrow-up"}
+          type="MaterialIcons"
+          iconStyle={styles.IconoDescripcion}
+          size={35}
+          onPress={() => this.alternarDescripcion()}
+          color={GrisClaro}
+        />
+      );
+    } else {
+      return (
+        <Icon
+          name={"keyboard-arrow-down"}
+          type="MaterialIcons"
+          iconStyle={styles.IconoDescripcion}
+          size={35}
+          onPress={() => this.alternarDescripcion()}
+          color={GrisClaro}
+        />
+      );
+    }
+  }
   render() {
     return (
       <View>
         <View style={styles.tituloBoton}>
           <Text style={styles.DescripcionTitulo}>Descripción</Text>
-
-          <Icon
-            name={[
-              this.state.desplegado == false
-                ? "keyboard-arrow-down"
-                : "keyboard-arrow-up"
-            ]}
-            type="MaterialIcons"
-            iconStyle={styles.IconoDescripcion}
-            size={35}
-            onPress={() => this.alternarDescripcion()}
-            color={GrisClaro}
-          />
+          {this.icono()}
         </View>
         <Animated.View
           style={[

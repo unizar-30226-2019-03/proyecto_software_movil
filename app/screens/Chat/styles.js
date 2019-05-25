@@ -27,7 +27,7 @@ export default StyleSheet.create({
     padding: 5,
     marginBottom: 7,
     flexDirection: "row",
-    justifyContent: 'center'
+    justifyContent: "center"
   },
   vista: {
     flex: 1

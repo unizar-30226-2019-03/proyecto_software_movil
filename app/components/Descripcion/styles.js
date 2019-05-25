@@ -7,6 +7,7 @@ export default StyleSheet.create({
   },
   tituloBoton: {
     borderTopWidth: 2,
+    borderBottomWidth: 2,
     padding: 5,
     flexDirection: "row"
   },
