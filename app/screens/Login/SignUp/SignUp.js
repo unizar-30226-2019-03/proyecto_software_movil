@@ -287,10 +287,11 @@ export default class SignUp extends React.Component {
         this.state.degreeId,
         photo,
         (error, data, response) => {
+          console.log(error);
           if (error.status == 403) {
             HaOcurridoUnError(null);
             Auth.signOut(this.props.navigation);
-          } else if (error.status == 500 ||error.status == 400 || error.status == 409) {
+          } else if (error.status == 500 || error.status == 400 || error.status == 409) {
             HaOcurridoUnError(null);
           } else {
             this.showSuccessfulRegister();

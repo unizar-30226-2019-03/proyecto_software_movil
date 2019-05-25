@@ -1,5 +1,11 @@
 import React from "react";
-import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  View
+} from "react-native";
 
 import { Image } from "react-native-elements";
 
@@ -18,10 +24,9 @@ import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
+import { observer } from "mobx-react/native";
 
-const samplePic =
-  "https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80";
-
+@observer
 export default class MensajesTab extends React.Component {
   constructor(props) {
     super(props);
@@ -60,10 +65,17 @@ export default class MensajesTab extends React.Component {
         }
       } else {
         console.log("DMENAJES    DAWDAWDAW");
-        console.log(data);
+        console.log("Message data : ", data);
+        let newData = null;
+        if (data._embedded) {
+          newData = data._embedded.messages;
+          UnicastNotifications.setObservedNewNotifications(false);
+        } else {
+          newData = data._embedded["messages"] = [];
+        }
         this.currentDate = ApiClient.parseDate(response.headers.date);
         this.setState({
-          data: [...data._embedded.messages],
+          data: newData,
           loading: false
         });
       }
@@ -71,15 +83,26 @@ export default class MensajesTab extends React.Component {
   };
 
   render() {
+    this.getData();
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          {
+            justifyContent: this.state.loading ? "center" : "flex-start"
+          }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
           <FlatList
             data={this.state.data}
             renderItem={({ item }) => {
-              let usuario = item.sender.id == Auth.getUserId() ? item.receiver : item.sender;
+              let usuario =
+                item.sender.id == Auth.getUserId()
+                  ? item.receiver
+                  : item.sender;
               return (
                 <RippleTouchable
                   onPress={() =>
@@ -91,7 +114,12 @@ export default class MensajesTab extends React.Component {
                   }
                 >
                   <View style={styles.chatContainer}>
-                    <Image source={{ uri: usuario.photo }} style={styles.profilePic} />
+                    <Image
+                      source={{
+                        uri: usuario.photo
+                      }}
+                      style={styles.profilePic}
+                    />
                     <View style={styles.nameAndMsgContainer}>
                       <Text numberOfLines={1} style={styles.nameText}>
                         {usuario.name + ", " + usuario.surnames}
@@ -100,7 +128,9 @@ export default class MensajesTab extends React.Component {
                         {item.text}
                       </Text>
                     </View>
-                    <Text style={styles.hourText}>{timeStampToChatDate(item.timestamp, this.currentDate)}</Text>
+                    <Text style={styles.hourText}>
+                      {timeStampToChatDate(item.timestamp, this.currentDate)}
+                    </Text>
                   </View>
                 </RippleTouchable>
               );
