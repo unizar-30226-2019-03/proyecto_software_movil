@@ -52,7 +52,6 @@ export default class Searching extends React.Component {
       getData: this.getData,
       searchText: this.state.searchText
     });
-    UnicastNotifications.fireSingleton();
   }
 
   getVideoData = () => {

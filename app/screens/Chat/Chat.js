@@ -63,7 +63,6 @@ export default class Chat extends React.Component {
     this.messageApi = new MessageApi();
 
     //lamar aqui a get data NUNCA EN EL CONSTRUCTOR
-    UnicastNotifications.fireSingleton();
   };
 
   static navigationOptions = ({ navigation }) => ({

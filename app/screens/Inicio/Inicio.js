@@ -38,7 +38,6 @@ export default class Inicio extends React.Component {
 
   componentDidMount() {
     this.getData();
-    UnicastNotifications.fireSingleton();
   }
 
   getData = () => {
