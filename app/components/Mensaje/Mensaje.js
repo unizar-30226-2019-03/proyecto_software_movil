@@ -15,7 +15,7 @@ export default class Mensaje extends React.Component {
     hora = hora.split(":");
     minutos = hora[1];
     hora = hora[0];
-    horaTotal = hora + ":" + minutos;
+    horaTotal = String(parseInt(hora) + 2) + ":" + minutos;
     diaActual = String(new Date().getDate()).padStart(2, "0");
 
     mesActual = new Date().getMonth() + 1;

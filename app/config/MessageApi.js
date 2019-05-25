@@ -1,6 +1,7 @@
 import { ApiClient } from "swagger_unicast";
 import MessageApi from "swagger_unicast/dist/api/MessageApi";
 import Auth from "../config/Auth";
+import { Alert } from "react-native";
 
 const defaultClient = ApiClient.instance;
 const apiInstance = new MessageApi();
@@ -18,6 +19,7 @@ export function addMessage(receiverId, text, callback) {
 
   apiInstance.addMessage(receiverId, text, (error, data, response) => {
     if (error) {
+      Alert.alert("ERROR");
       callback(false);
     } else {
       callback(data);

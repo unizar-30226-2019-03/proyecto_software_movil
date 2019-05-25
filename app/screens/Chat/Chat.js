@@ -6,7 +6,8 @@ import {
   Image,
   ListView,
   TextInput,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Alert
 } from "react-native";
 
 import styles from "./styles";
@@ -48,12 +49,12 @@ export default class Chat extends React.Component {
     this.mergeMessages = this.mergeMessages.bind(this);
     this.sendHandler = this.sendHandler.bind(this);
     this.addMessage = this.addMessage.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.iniciarReloj = this.iniciarReloj.bind(this);
     this.pararReloj = this.pararReloj.bind(this);
   }
 
   componentWillMount = () => {
+    this._isMounted = true;
     this.getAllFromSender(0, []);
     this.getAllSent(0, []);
     this.iniciarReloj();
@@ -61,12 +62,6 @@ export default class Chat extends React.Component {
   componentDidUpdate = () => {
     if (this.state.update) {
       this.mergeMessages();
-      const ds = new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1 !== r2
-      });
-      console.log("Mensajes", this.state.messages);
-      ds.cloneWithRows(this.state.mesagges);
-      this.setState({ dataSource: ds });
     }
   };
   componentDidMount = () => {
@@ -124,10 +119,34 @@ export default class Chat extends React.Component {
     const sent = this.state.sentMessages.slice();
     const received = this.state.receivedMessages.slice();
     const messages = this.mergeSortedArray(sent, received).reverse();
+    //Alert.alert(messages.length.toString());
+
+    let mess = messages.map(c => {
+      t = c.secondsFromBeginning;
+
+      const text = c.text;
+      const fromMe = c.fromMe;
+      const timestamp = c.timestamp;
+
+      return {
+        text: text,
+        fromMe: fromMe,
+        timestamp: timestamp
+      };
+    });
+    console.log(mess);
+    const ds = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2
+    });
+    //Alert.alert("Mensajes");
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAA");
+    console.log(mess);
+
     if (this._isMounted) {
       this.setState({
-        messages: messages,
-        update: false
+        messages: mess,
+        update: false,
+        dataSource: ds.cloneWithRows(mess)
       });
     }
   }
@@ -179,14 +198,6 @@ export default class Chat extends React.Component {
         );
       }
     );
-  }
-
-  handleChange(display) {
-    if (display) {
-      this.setState({ contentMargin: "300px" });
-    } else {
-      this.setState({ contentMargin: "71px" });
-    }
   }
 
   sendHandler() {
@@ -339,7 +350,7 @@ export default class Chat extends React.Component {
             <Mensaje
               esMio={rowData.fromMe}
               mensaje={rowData.text}
-              fecha={rowData.timestamp}
+              fecha={rowData.timestamp.toISOString()}
             />
           )}
           onContentSizeChange={() =>
