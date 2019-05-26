@@ -206,8 +206,9 @@ export default class ListaVideos extends React.Component {
 	};
 
 	borrarDeHistorial = (index, id) => {
-		this.apiInstance.displaysDeleteVideoIdDelete(id, (error, data, response) => {
+		this.apiInstance.deleteDisplay(id, (error, data, response) => {
 			if (error) {
+				console.log("error callback: ", error);
 				if (error.status == 403) {
 					Auth.signOut(this.props.navigation);
 				} else {
@@ -243,8 +244,8 @@ export default class ListaVideos extends React.Component {
 	};
 
 	delete = (index, id) => {
-		console.log(index);
-		console.log(id);
+		console.log("vamos a borrar ", index);
+		console.log("el de id ", id);
 		if (!this.state.deleting && !this.state.refreshing) {
 			this.setState({ deleting: true });
 			if (this.tipoLista == "mis_videos") {

@@ -71,10 +71,7 @@ export default class SignUp extends React.Component {
   }
 
   getUniData = () => {
-    if (
-      (this.totalUniPages == undefined || this.uniOffset < this.totalUniPages) &&
-      !this.state.onUniEndReachedManaged
-    ) {
+    if ((this.totalUniPages == undefined || this.uniOffset < this.totalUniPages) && !this.state.onUniEndReachedManaged) {
       let opts = {
         page: this.uniOffset
       };
@@ -96,10 +93,7 @@ export default class SignUp extends React.Component {
   };
 
   getDegData = () => {
-    if (
-      (this.totalDegPages == undefined || this.degOffset < this.totalDegPages) &&
-      !this.state.onDegEndReachedManaged
-    ) {
+    if ((this.totalDegPages == undefined || this.degOffset < this.totalDegPages) && !this.state.onDegEndReachedManaged) {
       let opts = {
         page: this.degOffset
       };
@@ -203,7 +197,7 @@ export default class SignUp extends React.Component {
       }
     }
 
-    if (this.state.image == undefined) {
+    if (this.state.image == "uri_nula") {
       this.setState({ imageErr: true });
       ok = false;
     } else {
@@ -287,11 +281,13 @@ export default class SignUp extends React.Component {
         this.state.degreeId,
         photo,
         (error, data, response) => {
-          if (error.status == 403) {
-            HaOcurridoUnError(null);
-            Auth.signOut(this.props.navigation);
-          } else if (error.status == 500 ||error.status == 400 || error.status == 409) {
-            HaOcurridoUnError(null);
+          if (error) {
+            console.log("error: ", error);
+            if (error.status == 403) {
+              Auth.signOut(this.props.navigation);
+            } else if (error.status == 500 || error.status == 400 || error.status == 409) {
+              HaOcurridoUnError(null);
+            }
           } else {
             this.showSuccessfulRegister();
             this.props.navigation.navigate("SignIn");
@@ -355,18 +351,9 @@ export default class SignUp extends React.Component {
         </View>
 
         <View style={styles.viewImageContainer}>
-          {this.state.imageErr ? (
-            <Text style={styles.imageErrText}>{imageErrText}</Text>
-          ) : (
-            <Image source={{ uri: this.state.image }} style={styles.profPic} />
-          )}
+          {this.state.imageErr ? <Text style={styles.imageErrText}>{imageErrText}</Text> : <Image source={{ uri: this.state.image }} style={styles.profPic} />}
 
-          <Button
-            title="Seleccionar foto"
-            containerStyle={styles.profPicButton}
-            onPress={this.pickProfileImage}
-            buttonStyle={styles.buttonColor}
-          />
+          <Button title="Seleccionar foto" containerStyle={styles.profPicButton} onPress={this.pickProfileImage} buttonStyle={styles.buttonColor} />
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
@@ -396,11 +383,7 @@ export default class SignUp extends React.Component {
             {this.state.universityName}
           </Text>
 
-          <Overlay
-            isVisible={this.state.openUniModal}
-            animationType="fade"
-            onBackdropPress={() => this.setState({ openUniModal: false })}
-          >
+          <Overlay isVisible={this.state.openUniModal} animationType="fade" onBackdropPress={() => this.setState({ openUniModal: false })}>
             <View>
               <FlatList
                 data={this.state.uniData.length < 1 ? [{}] : this.state.uniData}

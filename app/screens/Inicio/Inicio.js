@@ -44,9 +44,11 @@ export default class Inicio extends React.Component {
     this.navigation = this.props.navigation;
     this.apiInstance = new VideoApi();
   }
+  
   componentWillUnmount() {
     Linking.removeEventListener("url", this._handleOpenURL);
   }
+
   componentDidMount() {
     //this.props.navigation.navigate("Chat", {
     //title: "PRUEBA",
@@ -76,6 +78,7 @@ export default class Inicio extends React.Component {
       }
     });
   }
+
   _handleOpenURL(event) {
     Alert.alert(event.url);
     let { path, queryParams } = Expo.Linking.parse(event.url);
@@ -85,12 +88,13 @@ export default class Inicio extends React.Component {
     // id: id
     //});
   }
+
   getData = () => {
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
       pragma: "no-cache",
       expires: 0,
-      projection: "videoWithSubject"
+      projection: "videoWithSubjectAndUniversity"
     };
     this.apiInstance.findRecommendedVideos(opts, (error, data, response) => {
       if (error) {
