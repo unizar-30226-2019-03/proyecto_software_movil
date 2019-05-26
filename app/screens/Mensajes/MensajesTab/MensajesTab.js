@@ -36,6 +36,8 @@ export default class MensajesTab extends React.Component {
       loading: true
     };
 
+    this.isMounted = false;
+
     this.currentDate = null;
 
     let defaultClient = ApiClient.instance;
@@ -46,40 +48,52 @@ export default class MensajesTab extends React.Component {
   }
 
   componentDidMount = () => {
+    this.isMounted = true;
     this.getData();
   };
 
+  componentWillUnmount() {
+    this.isMounted = false;
+  }
+
   getData = () => {
-    let opts = {
-      cacheControl: "no-cache, no-store, must-revalidate",
-      pragma: "no-cache",
-      expires: 0
-    };
-    this.apiInstance.getLastMessages(opts, (error, data, response) => {
-      console.log(data);
-      if (error) {
-        if (error.status == 403) {
-          Auth.signOut(this.props.navigation);
+    if (this.isMounted) {
+      
+      this.setState({
+        loading: true
+      });
+
+      let opts = {
+        cacheControl: "no-cache, no-store, must-revalidate",
+        pragma: "no-cache",
+        expires: 0
+      };
+      this.apiInstance.getLastMessages(opts, (error, data, response) => {
+        console.log(data);
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(this.getData);
+          }
         } else {
-          HaOcurridoUnError(this.getData);
+          console.log("DMENAJES    DAWDAWDAW");
+          console.log("Message data : ", data);
+          let newData = null;
+          if (data._embedded) {
+            newData = data._embedded.messages;
+            UnicastNotifications.setObservedNewNotifications(false);
+          } else {
+            newData = data._embedded["messages"] = [];
+          }
+          this.currentDate = ApiClient.parseDate(response.headers.date);
+          this.setState({
+            data: [...newData],
+            loading: false
+          });
         }
-      } else {
-        console.log("DMENAJES    DAWDAWDAW");
-        console.log("Message data : ", data);
-        let newData = null;
-        if (data._embedded) {
-          newData = data._embedded.messages;
-          UnicastNotifications.setObservedNewNotifications(false);
-        } else {
-          newData = data._embedded["messages"] = [];
-        }
-        this.currentDate = ApiClient.parseDate(response.headers.date);
-        this.setState({
-          data: newData,
-          loading: false
-        });
-      }
-    });
+      });
+    }
   };
 
   render() {
