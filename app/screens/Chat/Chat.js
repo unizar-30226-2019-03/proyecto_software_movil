@@ -16,9 +16,9 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Mensaje from "../../components/Mensaje";
 
 import UnicastNotifications from "../../config/UnicastNotifications";
-
+//import Auth from "../../config/Auth";
 import { HeaderHeight } from "../../constants";
-
+import UserApi from "swagger_unicast";
 import {
   getMessagesToReceiver,
   getMessagesFromSender,
@@ -41,7 +41,8 @@ export default class Chat extends React.Component {
       receivedMessages: [],
       sentMessages: [],
       messages: [],
-      update: false
+      update: false,
+      puedeHablar: false
     };
     this.getNewMessages = this.getNewMessages.bind(this);
     this.getAllFromSender = this.getAllFromSender.bind(this);
@@ -54,10 +55,61 @@ export default class Chat extends React.Component {
   }
 
   componentWillMount = () => {
-    this._isMounted = true;
-    this.getAllFromSender(0, []);
-    this.getAllSent(0, []);
-    this.iniciarReloj();
+    this.UserApi = new UserApi();
+    //idUsuario = Auth.getUserId();
+    this.userApi.getSubjectsOfUser(
+      this.state.idUsuario,
+      opts,
+      (error, data, response) => {
+        if (error) {
+          //console.log(error);
+          this.setState({ seguidas: undefined });
+        } else {
+          //console.log(data);
+          this.setState({ seguidas: data._embedded.subjects });
+
+          //Si no la ha encontrado -> No sigue la asignatura
+        }
+      }
+    );
+    containsObject = (obj, list) => {
+      var x;
+      for (x in list) {
+        if (list[x].id === obj.id) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+    this.userApi.getSubjectsAsProfessor(
+      this.props.navigation.getParam("id"),
+      opts,
+      (error, data, response) => {
+        if (error) {
+          //console.log(error);
+        } else {
+          //console.log(data);
+          const found = data._embedded.subjects.find(s => {
+            if (this.state.seguidas != undefined) {
+              contains = this.containsObject(s, this.state.seguidas);
+              if (contains) {
+                this.setState({ puedeHablar: true });
+              }
+            }
+          });
+          //Si no la ha encontrado -> No sigue la asignatura
+          this.setState({ seguida: found === undefined ? false : true });
+        }
+      }
+    );
+    Alert.alert(this.state.puedeHablar.toString());
+    if (this.state.puedeHablar) {
+      this._isMounted = true;
+      this.getAllFromSender(0, []);
+      this.getAllSent(0, []);
+      this.iniciarReloj();
+    }
   };
   componentDidUpdate = () => {
     if (this.state.update) {
