@@ -439,7 +439,7 @@ export default class ViendoVideo extends React.Component {
                 }}
                 navigation={this.props.navigation}
                 name={this.state.asig.abbreviation}
-                image={this.state.asig.photo}
+                image={this.state.photo}
               />
             </TouchableOpacity>
             <View style={{ marginLeft: 60 }}>
