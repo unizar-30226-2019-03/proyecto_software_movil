@@ -59,6 +59,7 @@ export default class ViendoVideo extends React.Component {
       video: aux,
       focus: false,
       asig: {
+        id: null,
         abbreviation: "dummy",
         university: { photo2: require("../../../test/imagenes/perfil_uni.jpg") }
       },
@@ -427,7 +428,8 @@ export default class ViendoVideo extends React.Component {
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Asignatura", {
-                  title: "UPM - Proyecto software"
+                  id: this.state.asig.id,
+                  title: this.state.asig.name
                 })
               }
               activeOpacity={1}
@@ -439,7 +441,7 @@ export default class ViendoVideo extends React.Component {
                 }}
                 navigation={this.props.navigation}
                 name={this.state.asig.abbreviation}
-                image={this.state.asig.photo}
+                image={this.state.photo}
               />
             </TouchableOpacity>
             <View style={{ marginLeft: 60 }}>
