@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  FlatList,
-  View
-} from "react-native";
+import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
 
 import { Image } from "react-native-elements";
 
@@ -24,19 +18,16 @@ import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-import { observer } from "mobx-react/native";
 
-@observer
 export default class MensajesTab extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       data: [],
-      loading: true
+      loading: true,
+      updating: false
     };
-
-    this.isMounted = false;
 
     this.currentDate = null;
 
@@ -48,19 +39,19 @@ export default class MensajesTab extends React.Component {
   }
 
   componentDidMount = () => {
-    this.isMounted = true;
     this.getData();
+    UnicastNotifications.setNewMessageCallback(this.getData);
   };
 
-  componentWillUnmount() {
-    this.isMounted = false;
-  }
+  componentWillUnmount = () => {
+    UnicastNotifications.cleanNewMessageCallback();
+  };
 
   getData = () => {
-    if (this.isMounted) {
-      
+    if (!this.state.updating) {
       this.setState({
-        loading: true
+        loading: true,
+        updating: true
       });
 
       let opts = {
@@ -82,7 +73,6 @@ export default class MensajesTab extends React.Component {
           let newData = null;
           if (data._embedded) {
             newData = data._embedded.messages;
-            UnicastNotifications.setObservedNewNotifications(false);
           } else {
             newData = data._embedded["messages"] = [];
           }
@@ -93,11 +83,13 @@ export default class MensajesTab extends React.Component {
           });
         }
       });
+      this.setState({
+        updating: false
+      });
     }
   };
 
   render() {
-    this.getData();
     return (
       <View
         style={[
@@ -113,10 +105,7 @@ export default class MensajesTab extends React.Component {
           <FlatList
             data={this.state.data}
             renderItem={({ item }) => {
-              let usuario =
-                item.sender.id == Auth.getUserId()
-                  ? item.receiver
-                  : item.sender;
+              let usuario = item.sender.id == Auth.getUserId() ? item.receiver : item.sender;
               return (
                 <RippleTouchable
                   onPress={() =>
@@ -142,9 +131,7 @@ export default class MensajesTab extends React.Component {
                         {item.text}
                       </Text>
                     </View>
-                    <Text style={styles.hourText}>
-                      {timeStampToChatDate(item.timestamp, this.currentDate)}
-                    </Text>
+                    <Text style={styles.hourText}>{timeStampToChatDate(item.timestamp, this.currentDate)}</Text>
                   </View>
                 </RippleTouchable>
               );

@@ -6,13 +6,10 @@ import { UserApi, ApiClient } from "swagger_unicast";
 
 import UnicastNotifications from "../UnicastNotifications";
 
-import { observer } from "mobx-react/native";
-
 import PerfilStore from "../PerfilStore";
 
 import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 
-@observer
 export default class Auth {
   static userToken = undefined;
   static userId = undefined;
@@ -58,10 +55,7 @@ export default class Auth {
   }
 
   static async signIn(token, id, navigation, response_callback) {
-    await AsyncStorage.multiSet(
-      [["userToken", token], ["userId", id.toString()]],
-      null
-    );
+    await AsyncStorage.multiSet([["userToken", token], ["userId", id.toString()]], null);
     userToken = token;
     userId = id;
 
