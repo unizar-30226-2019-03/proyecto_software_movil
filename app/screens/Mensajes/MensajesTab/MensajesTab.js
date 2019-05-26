@@ -25,9 +25,10 @@ export default class MensajesTab extends React.Component {
 
     this.state = {
       data: [],
-      loading: true,
-      updating: false
+      loading: true
     };
+
+    this.updating = false;
 
     this.currentDate = null;
 
@@ -48,10 +49,11 @@ export default class MensajesTab extends React.Component {
   };
 
   getData = () => {
-    if (!this.state.updating) {
+    if (!this.updating) {
+      this.updating = true;
+
       this.setState({
-        loading: true,
-        updating: true
+        loading: true
       });
 
       let opts = {
@@ -82,9 +84,7 @@ export default class MensajesTab extends React.Component {
             loading: false
           });
         }
-      });
-      this.setState({
-        updating: false
+        this.updating = false;
       });
     }
   };
