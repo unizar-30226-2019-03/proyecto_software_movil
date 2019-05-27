@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Text,
-  TouchableOpacity,
-  ActivityIndicator,
-  FlatList,
-  View
-} from "react-native";
+import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
 
 import { Image } from "react-native-elements";
 
@@ -24,9 +18,7 @@ import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-import { observer } from "mobx-react/native";
 
-@observer
 export default class MensajesTab extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +27,8 @@ export default class MensajesTab extends React.Component {
       data: [],
       loading: true
     };
+
+    this.updating = false;
 
     this.currentDate = null;
 
@@ -47,43 +41,55 @@ export default class MensajesTab extends React.Component {
 
   componentDidMount = () => {
     this.getData();
+    UnicastNotifications.setNewMessageCallback(this.getData);
+  };
+
+  componentWillUnmount = () => {
+    UnicastNotifications.cleanNewMessageCallback();
   };
 
   getData = () => {
-    let opts = {
-      cacheControl: "no-cache, no-store, must-revalidate",
-      pragma: "no-cache",
-      expires: 0
-    };
-    this.apiInstance.getLastMessages(opts, (error, data, response) => {
-      console.log(data);
-      if (error) {
-        if (error.status == 403) {
-          Auth.signOut(this.props.navigation);
+    if (!this.updating) {
+      this.updating = true;
+
+      this.setState({
+        loading: true
+      });
+
+      let opts = {
+        cacheControl: "no-cache, no-store, must-revalidate",
+        pragma: "no-cache",
+        expires: 0
+      };
+      this.apiInstance.getLastMessages(opts, (error, data, response) => {
+        console.log(data);
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(this.getData);
+          }
         } else {
-          HaOcurridoUnError(this.getData);
+          console.log("DMENAJES    DAWDAWDAW");
+          console.log("Message data : ", data);
+          let newData = null;
+          if (data._embedded) {
+            newData = data._embedded.messages;
+          } else {
+            newData = data._embedded["messages"] = [];
+          }
+          this.currentDate = ApiClient.parseDate(response.headers.date);
+          this.setState({
+            data: [...newData],
+            loading: false
+          });
         }
-      } else {
-        console.log("DMENAJES    DAWDAWDAW");
-        console.log("Message data : ", data);
-        let newData = null;
-        if (data._embedded) {
-          newData = data._embedded.messages;
-          UnicastNotifications.setObservedNewNotifications(false);
-        } else {
-          newData = data._embedded["messages"] = [];
-        }
-        this.currentDate = ApiClient.parseDate(response.headers.date);
-        this.setState({
-          data: newData,
-          loading: false
-        });
-      }
-    });
+        this.updating = false;
+      });
+    }
   };
 
   render() {
-    this.getData();
     return (
       <View
         style={[
@@ -99,10 +105,7 @@ export default class MensajesTab extends React.Component {
           <FlatList
             data={this.state.data}
             renderItem={({ item }) => {
-              let usuario =
-                item.sender.id == Auth.getUserId()
-                  ? item.receiver
-                  : item.sender;
+              let usuario = item.sender.id == Auth.getUserId() ? item.receiver : item.sender;
               return (
                 <RippleTouchable
                   onPress={() =>
@@ -128,9 +131,7 @@ export default class MensajesTab extends React.Component {
                         {item.text}
                       </Text>
                     </View>
-                    <Text style={styles.hourText}>
-                      {timeStampToChatDate(item.timestamp, this.currentDate)}
-                    </Text>
+                    <Text style={styles.hourText}>{timeStampToChatDate(item.timestamp, this.currentDate)}</Text>
                   </View>
                 </RippleTouchable>
               );

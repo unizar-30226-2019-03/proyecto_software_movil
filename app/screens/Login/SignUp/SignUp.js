@@ -70,13 +70,23 @@ export default class SignUp extends React.Component {
     this.totalDegPages = undefined;
   }
 
+  componentDidMount = () => {
+    this.getUniData();
+    this.getDegData();
+  };
+
   getUniData = () => {
-    if ((this.totalUniPages == undefined || this.uniOffset < this.totalUniPages) && !this.state.onUniEndReachedManaged) {
+    if (
+      (this.totalUniPages == undefined || this.uniOffset < this.totalUniPages) &&
+      !this.state.onUniEndReachedManaged
+    ) {
       let opts = {
         page: this.uniOffset
       };
       this.universityApiInstance.getUniversities(opts, (error, data, response) => {
-        if (!error) {
+        if (error) {
+          HaOcurridoUnError(null);
+        } else {
           this.uniOffset = this.uniOffset + 1;
           this.totalUniPages = data.page.totalPages;
           this.setState({
@@ -93,12 +103,17 @@ export default class SignUp extends React.Component {
   };
 
   getDegData = () => {
-    if ((this.totalDegPages == undefined || this.degOffset < this.totalDegPages) && !this.state.onDegEndReachedManaged) {
+    if (
+      (this.totalDegPages == undefined || this.degOffset < this.totalDegPages) &&
+      !this.state.onDegEndReachedManaged
+    ) {
       let opts = {
         page: this.degOffset
       };
       this.degreeApiInstance.getDegrees(opts, (error, data, response) => {
-        if (!error) {
+        if (error) {
+          HaOcurridoUnError(null);
+        } else {
           this.degOffset = this.degOffset + 1;
           this.totalDegPages = data.page.totalPages;
           this.setState({
@@ -282,12 +297,7 @@ export default class SignUp extends React.Component {
         photo,
         (error, data, response) => {
           if (error) {
-            console.log("error: ", error);
-            if (error.status == 403) {
-              Auth.signOut(this.props.navigation);
-            } else if (error.status == 500 || error.status == 400 || error.status == 409) {
-              HaOcurridoUnError(null);
-            }
+            HaOcurridoUnError(null);
           } else {
             this.showSuccessfulRegister();
             this.props.navigation.navigate("SignIn");
@@ -300,187 +310,213 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
-        <View style={styles.logoView}>
-          <Image source={require("../../../assets/icon.png")} style={styles.appLogo} />
-        </View>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loadingUni || this.state.loadingDeg ? "center" : "flex-start" }
+        ]}
+      >
+        {this.state.loadingUni || this.state.loadingDeg ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <InputFixer View navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
+            <View style={styles.logoView}>
+              <Image source={require("../../../assets/icon.png")} style={styles.appLogo} />
+            </View>
 
-        <View style={styles.inputBoxSeparation}>
-          <Input
-            onFocus={() => this.InputFixer.onFocus()}
-            placeholder="Nombre de usuario*"
-            errorMessage={this.state.usernameLengthErr ? "El nombre de usuario no puede ser vacío" : null}
-            onChangeText={username => this.setState({ username: username })}
-            leftIcon={{ type: "font-awesome", name: "user" }}
-            leftIconContainerStyle={styles.inputSeparation}
-          />
-        </View>
-
-        <View style={styles.inputBoxSeparation}>
-          <Input
-            onFocus={() => this.InputFixer.onFocus()}
-            placeholder="Correo electrónico*"
-            errorMessage={this.state.emailErr ? "Correo electrónico no válido" : null}
-            onChangeText={email => this.setState({ email: email })}
-            leftIcon={{ type: "font-awesome", name: "at" }}
-            leftIconContainerStyle={styles.inputSeparation}
-          />
-        </View>
-
-        <View style={styles.inputBoxSeparation}>
-          <Input
-            onFocus={() => this.InputFixer.onFocus()}
-            placeholder="Contraseña*"
-            secureTextEntry={true}
-            errorMessage={this.state.passwordLengthErr ? "La contraseña no puede ser vacía" : null}
-            leftIcon={{ type: "font-awesome", name: "lock" }}
-            onChangeText={password => this.comparePasswords(password, 1)}
-            leftIconContainerStyle={styles.inputSeparation}
-          />
-        </View>
-        <View style={styles.inputBoxSeparation}>
-          <Input
-            onFocus={() => this.InputFixer.onFocus()}
-            placeholder="Repita la contraseña*"
-            secureTextEntry={true}
-            errorMessage={this.state.passwordsMatch ? null : "Las contraseñas no coinciden"}
-            leftIcon={{ type: "font-awesome", name: "lock" }}
-            onChangeText={checkpw => this.comparePasswords(checkpw, 2)}
-            leftIconContainerStyle={styles.inputSeparation}
-          />
-        </View>
-
-        <View style={styles.viewImageContainer}>
-          {this.state.imageErr ? <Text style={styles.imageErrText}>{imageErrText}</Text> : <Image source={{ uri: this.state.image }} style={styles.profPic} />}
-
-          <Button title="Seleccionar foto" containerStyle={styles.profPicButton} onPress={this.pickProfileImage} buttonStyle={styles.buttonColor} />
-        </View>
-        <View style={styles.inputBoxSeparation}>
-          <Input
-            onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={name => this.setState({ name: name })}
-            placeholder="Nombre*"
-            errorMessage={this.state.nameLengthErr ? "El nombre no puede ser vacío" : null}
-            leftIcon={{ type: "font-awesome", name: "id-card" }}
-            leftIconContainerStyle={styles.inputSeparation}
-          />
-        </View>
-        <View style={styles.inputBoxSeparation}>
-          <Input
-            onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={surname => this.setState({ surname: surname })}
-            placeholder="Apellidos*"
-            errorMessage={this.state.surnameLengthErr ? "Los apellidos no pueden ser vacíos" : null}
-            leftIcon={{ type: "font-awesome", name: "id-card" }}
-            leftIconContainerStyle={styles.inputSeparation}
-          />
-        </View>
-
-        <View style={styles.viewSelectAsign}>
-          <Text style={this.state.universityErr ? styles.textAsignaturaErr : styles.textAsignatura}>Universidad:</Text>
-
-          <Text style={styles.collegeName} onPress={() => this.setState({ openUniModal: true })}>
-            {this.state.universityName}
-          </Text>
-
-          <Overlay isVisible={this.state.openUniModal} animationType="fade" onBackdropPress={() => this.setState({ openUniModal: false })}>
-            <View>
-              <FlatList
-                data={this.state.uniData.length < 1 ? [{}] : this.state.uniData}
-                onEndReached={() => this.onEndReached("uni")}
-                renderItem={({ item }) => (
-                  <RippleTouchable
-                    style={styles.listRow}
-                    onPress={() =>
-                      this.setState({
-                        universityName: item.name,
-                        universityId: item.id,
-                        openUniModal: false
-                      })
-                    }
-                  >
-                    <Text style={styles.rowText}>{item.name}</Text>
-                  </RippleTouchable>
-                )}
-                ListFooterComponent={LoadingFooter({
-                  show: this.state.fetchingNewUniData
-                })}
-                keyExtractor={(item, index) => index.toString()}
+            <View style={styles.inputBoxSeparation}>
+              <Input
+                onFocus={() => this.InputFixer.onFocus()}
+                placeholder="Nombre de usuario*"
+                errorMessage={this.state.usernameLengthErr ? "El nombre de usuario no puede ser vacío" : null}
+                onChangeText={username => this.setState({ username: username })}
+                leftIcon={{ type: "font-awesome", name: "user" }}
+                leftIconContainerStyle={styles.inputSeparation}
               />
             </View>
-          </Overlay>
-        </View>
 
-        <View style={styles.viewSelectAsign}>
-          <Text style={this.state.degreeErr ? styles.textAsignaturaErr : styles.textAsignatura}>Estudios:</Text>
-
-          <Text style={styles.collegeName} onPress={() => this.setState({ openDegModal: true })}>
-            {this.state.degreeName}
-          </Text>
-
-          <Overlay
-            isVisible={this.state.openDegModal}
-            overlayStyle={styles.overlayStyle}
-            animationType="fade"
-            onBackdropPress={() => this.setState({ openDegModal: false })}
-          >
-            <View>
-              <FlatList
-                data={this.state.degData.length < 1 ? [{}] : this.state.degData}
-                onEndReached={() => this.onEndReached("deg")}
-                renderItem={({ item }) => (
-                  <RippleTouchable
-                    style={styles.listRow}
-                    onPress={() =>
-                      this.setState({
-                        degreeName: item.name,
-                        degreeId: item.id,
-                        openDegModal: false
-                      })
-                    }
-                  >
-                    <Text style={styles.rowText}>{item.name}</Text>
-                  </RippleTouchable>
-                )}
-                ListFooterComponent={LoadingFooter({
-                  show: this.state.fetchingNewDegData
-                })}
-                keyExtractor={(item, index) => index.toString()}
+            <View style={styles.inputBoxSeparation}>
+              <Input
+                onFocus={() => this.InputFixer.onFocus()}
+                placeholder="Correo electrónico*"
+                errorMessage={this.state.emailErr ? "Correo electrónico no válido" : null}
+                onChangeText={email => this.setState({ email: email })}
+                leftIcon={{ type: "font-awesome", name: "at" }}
+                leftIconContainerStyle={styles.inputSeparation}
               />
             </View>
-          </Overlay>
-        </View>
 
-        <View style={styles.descriptionContainer}>
-          <Input
-            onCharge
-            onFocus={() => this.InputFixer.onFocus()}
-            onChangeText={description => this.updateDescriptionAndFocus(description)}
-            placeholder="Escriba su descripción..."
-            errorMessage={this.state.descriptionLengthErr ? "La descripción no puede ser vacía" : null}
-            leftIcon={{ type: "font-awesome", name: "info" }}
-            leftIconContainerStyle={styles.inputSeparationInfo}
-            multiline={true}
-          />
-        </View>
+            <View style={styles.inputBoxSeparation}>
+              <Input
+                onFocus={() => this.InputFixer.onFocus()}
+                placeholder="Contraseña*"
+                secureTextEntry={true}
+                errorMessage={this.state.passwordLengthErr ? "La contraseña no puede ser vacía" : null}
+                leftIcon={{ type: "font-awesome", name: "lock" }}
+                onChangeText={password => this.comparePasswords(password, 1)}
+                leftIconContainerStyle={styles.inputSeparation}
+              />
+            </View>
+            <View style={styles.inputBoxSeparation}>
+              <Input
+                onFocus={() => this.InputFixer.onFocus()}
+                placeholder="Repita la contraseña*"
+                secureTextEntry={true}
+                errorMessage={this.state.passwordsMatch ? null : "Las contraseñas no coinciden"}
+                leftIcon={{ type: "font-awesome", name: "lock" }}
+                onChangeText={checkpw => this.comparePasswords(checkpw, 2)}
+                leftIconContainerStyle={styles.inputSeparation}
+              />
+            </View>
 
-        <View style={styles.viewNextButton}>
-          <Button
-            onPress={() => this.handleNext()}
-            title="Registrarse"
-            icon={{
-              type: "font-awesome",
-              name: "check-circle",
-              color: "white"
-            }}
-            titleStyle={styles.nextText}
-            containerStyle={styles.nextButton}
-            buttonStyle={styles.buttonColor}
-          />
-        </View>
-        <View style={{ height: 60 }} />
-        <LoadingModal visible={this.state.registering} />
-      </InputFixer>
+            <View style={styles.viewImageContainer}>
+              {this.state.imageErr ? (
+                <Text style={styles.imageErrText}>{imageErrText}</Text>
+              ) : (
+                <Image source={{ uri: this.state.image }} style={styles.profPic} />
+              )}
+
+              <Button
+                title="Seleccionar foto"
+                containerStyle={styles.profPicButton}
+                onPress={this.pickProfileImage}
+                buttonStyle={styles.buttonColor}
+              />
+            </View>
+            <View style={styles.inputBoxSeparation}>
+              <Input
+                onFocus={() => this.InputFixer.onFocus()}
+                onChangeText={name => this.setState({ name: name })}
+                placeholder="Nombre*"
+                errorMessage={this.state.nameLengthErr ? "El nombre no puede ser vacío" : null}
+                leftIcon={{ type: "font-awesome", name: "id-card" }}
+                leftIconContainerStyle={styles.inputSeparation}
+              />
+            </View>
+            <View style={styles.inputBoxSeparation}>
+              <Input
+                onFocus={() => this.InputFixer.onFocus()}
+                onChangeText={surname => this.setState({ surname: surname })}
+                placeholder="Apellidos*"
+                errorMessage={this.state.surnameLengthErr ? "Los apellidos no pueden ser vacíos" : null}
+                leftIcon={{ type: "font-awesome", name: "id-card" }}
+                leftIconContainerStyle={styles.inputSeparation}
+              />
+            </View>
+
+            <View style={styles.viewSelectAsign}>
+              <Text style={this.state.universityErr ? styles.textAsignaturaErr : styles.textAsignatura}>
+                Universidad:
+              </Text>
+
+              <Text style={styles.collegeName} onPress={() => this.setState({ openUniModal: true })}>
+                {this.state.universityName}
+              </Text>
+
+              <Overlay
+                isVisible={this.state.openUniModal}
+                animationType="fade"
+                onBackdropPress={() => this.setState({ openUniModal: false })}
+              >
+                <View>
+                  <FlatList
+                    data={this.state.uniData.length < 1 ? [{}] : this.state.uniData}
+                    onEndReached={() => this.onEndReached("uni")}
+                    renderItem={({ item }) => (
+                      <RippleTouchable
+                        style={styles.listRow}
+                        onPress={() =>
+                          this.setState({
+                            universityName: item.name,
+                            universityId: item.id,
+                            openUniModal: false
+                          })
+                        }
+                      >
+                        <Text style={styles.rowText}>{item.name}</Text>
+                      </RippleTouchable>
+                    )}
+                    ListFooterComponent={LoadingFooter({
+                      show: this.state.fetchingNewUniData
+                    })}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                </View>
+              </Overlay>
+            </View>
+
+            <View style={styles.viewSelectAsign}>
+              <Text style={this.state.degreeErr ? styles.textAsignaturaErr : styles.textAsignatura}>Estudios:</Text>
+
+              <Text style={styles.collegeName} onPress={() => this.setState({ openDegModal: true })}>
+                {this.state.degreeName}
+              </Text>
+
+              <Overlay
+                isVisible={this.state.openDegModal}
+                overlayStyle={styles.overlayStyle}
+                animationType="fade"
+                onBackdropPress={() => this.setState({ openDegModal: false })}
+              >
+                <View>
+                  <FlatList
+                    data={this.state.degData.length < 1 ? [{}] : this.state.degData}
+                    onEndReached={() => this.onEndReached("deg")}
+                    renderItem={({ item }) => (
+                      <RippleTouchable
+                        style={styles.listRow}
+                        onPress={() =>
+                          this.setState({
+                            degreeName: item.name,
+                            degreeId: item.id,
+                            openDegModal: false
+                          })
+                        }
+                      >
+                        <Text style={styles.rowText}>{item.name}</Text>
+                      </RippleTouchable>
+                    )}
+                    ListFooterComponent={LoadingFooter({
+                      show: this.state.fetchingNewDegData
+                    })}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                </View>
+              </Overlay>
+            </View>
+
+            <View style={styles.descriptionContainer}>
+              <Input
+                onCharge
+                onFocus={() => this.InputFixer.onFocus()}
+                onChangeText={description => this.updateDescriptionAndFocus(description)}
+                placeholder="Escriba su descripción..."
+                errorMessage={this.state.descriptionLengthErr ? "La descripción no puede ser vacía" : null}
+                leftIcon={{ type: "font-awesome", name: "info" }}
+                leftIconContainerStyle={styles.inputSeparationInfo}
+                multiline={true}
+              />
+            </View>
+
+            <View style={styles.viewNextButton}>
+              <Button
+                onPress={() => this.handleNext()}
+                title="Registrarse"
+                icon={{
+                  type: "font-awesome",
+                  name: "check-circle",
+                  color: "white"
+                }}
+                titleStyle={styles.nextText}
+                containerStyle={styles.nextButton}
+                buttonStyle={styles.buttonColor}
+              />
+            </View>
+            <View style={{ height: 60 }} />
+            <LoadingModal visible={this.state.registering} />
+          </InputFixer>
+        )}
+      </View>
     );
   }
 }

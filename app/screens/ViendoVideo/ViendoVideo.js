@@ -61,6 +61,7 @@ export default class ViendoVideo extends React.Component {
       video: aux,
       focus: false,
       asig: {
+        id: null,
         abbreviation: "dummy",
         university: { photo2: require("../../../test/imagenes/perfil_uni.jpg") }
       },

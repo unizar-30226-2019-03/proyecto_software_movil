@@ -2,8 +2,6 @@ import React from "react";
 
 import { Notifications } from "expo";
 
-import { observable, action } from "mobx";
-
 import Auth from "../../config/Auth";
 
 import { PeriodoNotificaciones } from "../../constants";
@@ -31,7 +29,9 @@ export default class UnicastNotifications extends React.Component {
   static lastMsgDate = null;
   static lastVidDate = null;
 
-  @observable newNotifications = false;
+  static newMessageCallback = null;
+
+  static newNotifications = false;
 
   static notificationRenderAndroid = {
     //icon: "../../assets/icon.png", //TO_DO, ICONO DE JASEN
@@ -47,21 +47,12 @@ export default class UnicastNotifications extends React.Component {
     };
     vidChannel = {
       name: "Nuevos vídeos en UniCast",
-      description:
-        "Notificaciones de UniCast de vídeos nuevos de asignaturas a las que sigues",
+      description: "Notificaciones de UniCast de vídeos nuevos de asignaturas a las que sigues",
       vibrate: [0, 250, 250],
       badge: true
     };
     Notifications.createChannelAndroidAsync("msg", msgChannel);
     Notifications.createChannelAndroidAsync("vid", vidChannel);
-  }
-
-  static getObservedNewNotifications() {
-    return this.newNotifications;
-  }
-
-  static setObservedNewNotifications(value) {
-    this.newNotifications = value;
   }
 
   static fireSingleton() {
@@ -91,28 +82,22 @@ export default class UnicastNotifications extends React.Component {
       page: 0 //creo que es 0 porque cada vez que mires la pagina 0 se checkearán todas esas notis, con lo cual no haría falta llevar conteo de offset
     };
     do {
-      this.apiInstance.getUserUncheckedNotifications(
-        opts,
-        (error, data, response) => {
-          if (!error) {
-            this.totalPages = data.page.totalPages;
-            this.currentDate = ApiClient.parseDate(response.headers.date);
-            this.uncheckedNotifications = data._embedded.usersAreNotified;
-            console.log(
-              "notificaciones sin chequear : ",
-              this.uncheckedNotifications
-            );
-            console.log("num pags : ", this.totalPages);
-            this.managePage0();
-            if (this.totalPages == 1) {
-              this.renderNotifications();
-            }
-            console.log("he acabado la pagina");
-            // this.totalPages = data.page.totalPages;
-            // this.offset = this.totalPages > (this.offset + 1) ? ...
+      this.apiInstance.getUserUncheckedNotifications(opts, (error, data, response) => {
+        if (!error) {
+          this.totalPages = data.page.totalPages;
+          this.currentDate = ApiClient.parseDate(response.headers.date);
+          this.uncheckedNotifications = data._embedded.usersAreNotified;
+          console.log("notificaciones sin chequear : ", this.uncheckedNotifications);
+          console.log("num pags : ", this.totalPages);
+          this.managePage0();
+          if (this.totalPages == 1) {
+            this.renderNotifications();
           }
+          console.log("he acabado la pagina");
+          // this.totalPages = data.page.totalPages;
+          // this.offset = this.totalPages > (this.offset + 1) ? ...
         }
-      );
+      });
     } while (this.totalPages > 1);
 
     this.fetchingNotifications = false;
@@ -127,38 +112,28 @@ export default class UnicastNotifications extends React.Component {
       if (this.msgTimePending && thisNoti.notificationCategory == "messages") {
         this.msgTimePending = false;
         this.lastMsgDate = thisNoti.timestamp;
-        this.setObservedNewNotifications(true);
-      } else if (
-        this.vidTimePending &&
-        thisNoti.notificationCategory != "messages"
-      ) {
+        if (newMessageCallback) {
+          newMessageCallback();
+        }
+      } else if (this.vidTimePending && thisNoti.notificationCategory != "messages") {
         this.vidTimePending = false;
         this.lastVidDate = thisNoti.timestamp;
       }
 
-      this.apiInstance.checkNotification(
-        thisNoti.id,
-        () => {
-          console.log("chequeo ", count);
-        }
-        /* {
-          if (error) {
-            console.log("ERROR EN EL CHEQUEO");
-            if (error.status == 403) {
-              Auth.signOut(this.props.navigation);
-            }
-          } else {
-            console.log("BIEN EL CHEQUEO");
-          }
-        } */
-      );
+      this.apiInstance.checkNotification(thisNoti.id, () => {
+        console.log("chequeo ", count);
+      });
 
-      console.log(
-        "todas las ",
-        this.uncheckedNotifications.length,
-        " chequeadas"
-      );
+      console.log("todas las ", this.uncheckedNotifications.length, " chequeadas");
     }
+  }
+
+  static setNewMessageCallback(callback) {
+    newMessageCallback = callback;
+  }
+
+  static cleanNewMessageCallback() {
+    newMessageCallback = null;
   }
 
   static renderNotifications() {
@@ -168,9 +143,7 @@ export default class UnicastNotifications extends React.Component {
       Notifications.presentLocalNotificationAsync(
         {
           title: "Unicast",
-          body:
-            "Nuevo mensaje recibido: " +
-            timeStampToFormat(this.lastMsgDate, this.currentDate)
+          body: "Nuevo mensaje recibido: " + timeStampToFormat(this.lastMsgDate, this.currentDate)
         },
         "msg"
       );
@@ -180,9 +153,7 @@ export default class UnicastNotifications extends React.Component {
       Notifications.presentLocalNotificationAsync(
         {
           title: "Unicast",
-          body:
-            "Nuevo vídeo subido: " +
-            timeStampToFormat(this.lastVidDate, this.currentDate)
+          body: "Nuevo vídeo subido: " + timeStampToFormat(this.lastVidDate, this.currentDate)
         },
         "vid"
       );
