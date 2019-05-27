@@ -71,16 +71,17 @@ export default class MensajesTab extends React.Component {
           }
         } else {
           console.log("DMENAJES    DAWDAWDAW");
-          console.log("Message data : ", data);
+          console.log("Message datdwadawdawdadawdawd", data);
           let newData = null;
           if (data._embedded) {
             newData = data._embedded.messages;
           } else {
             newData = data._embedded["messages"] = [];
           }
+
           this.currentDate = ApiClient.parseDate(response.headers.date);
           this.setState({
-            data: [...newData],
+            data: newData,
             loading: false
           });
         }
