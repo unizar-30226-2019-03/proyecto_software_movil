@@ -16,7 +16,7 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Mensaje from "../../components/Mensaje";
 
 import UnicastNotifications from "../../config/UnicastNotifications";
-//import Auth from "../../config/Auth";
+import Auth from "../../config/Auth";
 import { HeaderHeight } from "../../constants";
 import UserApi from "swagger_unicast";
 import {
@@ -55,33 +55,36 @@ export default class Chat extends React.Component {
   }
 
   componentWillMount = () => {
-    this.UserApi = new UserApi();
-    //idUsuario = Auth.getUserId();
-    this.userApi.getSubjectsOfUser(
-      this.state.idUsuario,
-      opts,
-      (error, data, response) => {
-        if (error) {
-          //console.log(error);
-          this.setState({ seguidas: undefined });
-        } else {
-          //console.log(data);
-          this.setState({ seguidas: data._embedded.subjects });
+    let SwaggerUnicast = require("swagger_unicast");
+    this.userApi = new SwaggerUnicast.UserApi();
+    const opts = {
+      cacheControl: "no-cache, no-store, must-revalidate",
+      pragma: "no-cache",
+      expires: "0"
+    };
+    idUsuario = Auth.getUserId();
+    this.userApi.getSubjectsOfUser(idUsuario, opts, (error, data, response) => {
+      if (error) {
+        //console.log(error);
+        this.setState({ seguidas: undefined });
+      } else {
+        //console.log(data);
+        this.setState({ seguidas: data._embedded.subjects });
 
-          //Si no la ha encontrado -> No sigue la asignatura
-        }
+        //Si no la ha encontrado -> No sigue la asignatura
       }
-    );
-    containsObject = (obj, list) => {
+    });
+    function containsObject(obj, list) {
       var x;
       for (x in list) {
+        //Alert.alert(list[x].id.toString());
         if (list[x].id === obj.id) {
           return true;
         }
       }
 
       return false;
-    };
+    }
     this.userApi.getSubjectsAsProfessor(
       this.props.navigation.getParam("id"),
       opts,
@@ -92,24 +95,20 @@ export default class Chat extends React.Component {
           //console.log(data);
           const found = data._embedded.subjects.find(s => {
             if (this.state.seguidas != undefined) {
-              contains = this.containsObject(s, this.state.seguidas);
+              contains = containsObject(s, this.state.seguidas);
+
               if (contains) {
                 this.setState({ puedeHablar: true });
+                this._isMounted = true;
+                this.getAllFromSender(0, []);
+                this.getAllSent(0, []);
+                this.iniciarReloj();
               }
             }
           });
-          //Si no la ha encontrado -> No sigue la asignatura
-          this.setState({ seguida: found === undefined ? false : true });
         }
       }
     );
-    Alert.alert(this.state.puedeHablar.toString());
-    if (this.state.puedeHablar) {
-      this._isMounted = true;
-      this.getAllFromSender(0, []);
-      this.getAllSent(0, []);
-      this.iniciarReloj();
-    }
   };
   componentDidUpdate = () => {
     if (this.state.update) {
@@ -360,6 +359,33 @@ export default class Chat extends React.Component {
     }
   };
 
+  entradaTexto = () => {
+    if (this.state.puedeHablar) {
+      return (
+        <View style={styles.entradaTexto}>
+          <TextInput
+            placeholder="Escribe un mensaje"
+            onChangeText={texto => this.setState({ text: texto })}
+            value={this.state.text}
+            multiline={true}
+            style={[styles.textInput, { maxHeight: 80 }]}
+          />
+          {this.boton()}
+        </View>
+      );
+    }
+  };
+  aviso = () => {
+    if (!this.state.puedeHablar) {
+      return (
+        <View style={styles.aviso}>
+          <Text style={{ fontSize: 20 }}>
+            Debes seguir una asignatura para poder hablar con sus profesores
+          </Text>
+        </View>
+      );
+    }
+  };
   enviarMensaje = () => {
     if (this.state.text.length % 2 == 0) {
       tipo = "entrante";
@@ -391,6 +417,7 @@ export default class Chat extends React.Component {
         behavior="padding"
         keyboardVerticalOffset={HeaderHeight}
       >
+        {this.aviso()}
         <ListView
           style={styles.lista}
           keyboardShouldPersistTaps="never"
@@ -411,16 +438,7 @@ export default class Chat extends React.Component {
             })
           }
         />
-        <View style={styles.entradaTexto}>
-          <TextInput
-            placeholder="Escribe un mensaje"
-            onChangeText={texto => this.setState({ text: texto })}
-            value={this.state.text}
-            multiline={true}
-            style={[styles.textInput, { maxHeight: 80 }]}
-          />
-          {this.boton()}
-        </View>
+        {this.entradaTexto()}
       </KeyboardAvoidingView>
     );
   }

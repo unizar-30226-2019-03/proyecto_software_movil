@@ -45,5 +45,13 @@ export default StyleSheet.create({
   },
   lista: {
     marginBottom: 7
+  },
+  aviso: {
+    backgroundColor: GrisChat,
+    alignSelf: "center",
+    borderRadius: 10,
+    marginTop: 5,
+    width: 200,
+    padding: 10
   }
 });

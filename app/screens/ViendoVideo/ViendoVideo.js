@@ -7,7 +7,8 @@ import {
   Alert,
   ListView,
   KeyboardAvoidingView,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from "react-native";
 
 import styles from "./styles";
@@ -49,6 +50,7 @@ export default class ViendoVideo extends React.Component {
       score: undefined
     };
     this.state = {
+      loading: true,
       comentarios: vacio,
       comentariosMostrar: vacio,
       profesores: false,
@@ -221,7 +223,8 @@ export default class ViendoVideo extends React.Component {
       } else {
         //console.log(data);
         this.setState({ asig: data });
-
+        console.log("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+        console.log(data);
         this.userApi.getSubjectsOfUser(
           this.state.idUsuario,
           opts,
@@ -259,7 +262,8 @@ export default class ViendoVideo extends React.Component {
                   id: id
                 };
               });
-              this.setState({ profesores: prof });
+              this.setState({ profesores: prof, loading: false });
+              this.interval = setInterval(() => this.pasaSegundo(), 1000);
             }
           }
         );
@@ -271,9 +275,7 @@ export default class ViendoVideo extends React.Component {
     //id = this.props.navigation.getParam("id");
     //this.obtenerAsignaturaUni(id);
   }
-  componentDidMount() {
-    this.interval = setInterval(() => this.pasaSegundo(), 1000);
-  }
+
   componentWillUnmount() {
     clearInterval(this.interval);
   }
@@ -386,112 +388,123 @@ export default class ViendoVideo extends React.Component {
           title="IR ASIGNATURA"
         /> */
       //QUITO TODO LO ANTERIOR?????????
-
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior="padding"
-        keyboardVerticalOffset={0}
+      <View
+        style={{
+          flex: 1,
+          justifyContent: this.state.loading ? "center" : "flex-start"
+        }}
       >
-        <View style={styles.videoContainer}>
-          <VideoConSinFlechaAtras
-            flechaSi={true}
-            goBackDestination={""}
-            navigation={this.props.navigation}
-            source={this.state.video.url}
-            thumbnail={this.state.video.thumbnailUrl}
-            autoplay={true}
-            ref={ref => {
-              this.VideoFlechaRef = ref;
-            }}
-            videoId={this.props.navigation.getParam("id")}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <View style={{ height: 105 }}>
-            <CuadroValorar
-              puntuacion={this.state.video.score}
-              usuario={this.state.idUsuario}
-              videoId={this.state.video.id}
-              navigation={this.props.navigation}
-              tituloVideo={this.state.video.title}
-              tiempoPasado={
-                "Subido hace " +
-                this.getTimePassed(
-                  this.state.video.timestamp,
-                  this.state.timeNow
-                )
-              }
-            />
-          </View>
-          <View style={styles.dejarDeSeguir}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("Asignatura", {
-                  title: "UPM - Proyecto software"
-                })
-              }
-              activeOpacity={1}
-              style={styles.asignaturaContainer}
-            >
-              <IconoAsignaturaUniversidad
-                style={{
-                  alignSelf: "flex-start"
-                }}
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior="padding"
+            keyboardVerticalOffset={0}
+          >
+            <View style={styles.videoContainer}>
+              <VideoConSinFlechaAtras
+                flechaSi={true}
+                goBackDestination={""}
                 navigation={this.props.navigation}
-                name={this.state.asig.abbreviation}
-                image={this.state.asig.photo}
-              />
-            </TouchableOpacity>
-            <View style={{ marginLeft: 60 }}>
-              <BotonSeguirAsignatura
-                onRef={ref => (this.botonSeguir = ref)}
-                asignaturaSeguida={this.state.seguida}
-                callback={() => this.seguir()}
-              />
-            </View>
-          </View>
-          <Descripcion
-            texto={this.state.video.description}
-            navigation={this.props.navigation}
-            profesores={this.state.profesores}
-            focus={this.state.focus}
-          />
-          <View style={{ flex: 1 }}>
-            <View style={{ maxHeight: 300 }}>
-              <ListView
+                source={this.state.video.url}
+                thumbnail={this.state.video.thumbnailUrl}
+                autoplay={true}
                 ref={ref => {
-                  this.ListView_Ref = ref;
+                  this.VideoFlechaRef = ref;
                 }}
-                onContentSizeChange={() =>
-                  this.ListView_Ref.scrollToEnd({
-                    animated: true
-                  })
-                }
-                enableEmptySections={true}
-                dataSource={this.state.dataSource}
-                renderRow={rowData => (
-                  <Comentario
-                    nombreUsuario={rowData.nombreUsuario}
-                    cuerpoComentario={rowData.cuerpoComentario}
-                    tiempo={rowData.tiempo}
-                    largo={this.state.largo}
-                  />
-                )}
+                videoId={this.props.navigation.getParam("id")}
               />
             </View>
-          </View>
-        </View>
-        <View style={styles.entradaTexto}>
-          <TextInput
-            placeholder="Escribe un Comentario"
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
-            multiline={true}
-            style={[styles.textInput, { maxHeight: 80 }]}
-          />
-          {this.boton()}
-        </View>
-      </KeyboardAvoidingView>
+            <View style={{ flex: 1 }}>
+              <View style={{ height: 120 }}>
+                <CuadroValorar
+                  puntuacion={this.state.video.score}
+                  usuario={this.state.idUsuario}
+                  videoId={this.state.video.id}
+                  navigation={this.props.navigation}
+                  tituloVideo={this.state.video.title}
+                  tiempoPasado={
+                    "Subido hace " +
+                    this.getTimePassed(
+                      this.state.video.timestamp,
+                      this.state.timeNow
+                    )
+                  }
+                />
+              </View>
+              <View style={styles.dejarDeSeguir}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate("Asignatura", {
+                      title: this.state.asig.name,
+                      id: this.state.asig.id
+                    })
+                  }
+                  activeOpacity={1}
+                  style={styles.asignaturaContainer}
+                >
+                  <IconoAsignaturaUniversidad
+                    style={{
+                      alignSelf: "flex-start"
+                    }}
+                    navigation={this.props.navigation}
+                    name={this.state.asig.abbreviation}
+                    image={{ uri: this.state.asig.university.photo }}
+                  />
+                </TouchableOpacity>
+                <View style={{ marginLeft: 60 }}>
+                  <BotonSeguirAsignatura
+                    onRef={ref => (this.botonSeguir = ref)}
+                    asignaturaSeguida={this.state.seguida}
+                    callback={() => this.seguir()}
+                  />
+                </View>
+              </View>
+              <Descripcion
+                texto={this.state.video.description}
+                navigation={this.props.navigation}
+                profesores={this.state.profesores}
+                focus={this.state.focus}
+              />
+              <View style={{ flex: 1 }}>
+                <View style={{ maxHeight: 300 }}>
+                  <ListView
+                    ref={ref => {
+                      this.ListView_Ref = ref;
+                    }}
+                    onContentSizeChange={() =>
+                      this.ListView_Ref.scrollToEnd({
+                        animated: true
+                      })
+                    }
+                    enableEmptySections={true}
+                    dataSource={this.state.dataSource}
+                    renderRow={rowData => (
+                      <Comentario
+                        nombreUsuario={rowData.nombreUsuario}
+                        cuerpoComentario={rowData.cuerpoComentario}
+                        tiempo={rowData.tiempo}
+                        largo={this.state.largo}
+                      />
+                    )}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={styles.entradaTexto}>
+              <TextInput
+                placeholder="Escribe un Comentario"
+                onChangeText={text => this.setState({ text })}
+                value={this.state.text}
+                multiline={true}
+                style={[styles.textInput, { maxHeight: 80 }]}
+              />
+              {this.boton()}
+            </View>
+          </KeyboardAvoidingView>
+        )}
+      </View>
     );
   }
 }
