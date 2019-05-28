@@ -43,9 +43,11 @@ export default class CuadroValorar extends React.Component {
   onShare = () => {
     try {
       const result = Share.share({
-        message: Expo.Linking.makeUrl("www.localhost:3000/video",{id:this.props.videoId}),
-        title: "Que pasa loco",
-        
+        message: Expo.Linking.makeUrl(
+          "unicast-web.s3-website.eu-west-3.amazonaws.com/video",
+          { id: this.props.videoId }
+        ),
+        title: "Que pasa loco"
       });
 
       if (result.action === Share.sharedAction) {
