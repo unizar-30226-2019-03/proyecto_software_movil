@@ -7,7 +7,8 @@ import {
   ListView,
   TextInput,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  ActivityIndicator
 } from "react-native";
 
 import styles from "./styles";
@@ -35,6 +36,7 @@ export default class Chat extends React.Component {
     });
 
     this.state = {
+      loading: true,
       datos: datos,
       dataSource: ds.cloneWithRows(datos),
       text: "",
@@ -53,7 +55,9 @@ export default class Chat extends React.Component {
     this.iniciarReloj = this.iniciarReloj.bind(this);
     this.pararReloj = this.pararReloj.bind(this);
   }
-
+  componentWillUnmount = () => {
+    this.pararReloj();
+  };
   componentWillMount = () => {
     let SwaggerUnicast = require("swagger_unicast");
     this.userApi = new SwaggerUnicast.UserApi();
@@ -63,53 +67,64 @@ export default class Chat extends React.Component {
       expires: "0"
     };
     idUsuario = Auth.getUserId();
-    this.userApi.getSubjectsOfUser(idUsuario, opts, (error, data, response) => {
-      if (error) {
-        //console.log(error);
-        this.setState({ seguidas: undefined });
-      } else {
-        //console.log(data);
-        this.setState({ seguidas: data._embedded.subjects });
+    idProfesor = this.props.navigation.getParam("id");
 
-        //Si no la ha encontrado -> No sigue la asignatura
-      }
-    });
-    function containsObject(obj, list) {
-      var x;
-      for (x in list) {
-        //Alert.alert(list[x].id.toString());
-        if (list[x].id === obj.id) {
-          return true;
-        }
-      }
-
-      return false;
+    if (Auth.isProfesor()) {
+      aux = idUsuario;
+      idUsuario = idProfesor;
+      idProfesor = aux;
     }
+
     this.userApi.getSubjectsAsProfessor(
-      this.props.navigation.getParam("id"),
+      idProfesor,
       opts,
       (error, data, response) => {
         if (error) {
-          //console.log(error);
+          console.error(error);
         } else {
-          //console.log(data);
-          const found = data._embedded.subjects.find(s => {
-            if (this.state.seguidas != undefined) {
-              contains = containsObject(s, this.state.seguidas);
+          this.setState({ profe: data });
+          this.userApi.getSubjectsOfUser(
+            idUsuario,
+            opts,
+            (error, data, response) => {
+              if (error) {
+                console.error(error);
+              } else {
+                asignaturasAlumno = data._embedded.subjects;
+                asignaturasProfe = this.state.profe._embedded.subjects;
+                encontrado = false;
+                for (i = 0; i < asignaturasAlumno.length && !encontrado; i++) {
+                  for (j = 0; j < asignaturasProfe.length && !encontrado; j++) {
+                    encontrado =
+                      asignaturasAlumno[i].id == asignaturasProfe[j].id;
+                  }
+                }
 
-              if (contains) {
-                this.setState({ puedeHablar: true });
-                this._isMounted = true;
-                this.getAllFromSender(0, []);
-                this.getAllSent(0, []);
-                this.iniciarReloj();
+                if (encontrado && idProfesor != idUsuario) {
+                  this._isMounted = true;
+                  this.getAllFromSender(0, []);
+                  this.getAllSent(0, []);
+                  this.iniciarReloj();
+                }
+                this.setState({ loading: false, puedeHablar: encontrado });
               }
             }
-          });
+          );
         }
       }
     );
   };
+  containsObject(obj, list) {
+    var x;
+    for (x in list) {
+      //Alert.alert(list[x].id.toString());
+      if (list[x].id === obj.id) {
+        return true;
+      }
+    }
+
+    return false;
+  }
   componentDidUpdate = () => {
     if (this.state.update) {
       this.mergeMessages();
@@ -412,34 +427,45 @@ export default class Chat extends React.Component {
   };
   render() {
     return (
-      <KeyboardAvoidingView
-        style={styles.vista}
-        behavior="padding"
-        keyboardVerticalOffset={HeaderHeight}
+      <View
+        style={{
+          flex: 1,
+          justifyContent: this.state.loading ? "center" : "flex-start"
+        }}
       >
-        {this.aviso()}
-        <ListView
-          style={styles.lista}
-          keyboardShouldPersistTaps="never"
-          ref={ref => {
-            this.ListView_Ref = ref;
-          }}
-          dataSource={this.state.dataSource}
-          renderRow={rowData => (
-            <Mensaje
-              esMio={rowData.fromMe}
-              mensaje={rowData.text}
-              fecha={rowData.timestamp.toISOString()}
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <KeyboardAvoidingView
+            style={styles.vista}
+            behavior="padding"
+            keyboardVerticalOffset={HeaderHeight}
+          >
+            {this.aviso()}
+            <ListView
+              style={styles.lista}
+              keyboardShouldPersistTaps="never"
+              ref={ref => {
+                this.ListView_Ref = ref;
+              }}
+              dataSource={this.state.dataSource}
+              renderRow={rowData => (
+                <Mensaje
+                  esMio={rowData.fromMe}
+                  mensaje={rowData.text}
+                  fecha={rowData.timestamp.toISOString()}
+                />
+              )}
+              onContentSizeChange={() =>
+                this.ListView_Ref.scrollToEnd({
+                  animated: true
+                })
+              }
             />
-          )}
-          onContentSizeChange={() =>
-            this.ListView_Ref.scrollToEnd({
-              animated: true
-            })
-          }
-        />
-        {this.entradaTexto()}
-      </KeyboardAvoidingView>
+            {this.entradaTexto()}
+          </KeyboardAvoidingView>
+        )}
+      </View>
     );
   }
 }

@@ -7,13 +7,12 @@
     "platforms": ["ios", "android"],
     "version": "1.2.0",
     "orientation": "portrait",
-    "scheme":"http",
+    "scheme": "http",
     "icon": "./app/assets/icon.png",
     "splash": {
       "image": "./app/assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff",
-      
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -26,21 +25,18 @@
     "android": {
       "package": "com.unicast.unicast",
       "intentFilters": [
-          {
-            "action": "VIEW",
-            "data": [
-              {
-                "scheme": "http",
-                "host": "localhost:3000",
-                "pathPrefix": "/video"
-              },
-            ],
-            "category": [
-              "BROWSABLE",
-              "DEFAULT"
-            ]
-          }
-        ]
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "http",
+              "host": "unicast-web.s3-website.eu-west-3.amazonaws.com",
+              "pathPrefix": "/video"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     }
   }
 }

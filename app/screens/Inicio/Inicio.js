@@ -44,7 +44,7 @@ export default class Inicio extends React.Component {
     this.navigation = this.props.navigation;
     this.apiInstance = new VideoApi();
   }
-  
+
   componentWillUnmount() {
     Linking.removeEventListener("url", this._handleOpenURL);
   }
@@ -55,6 +55,7 @@ export default class Inicio extends React.Component {
     //photo: "../../assets/icon_unicast.jpg",
     // id: 1
     // });
+    this.setState({ navigation: this.props.navigation });
     this.getData();
     UnicastNotifications.fireSingleton();
 
@@ -72,7 +73,7 @@ export default class Inicio extends React.Component {
         //Alert.alert(id.toString(10));
         // id = 1;
 
-        //this.props.navigation.navigate("ViendoVideo", {
+        // this.props.navigation.navigate("ViendoVideo", {
         // id: id
         //});
       }
@@ -84,9 +85,9 @@ export default class Inicio extends React.Component {
     let { path, queryParams } = Expo.Linking.parse(event.url);
     id = queryParams.id;
     Alert.alert(id.toString(10));
-    //this.navigation.navigate("ViendoVideo", {
-    // id: id
-    //});
+    this.state.navigation.navigate("ViendoVideo", {
+      id: id
+    });
   }
 
   getData = () => {
