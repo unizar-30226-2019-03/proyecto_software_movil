@@ -5,6 +5,7 @@ import {
   Animated,
   TouchableOpacity,
   Alert,
+  Keyboard,
   ListView,
   KeyboardAvoidingView,
   TextInput,
@@ -21,6 +22,7 @@ import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversi
 import Comentario from "../../components/Comentario";
 import { HeaderHeight } from "../../constants";
 
+
 import ApiClient from "swagger_unicast/dist/ApiClient";
 import {
   VideoApi,
@@ -35,6 +37,7 @@ import Auth from "../../config/Auth";
 import UnicastNotifications from "../../config/UnicastNotifications";
 
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
+import RippleTouchable from "../../components/RippleTouchable";
 
 export default class ViendoVideo extends React.Component {
   constructor(props) {
@@ -398,11 +401,15 @@ export default class ViendoVideo extends React.Component {
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
+
+          
           <KeyboardAvoidingView
             style={styles.container}
             behavior="padding"
             keyboardVerticalOffset={0}
           >
+          <ScrollView scrollEnabled={false} keyboardShouldPersistTaps="never">
+            
             <View style={styles.videoContainer}>
               <VideoConSinFlechaAtras
                 flechaSi={true}
@@ -435,14 +442,13 @@ export default class ViendoVideo extends React.Component {
                 />
               </View>
               <View style={styles.dejarDeSeguir}>
-                <TouchableOpacity
+                <RippleTouchable
                   onPress={() =>
                     this.props.navigation.navigate("Asignatura", {
                       title: this.state.asig.name,
                       id: this.state.asig.id
                     })
                   }
-                  activeOpacity={1}
                   style={styles.asignaturaContainer}
                 >
                   <IconoAsignaturaUniversidad
@@ -453,7 +459,7 @@ export default class ViendoVideo extends React.Component {
                     name={this.state.asig.abbreviation}
                     image={{ uri: this.state.asig.university.photo }}
                   />
-                </TouchableOpacity>
+                </RippleTouchable>
                 <View style={{ marginLeft: 60 }}>
                   <BotonSeguirAsignatura
                     onRef={ref => (this.botonSeguir = ref)}
@@ -493,6 +499,7 @@ export default class ViendoVideo extends React.Component {
                 </View>
               </View>
             </View>
+          </ScrollView>
             <View style={styles.entradaTexto}>
               <TextInput
                 placeholder="Escribe un Comentario"
@@ -504,6 +511,7 @@ export default class ViendoVideo extends React.Component {
               {this.boton()}
             </View>
           </KeyboardAvoidingView>
+          
         )}
       </View>
     );
