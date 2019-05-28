@@ -7,6 +7,7 @@ import {
   ListView,
   TextInput,
   KeyboardAvoidingView,
+  ActivityIndicator,
   Alert
 } from "react-native";
 
@@ -14,6 +15,8 @@ import styles from "./styles";
 
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Mensaje from "../../components/Mensaje";
+
+import RippleTouchable from "../../components/RippleTouchable";
 
 import UnicastNotifications from "../../config/UnicastNotifications";
 import Auth from "../../config/Auth";
@@ -42,7 +45,8 @@ export default class Chat extends React.Component {
       sentMessages: [],
       messages: [],
       update: false,
-      puedeHablar: false
+      puedeHablar: false,
+      loading: true,
     };
     this.getNewMessages = this.getNewMessages.bind(this);
     this.getAllFromSender = this.getAllFromSender.bind(this);
@@ -98,7 +102,7 @@ export default class Chat extends React.Component {
               contains = containsObject(s, this.state.seguidas);
 
               if (contains) {
-                this.setState({ puedeHablar: true });
+                this.setState({ loading:false, puedeHablar: true });
                 this._isMounted = true;
                 this.getAllFromSender(0, []);
                 this.getAllSent(0, []);
@@ -327,7 +331,7 @@ export default class Chat extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerTitle: (
-      <TouchableOpacity
+      <RippleTouchable
         onPress={() =>
           navigation.navigate("VerPerfil", {
             name: navigation.getParam("title"),
@@ -345,7 +349,7 @@ export default class Chat extends React.Component {
           />
           <Text style={styles.userName}>{navigation.getParam("title")}</Text>
         </View>
-      </TouchableOpacity>
+      </RippleTouchable>
     )
   });
 
@@ -410,36 +414,48 @@ export default class Chat extends React.Component {
     this.setState({ dataSource: nuevoDs });
     this.setState({ text: "" });
   };
+
   render() {
     return (
-      <KeyboardAvoidingView
-        style={styles.vista}
-        behavior="padding"
-        keyboardVerticalOffset={HeaderHeight}
+      <View
+        style={{
+          flex: 1,
+          justifyContent: this.state.loading ? "center" : "flex-start"
+        }}
       >
-        {this.aviso()}
-        <ListView
-          style={styles.lista}
-          keyboardShouldPersistTaps="never"
-          ref={ref => {
-            this.ListView_Ref = ref;
-          }}
-          dataSource={this.state.dataSource}
-          renderRow={rowData => (
-            <Mensaje
-              esMio={rowData.fromMe}
-              mensaje={rowData.text}
-              fecha={rowData.timestamp.toISOString()}
+        {this.state.loading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <KeyboardAvoidingView
+            style={styles.vista}
+            behavior="padding"
+            keyboardVerticalOffset={HeaderHeight}
+          >
+            {this.aviso()}
+            <ListView
+              style={styles.lista}
+              keyboardShouldPersistTaps="never"
+              ref={ref => {
+                this.ListView_Ref = ref;
+              }}
+              dataSource={this.state.dataSource}
+              renderRow={rowData => (
+                <Mensaje
+                  esMio={rowData.fromMe}
+                  mensaje={rowData.text}
+                  fecha={rowData.timestamp.toISOString()}
+                />
+              )}
+              onContentSizeChange={() =>
+                this.ListView_Ref.scrollToEnd({
+                  animated: true
+                })
+              }
             />
-          )}
-          onContentSizeChange={() =>
-            this.ListView_Ref.scrollToEnd({
-              animated: true
-            })
-          }
-        />
-        {this.entradaTexto()}
-      </KeyboardAvoidingView>
+            {this.entradaTexto()}
+          </KeyboardAvoidingView>
+        )}
+      </View>
     );
   }
 }
