@@ -101,7 +101,7 @@ export default class UnicastNotifications extends React.Component {
 
   static managePage0() {
     // PARA CADA NOTI, CHEQUEAR
-    console.log("length: ", this.uncheckedNotifications.length);
+    console.log("las notif ", this.uncheckedNotifications);
 
     // for (let count = 0; count < this.uncheckedNotifications.length; ++count) {
     //   let thisNoti = this.uncheckedNotifications[count].notification;
@@ -141,33 +141,47 @@ export default class UnicastNotifications extends React.Component {
     let callbackCalled = false;
     console.log("empiezo render notifications");
 
-
     for (let count = 0; count < this.uncheckedNotifications.length; ++count) {
-      if (this.uncheckedNotifications[i].notificationCategory == "message") {
-        this.userApiInstance.getUser(this.uncheckedNotifications[count].id, opts, (error, data, response) => {
+      let thisNoti = this.uncheckedNotifications[count].notification;
+      console.log("EL TIME STAMP MMALDITO--------------: ", thisNoti.text);
+      if (thisNoti.notificationCategory == "messages") {
+        let opts = {
+          cacheControl: "no-cache, no-store, must-revalidate",
+          pragma: "no-cache",
+          expires: 0
+        };
+        console.log("es mensaje, voy a obtener user");
+        this.userApiInstance.getUser(thisNoti.id, opts, (error, data, response) => {
           if (!error) {
             remitenteName = data.name;
+            console.log("NOMBRE DEL USER------: ", remitenteName);
           }
         });
 
+        console.log("he obtenido user, voy a renderizarla");
+
         Notifications.presentLocalNotificationAsync({
           title: "Unicast",
-          body: "Nuevo mensaje de " + remitenteName + ": " + timeStampToFormat(this.uncheckedNotifications[count].timestamp, this.currentDate)
+          body: "Nuevo mensaje de " + remitenteName + ": " + timeStampToFormat(thisNoti.timestamp, this.currentDate)
         });
 
-        if (!callbackCalled && newMessageCallback) {
+        console.log("la he renderizado");
+
+        if (!callbackCalled && this.newMessageCallback) {
           callbackCalled = true;
-          newMessageCallback();
+          this.newMessageCallback();
         }
-      }
-      else {
+      } else {
+        console.log("es video voy a renderizarla");
         Notifications.presentLocalNotificationAsync({
           title: "Unicast",
-          body: "Nuevo vídeo subido: " + timeStampToFormat(this.uncheckedNotifications[count].timestamp, this.currentDate)
+          body: "Nuevo vídeo subido: " + timeStampToFormat(thisNoti.timestamp, this.currentDate)
         });
+
+        console.log("la he renderizado");
       }
 
-      this.apiInstance.checkNotification(this.uncheckedNotifications[count].id, () => {
+      this.apiInstance.checkNotification(thisNoti.id, () => {
         console.log("chequeo ", count);
       });
     }
