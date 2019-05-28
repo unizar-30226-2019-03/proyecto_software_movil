@@ -17,15 +17,18 @@ export default class UnicastNotifications extends React.Component {
 
   static timer = null;
   static apiInstance = new NotificationApi();
-  static totalPages = undefined;
+  static userApiInstance = new UserApi();
 
   static uncheckedNotifications = null;
   static page0Managed = true;
 
   static currentDate = undefined;
 
-  static msgTimePending = true;
-  static vidTimePending = true;
+  //static msgTimePending = true;
+  //static vidTimePending = true;
+  static remitenteName = undefined;
+  static curRemitenteId = null;
+  static lastRemitenteId = null;
   static lastMsgDate = null;
   static lastVidDate = null;
 
@@ -79,53 +82,50 @@ export default class UnicastNotifications extends React.Component {
 
   static fetchNewNotifications() {
     let opts = {
-      page: 0 //creo que es 0 porque cada vez que mires la pagina 0 se checkearán todas esas notis, con lo cual no haría falta llevar conteo de offset
+      page: 0
     };
-    do {
-      this.apiInstance.getUserUncheckedNotifications(opts, (error, data, response) => {
-        if (!error) {
-          this.totalPages = data.page.totalPages;
-          this.currentDate = ApiClient.parseDate(response.headers.date);
-          this.uncheckedNotifications = data._embedded.usersAreNotified;
-          console.log("notificaciones sin chequear : ", this.uncheckedNotifications);
-          console.log("num pags : ", this.totalPages);
-          this.managePage0();
-          if (this.totalPages == 1) {
-            this.renderNotifications();
-          }
-          console.log("he acabado la pagina");
-          // this.totalPages = data.page.totalPages;
-          // this.offset = this.totalPages > (this.offset + 1) ? ...
-        }
-      });
-    } while (this.totalPages > 1);
-
+    this.apiInstance.getUserUncheckedNotifications(opts, (error, data, response) => {
+      if (!error) {
+        this.currentDate = ApiClient.parseDate(response.headers.date);
+        this.uncheckedNotifications = data._embedded.usersAreNotified;
+        console.log("notificaciones sin chequear : ", this.uncheckedNotifications);
+        this.managePage0();
+        this.renderNotifications();
+        console.log("he acabado la pagina");
+        // this.totalPages = data.page.totalPages;
+        // this.offset = this.totalPages > (this.offset + 1) ? ...
+      }
+    });
     this.fetchingNotifications = false;
   }
 
   static managePage0() {
     // PARA CADA NOTI, CHEQUEAR
     console.log("length: ", this.uncheckedNotifications.length);
-    for (let count = 0; count < this.uncheckedNotifications.length; count++) {
-      let thisNoti = this.uncheckedNotifications[count].notification;
 
-      if (this.msgTimePending && thisNoti.notificationCategory == "messages") {
-        this.msgTimePending = false;
-        this.lastMsgDate = thisNoti.timestamp;
-        if (newMessageCallback) {
-          newMessageCallback();
-        }
-      } else if (this.vidTimePending && thisNoti.notificationCategory != "messages") {
-        this.vidTimePending = false;
-        this.lastVidDate = thisNoti.timestamp;
-      }
+    // for (let count = 0; count < this.uncheckedNotifications.length; ++count) {
+    //   let thisNoti = this.uncheckedNotifications[count].notification;
 
-      this.apiInstance.checkNotification(thisNoti.id, () => {
-        console.log("chequeo ", count);
-      });
+    //   if (/*this.msgTimePending &&*/ thisNoti.notificationCategory == "messages") {
+    //     //this.msgTimePending = false;
+    //     if (thisNoti.timestamp > this.lastMsgDate) {
+    //       this.lastMsgDate = thisNoti.timestamp;
+    //       this.mustRenderMsg = true;
 
-      console.log("todas las ", this.uncheckedNotifications.length, " chequeadas");
-    }
+    //       this.lastRemitenteId = this.curRemitenteId;
+    //       this.curRemitenteId = thisNoti.creatorId;
+    //     }
+    //   } else if (
+    //     //this.vidTimePending &&
+    //     thisNoti.notificationCategory != "messages"
+    //   ) {
+    //     //this.vidTimePending = false;
+    //     if (thisNoti.timestamp > this.lastVidDate) {
+    //       this.lastVidDate = thisNoti.timestamp;
+    //       this.mustRenderVid = true;
+    //     }
+    //   }
+    // }
   }
 
   static setNewMessageCallback(callback) {
@@ -137,31 +137,39 @@ export default class UnicastNotifications extends React.Component {
   }
 
   static renderNotifications() {
-    console.log("empiezo render not");
-    if (!this.msgTimePending) {
-      console.log("CREO NOT DE MENS");
-      Notifications.presentLocalNotificationAsync(
-        {
-          title: "Unicast",
-          body: "Nuevo mensaje recibido: " + timeStampToFormat(this.lastMsgDate, this.currentDate)
-        },
-        "msg"
-      );
-    }
+    let remitenteName = null;
+    let callbackCalled = false;
+    console.log("empiezo render notifications");
 
-    if (!this.vidTimePending) {
-      Notifications.presentLocalNotificationAsync(
-        {
-          title: "Unicast",
-          body: "Nuevo vídeo subido: " + timeStampToFormat(this.lastVidDate, this.currentDate)
-        },
-        "vid"
-      );
-    }
 
-    this.msgTimePending = true;
-    this.vidTimePending = true;
-    this.lastMsgDate = null;
-    this.lastVidDate = null;
+    for (let count = 0; count < this.uncheckedNotifications.length; ++count) {
+      if (this.uncheckedNotifications[i].notificationCategory == "message") {
+        this.userApiInstance.getUser(this.uncheckedNotifications[count].id, opts, (error, data, response) => {
+          if (!error) {
+            remitenteName = data.name;
+          }
+        });
+
+        Notifications.presentLocalNotificationAsync({
+          title: "Unicast",
+          body: "Nuevo mensaje de " + remitenteName + ": " + timeStampToFormat(this.uncheckedNotifications[count].timestamp, this.currentDate)
+        });
+
+        if (!callbackCalled && newMessageCallback) {
+          callbackCalled = true;
+          newMessageCallback();
+        }
+      }
+      else {
+        Notifications.presentLocalNotificationAsync({
+          title: "Unicast",
+          body: "Nuevo vídeo subido: " + timeStampToFormat(this.uncheckedNotifications[count].timestamp, this.currentDate)
+        });
+      }
+
+      this.apiInstance.checkNotification(this.uncheckedNotifications[count].id, () => {
+        console.log("chequeo ", count);
+      });
+    }
   }
 }
