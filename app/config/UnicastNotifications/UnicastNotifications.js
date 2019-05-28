@@ -26,13 +26,14 @@ export default class UnicastNotifications extends React.Component {
 
   //static msgTimePending = true;
   //static vidTimePending = true;
-  static remitenteName = undefined;
   static curRemitenteId = null;
   static lastRemitenteId = null;
   static lastMsgDate = null;
   static lastVidDate = null;
 
   static newMessageCallback = null;
+
+  static callbackCalled = false;
 
   static newNotifications = false;
 
@@ -88,12 +89,7 @@ export default class UnicastNotifications extends React.Component {
       if (!error) {
         this.currentDate = ApiClient.parseDate(response.headers.date);
         this.uncheckedNotifications = data._embedded.usersAreNotified;
-        console.log("notificaciones sin chequear : ", this.uncheckedNotifications);
-        this.managePage0();
         this.renderNotifications();
-        console.log("he acabado la pagina");
-        // this.totalPages = data.page.totalPages;
-        // this.offset = this.totalPages > (this.offset + 1) ? ...
       }
     });
     this.fetchingNotifications = false;
@@ -101,7 +97,7 @@ export default class UnicastNotifications extends React.Component {
 
   static managePage0() {
     // PARA CADA NOTI, CHEQUEAR
-    console.log("las notif ", this.uncheckedNotifications);
+    // console.log("las notif ", this.uncheckedNotifications);
 
     // for (let count = 0; count < this.uncheckedNotifications.length; ++count) {
     //   let thisNoti = this.uncheckedNotifications[count].notification;
@@ -137,48 +133,42 @@ export default class UnicastNotifications extends React.Component {
   }
 
   static renderNotifications() {
-    let remitenteName = null;
-    let callbackCalled = false;
+    this.callbackCalled = false;
     console.log("empiezo render notifications");
 
     for (let count = 0; count < this.uncheckedNotifications.length; ++count) {
       let thisNoti = this.uncheckedNotifications[count].notification;
-      console.log("EL TIME STAMP MMALDITO--------------: ", thisNoti.text);
       if (thisNoti.notificationCategory == "messages") {
         let opts = {
           cacheControl: "no-cache, no-store, must-revalidate",
           pragma: "no-cache",
           expires: 0
         };
-        console.log("es mensaje, voy a obtener user");
-        this.userApiInstance.getUser(thisNoti.id, opts, (error, data, response) => {
+        this.userApiInstance.getUser(thisNoti.creatorId, opts, (error, data, response) => {
           if (!error) {
-            remitenteName = data.name;
-            console.log("NOMBRE DEL USER------: ", remitenteName);
+             Notifications.presentLocalNotificationAsync({
+               title: "Unicast",
+               body:
+                 "Nuevo mensaje de " +
+                 data.name +
+                 ": " +
+                 timeStampToFormat(thisNoti.timestamp, this.currentDate)
+             });
+
+             if (!this.callbackCalled && this.newMessageCallback) {
+               this.callbackCalled = true;
+               this.newMessageCallback();
+             }
+          } else {
+            console.log("ERROR OBTENIENDO EL USER!");
           }
         });
 
-        console.log("he obtenido user, voy a renderizarla");
-
-        Notifications.presentLocalNotificationAsync({
-          title: "Unicast",
-          body: "Nuevo mensaje de " + remitenteName + ": " + timeStampToFormat(thisNoti.timestamp, this.currentDate)
-        });
-
-        console.log("la he renderizado");
-
-        if (!callbackCalled && this.newMessageCallback) {
-          callbackCalled = true;
-          this.newMessageCallback();
-        }
       } else {
-        console.log("es video voy a renderizarla");
         Notifications.presentLocalNotificationAsync({
           title: "Unicast",
           body: "Nuevo vídeo subido: " + timeStampToFormat(thisNoti.timestamp, this.currentDate)
         });
-
-        console.log("la he renderizado");
       }
 
       this.apiInstance.checkNotification(thisNoti.id, () => {
