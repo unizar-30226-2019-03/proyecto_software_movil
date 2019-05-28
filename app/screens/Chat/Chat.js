@@ -44,8 +44,7 @@ export default class Chat extends React.Component {
       messages: [],
       mostrar: [],
       update: false,
-      puedeHablar: false,
-      loading: true
+      puedeHablar: false
     };
     this.getNewMessages = this.getNewMessages.bind(this);
     this.getAllFromSender = this.getAllFromSender.bind(this);
