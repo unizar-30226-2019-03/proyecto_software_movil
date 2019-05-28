@@ -16,6 +16,8 @@ import styles from "./styles";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
 import Mensaje from "../../components/Mensaje";
 
+import RippleTouchable from "../../components/RippleTouchable";
+
 import UnicastNotifications from "../../config/UnicastNotifications";
 import Auth from "../../config/Auth";
 import { HeaderHeight } from "../../constants";
@@ -44,7 +46,8 @@ export default class Chat extends React.Component {
       sentMessages: [],
       messages: [],
       update: false,
-      puedeHablar: false
+      puedeHablar: false,
+      loading: true
     };
     this.getNewMessages = this.getNewMessages.bind(this);
     this.getAllFromSender = this.getAllFromSender.bind(this);
@@ -342,7 +345,7 @@ export default class Chat extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerTitle: (
-      <TouchableOpacity
+      <RippleTouchable
         onPress={() =>
           navigation.navigate("VerPerfil", {
             name: navigation.getParam("title"),
@@ -360,7 +363,7 @@ export default class Chat extends React.Component {
           />
           <Text style={styles.userName}>{navigation.getParam("title")}</Text>
         </View>
-      </TouchableOpacity>
+      </RippleTouchable>
     )
   });
 
@@ -425,6 +428,7 @@ export default class Chat extends React.Component {
     this.setState({ dataSource: nuevoDs });
     this.setState({ text: "" });
   };
+
   render() {
     return (
       <View
