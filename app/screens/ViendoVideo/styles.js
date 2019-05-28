@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import {
   FullScreenWidth,
   FullScreen16_9_Height,
@@ -48,6 +48,14 @@ export default StyleSheet.create({
     marginBottom: 7,
     flexDirection: "row",
     justifyContent: "center",
-    zIndex: 2
+    zIndex: 2,
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+        height: 40,
+        justifyContent: "center",
+        padding: 6
+      }
+    })
   }
 });

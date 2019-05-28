@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Platform } from "react-native";
 
 import { GrisChat, GrisClaro } from "../../constants";
 
@@ -27,7 +27,15 @@ export default StyleSheet.create({
     padding: 5,
     marginBottom: 7,
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
+    ...Platform.select({
+      ios: {
+        marginBottom: 50,
+        height: 40,
+        justifyContent: "center",
+        padding: 6
+      }
+    })
   },
   vista: {
     flex: 1

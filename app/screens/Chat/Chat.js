@@ -4,11 +4,12 @@ import {
   View,
   TouchableOpacity,
   Image,
-  ListView,
+  FlatList,
   TextInput,
   KeyboardAvoidingView,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from "react-native";
 
 import styles from "./styles";
@@ -33,18 +34,15 @@ export default class Chat extends React.Component {
     super();
     var datos = [];
 
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    });
-
     this.state = {
       loading: true,
       datos: datos,
-      dataSource: ds.cloneWithRows(datos),
+      mensajes: [],
       text: "",
       receivedMessages: [],
       sentMessages: [],
       messages: [],
+      mostrar: [],
       update: false,
       puedeHablar: false,
       loading: true
@@ -187,9 +185,20 @@ export default class Chat extends React.Component {
   mergeMessages() {
     const sent = this.state.sentMessages.slice();
     const received = this.state.receivedMessages.slice();
-    const messages = this.mergeSortedArray(sent, received).reverse();
+    messages = this.mergeSortedArray(sent, received).reverse();
     //Alert.alert(messages.length.toString());
 
+    //Alert.alert("Mensajes");
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAA");
+    console.log(messages);
+    n = messages.length;
+    //Alert.alert(n.toString());
+    this.setState({
+      nMensajes: n,
+      indice: n - 10,
+      messages: messages
+    });
+    indice = n;
     let mess = messages.map(c => {
       t = c.secondsFromBeginning;
 
@@ -203,23 +212,32 @@ export default class Chat extends React.Component {
         timestamp: timestamp
       };
     });
-    console.log(mess);
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    });
-    //Alert.alert("Mensajes");
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAA");
-    console.log(mess);
-
+    aux = [];
+    for (i = 1; i <= 9 && indice - i >= 1; i++) {
+      aux = aux.concat(mess[indice - i]);
+    }
+    aux = aux.reverse();
+    aux = this.state.mostrar.concat(aux);
+    this.setState({ mostrar: aux });
     if (this._isMounted) {
       this.setState({
-        messages: mess,
-        update: false,
-        dataSource: ds.cloneWithRows(mess)
+        update: false
       });
     }
   }
+  carga10() {
+    aux = [];
 
+    indice = this.state.indice;
+    todos = this.state.messages;
+
+    for (i = 1; i <= 9 && indice - i >= 1; i++) {
+      aux = aux.concat(todos[indice - i]);
+    }
+    aux = aux.reverse();
+    aux = aux.concat(this.state.mostrar);
+    this.setState({ mostrar: aux, indice: indice - 10 });
+  }
   getNewMessages() {
     getMessagesFromSender(
       parseInt(this.props.navigation.getParam("id")),
@@ -261,6 +279,9 @@ export default class Chat extends React.Component {
               this.setState({
                 sentMessages: newSent,
                 update: true
+              });
+              this.ListView_Ref.scrollToEnd({
+                animated: true
               });
             }
           }
@@ -424,8 +445,8 @@ export default class Chat extends React.Component {
       }
     ];
     this.setState({ datos: nuevoDatos });
-    nuevoDs = this.state.dataSource.cloneWithRows(nuevoDatos);
-    this.setState({ dataSource: nuevoDs });
+
+    this.setState({ mensajes: nuevoDatos });
     this.setState({ text: "" });
   };
 
@@ -443,28 +464,27 @@ export default class Chat extends React.Component {
           <KeyboardAvoidingView
             style={styles.vista}
             behavior="padding"
-            keyboardVerticalOffset={HeaderHeight}
+            keyboardVerticalOffset={Platform.OS == "ios" ? 30 : HeaderHeight}
           >
             {this.aviso()}
-            <ListView
+            <FlatList
+              refreshing={this.state.loading}
               style={styles.lista}
               keyboardShouldPersistTaps="never"
               ref={ref => {
                 this.ListView_Ref = ref;
               }}
-              dataSource={this.state.dataSource}
-              renderRow={rowData => (
+              data={this.state.mostrar}
+              renderItem={({ item }) => (
                 <Mensaje
-                  esMio={rowData.fromMe}
-                  mensaje={rowData.text}
-                  fecha={rowData.timestamp.toISOString()}
+                  esMio={item.fromMe}
+                  mensaje={item.text}
+                  fecha={item.timestamp.toISOString()}
                 />
               )}
-              onContentSizeChange={() =>
-                this.ListView_Ref.scrollToEnd({
-                  animated: true
-                })
-              }
+              onRefresh={() => {
+                this.carga10();
+              }}
             />
             {this.entradaTexto()}
           </KeyboardAvoidingView>

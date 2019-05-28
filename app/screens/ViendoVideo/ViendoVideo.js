@@ -8,7 +8,8 @@ import {
   ListView,
   KeyboardAvoidingView,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from "react-native";
 
 import styles from "./styles";
@@ -401,7 +402,7 @@ export default class ViendoVideo extends React.Component {
           <KeyboardAvoidingView
             style={styles.container}
             behavior="padding"
-            keyboardVerticalOffset={0}
+            keyboardVerticalOffset={Platform.OS == "ios" ? 30 : 0}
           >
             <View style={styles.videoContainer}>
               <VideoConSinFlechaAtras

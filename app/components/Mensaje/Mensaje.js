@@ -14,16 +14,28 @@ export default class Mensaje extends React.Component {
     hora = aux[1];
     hora = hora.split(":");
     minutos = hora[1];
-    hora = hora[0];
-    horaTotal = String(parseInt(hora) + 2) + ":" + minutos;
-    diaActual = String(new Date().getDate()).padStart(2, "0");
-
-    mesActual = new Date().getMonth() + 1;
-    anyoActual = new Date().getFullYear();
+    hora = parseInt(hora[0]) + 2;
     fecha = fecha.split("-");
     anyo = fecha[0];
     mes = fecha[1];
     dia = fecha[2];
+    if (hora >= 24) {
+      hora = hora % 24;
+      dia = parseInt(dia) + 1;
+      if (dia > this.diasDelMes(mes, anyo)) {
+        mes = parseInt(mes) + 1;
+        dia = 1;
+        if (mes > 12) {
+          anyo = parseInt(anyo) + 1;
+          mes = 1;
+        }
+      }
+    }
+    horaTotal = String(hora) + ":" + minutos;
+    diaActual = String(new Date().getDate()).padStart(2, "0");
+
+    mesActual = new Date().getMonth() + 1;
+    anyoActual = new Date().getFullYear();
 
     preludio = "";
     if (mesActual == mes && anyoActual == anyo) {
