@@ -26,7 +26,6 @@ export default class VideoConSinFlechaAtras extends React.Component {
     super(props);
     this.state = {
       pantallaCompleta: false,
-
       showControls: false
     };
 
@@ -90,26 +89,22 @@ export default class VideoConSinFlechaAtras extends React.Component {
   orientationChange = () => {
     if (this.orientationChangeSecondCall) {
       this.orientationChangeSecondCall = false;
-      this.setState({
-        pantallaCompleta: !this.state.pantallaCompleta
-      });
-
       if (this.state.pantallaCompleta) {
         ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT);
         this.setState({
+          pantallaCompleta: false,
           showControls: false
         });
       } else {
         this.clearTimeout();
         this.setState({
+          pantallaCompleta: true,
           showControls: true
         });
         ScreenOrientation.allowAsync(ScreenOrientation.Orientation.LANDSCAPE);
       }
     } else {
-      this.setState({
-        orientationChangeSecondCall: true
-      });
+      this.orientationChangeSecondCall = true;
     }
   };
 
