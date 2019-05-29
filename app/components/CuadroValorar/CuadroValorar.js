@@ -47,7 +47,7 @@ export default class CuadroValorar extends React.Component {
           "unicast-web.s3-website.eu-west-3.amazonaws.com/video",
           { id: this.props.videoId }
         ),
-        title: "Que pasa loco"
+        title: "¡Mira este video!"
       });
 
       if (result.action === Share.sharedAction) {
