@@ -132,7 +132,7 @@ export default class VideoConSinFlechaAtras extends React.Component {
           } else {
             console.log(data);
             if (data.secsFromBeg == this.props.duracion) {
-              this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
+              this.Video_ref.playFromPositionAsync(0);
             } else {
               this.Video_ref.playFromPositionAsync(data.secsFromBeg * 1000);
             }
