@@ -23,7 +23,6 @@ import IconoAsignaturaUniversidad from "../../components/IconoAsignaturaUniversi
 import Comentario from "../../components/Comentario";
 import { HeaderHeight } from "../../constants";
 
-
 import ApiClient from "swagger_unicast/dist/ApiClient";
 import {
   VideoApi,
@@ -72,7 +71,8 @@ export default class ViendoVideo extends React.Component {
       photo: require("../../../test/imagenes/perfil_uni.jpg"),
       idUsuario: Auth.getUserId()
     };
-
+  }
+  componentDidMount() {
     let SwaggerUnicast = require("swagger_unicast");
     this.videoApi = new SwaggerUnicast.VideoApi();
 
@@ -110,6 +110,12 @@ export default class ViendoVideo extends React.Component {
     this.videoApi.getVideo(id, opts, (error, data, response) => {
       if (error) {
         //// console.error(error);
+        if (error.status === 403) {
+          Auth.signOut(this.props.navigation);
+        } else {
+          Alert.alert("No se ha podido cargar el video");
+          this.props.navigation.goBack(null);
+        }
         //// //console.log(data);
       } else {
         const now = ApiClient.parseDate(response.headers.date);
@@ -276,11 +282,6 @@ export default class ViendoVideo extends React.Component {
     });
   }
 
-  componentWillMount() {
-    //id = this.props.navigation.getParam("id");
-    //this.obtenerAsignaturaUni(id);
-  }
-
   componentWillUnmount() {
     clearInterval(this.interval);
   }
@@ -375,24 +376,6 @@ export default class ViendoVideo extends React.Component {
   };
   render() {
     return (
-      /*
-      
-        <Text>TODO VIENDO VIDEO</Text>
-        <Button
-          title="ATRAS"
-          onPress={() => {
-            this.props.navigation.goBack(null);
-          }}
-        />
-        <Button
-          onPress={() =>
-            this.props.navigation.navigate("Asignatura", {
-              title: "Una asignatura"
-            })
-          }
-          title="IR ASIGNATURA"
-        /> */
-      //QUITO TODO LO ANTERIOR?????????
       <View
         style={{
           flex: 1,
@@ -402,105 +385,102 @@ export default class ViendoVideo extends React.Component {
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
-
-          
           <KeyboardAvoidingView
             style={styles.container}
             behavior="padding"
             keyboardVerticalOffset={Platform.OS == "ios" ? 30 : 0}
           >
-          <ScrollView scrollEnabled={false} keyboardShouldPersistTaps="never">
-            
-            <View style={styles.videoContainer}>
-              <VideoConSinFlechaAtras
-                flechaSi={true}
-                goBackDestination={""}
-                navigation={this.props.navigation}
-                source={this.state.video.url}
-                thumbnail={this.state.video.thumbnailUrl}
-                autoplay={true}
-                ref={ref => {
-                  this.VideoFlechaRef = ref;
-                }}
-                videoId={this.props.navigation.getParam("id")}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <View style={{ height: 120 }}>
-                <CuadroValorar
-                  puntuacion={this.state.video.score}
-                  usuario={this.state.idUsuario}
-                  videoId={this.state.video.id}
+            <ScrollView scrollEnabled={false} keyboardShouldPersistTaps="never">
+              <View style={styles.videoContainer}>
+                <VideoConSinFlechaAtras
+                  flechaSi={true}
+                  goBackDestination={""}
                   navigation={this.props.navigation}
-                  tituloVideo={this.state.video.title}
-                  tiempoPasado={
-                    "Subido hace " +
-                    this.getTimePassed(
-                      this.state.video.timestamp,
-                      this.state.timeNow
-                    )
-                  }
+                  source={this.state.video.url}
+                  thumbnail={this.state.video.thumbnailUrl}
+                  autoplay={true}
+                  ref={ref => {
+                    this.VideoFlechaRef = ref;
+                  }}
+                  videoId={this.props.navigation.getParam("id")}
                 />
               </View>
-              <View style={styles.dejarDeSeguir}>
-                <RippleTouchable
-                  onPress={() =>
-                    this.props.navigation.navigate("Asignatura", {
-                      title: this.state.asig.name,
-                      id: this.state.asig.id
-                    })
-                  }
-                  style={styles.asignaturaContainer}
-                >
-                  <IconoAsignaturaUniversidad
-                    style={{
-                      alignSelf: "flex-start"
-                    }}
+              <View style={{ flex: 1 }}>
+                <View style={{ height: 120 }}>
+                  <CuadroValorar
+                    puntuacion={this.state.video.score}
+                    usuario={this.state.idUsuario}
+                    videoId={this.state.video.id}
                     navigation={this.props.navigation}
-                    name={this.state.asig.abbreviation}
-                    image={{ uri: this.state.asig.university.photo }}
-                  />
-                </RippleTouchable>
-                <View style={{ marginLeft: 60 }}>
-                  <BotonSeguirAsignatura
-                    onRef={ref => (this.botonSeguir = ref)}
-                    asignaturaSeguida={this.state.seguida}
-                    callback={() => this.seguir()}
+                    tituloVideo={this.state.video.title}
+                    tiempoPasado={
+                      "Subido hace " +
+                      this.getTimePassed(
+                        this.state.video.timestamp,
+                        this.state.timeNow
+                      )
+                    }
                   />
                 </View>
-              </View>
-              <Descripcion
-                texto={this.state.video.description}
-                navigation={this.props.navigation}
-                profesores={this.state.profesores}
-                focus={this.state.focus}
-              />
-              <View style={{ flex: 1 }}>
-                <View style={{ maxHeight: 300 }}>
-                  <ListView
-                    ref={ref => {
-                      this.ListView_Ref = ref;
-                    }}
-                    onContentSizeChange={() =>
-                      this.ListView_Ref.scrollToEnd({
-                        animated: true
+                <View style={styles.dejarDeSeguir}>
+                  <RippleTouchable
+                    onPress={() =>
+                      this.props.navigation.navigate("Asignatura", {
+                        title: this.state.asig.name,
+                        id: this.state.asig.id
                       })
                     }
-                    enableEmptySections={true}
-                    dataSource={this.state.dataSource}
-                    renderRow={rowData => (
-                      <Comentario
-                        nombreUsuario={rowData.nombreUsuario}
-                        cuerpoComentario={rowData.cuerpoComentario}
-                        tiempo={rowData.tiempo}
-                        largo={this.state.largo}
-                      />
-                    )}
-                  />
+                    style={styles.asignaturaContainer}
+                  >
+                    <IconoAsignaturaUniversidad
+                      style={{
+                        alignSelf: "flex-start"
+                      }}
+                      navigation={this.props.navigation}
+                      name={this.state.asig.abbreviation}
+                      image={{ uri: this.state.asig.university.photo }}
+                    />
+                  </RippleTouchable>
+                  <View style={{ marginLeft: 60 }}>
+                    <BotonSeguirAsignatura
+                      onRef={ref => (this.botonSeguir = ref)}
+                      asignaturaSeguida={this.state.seguida}
+                      callback={() => this.seguir()}
+                    />
+                  </View>
+                </View>
+                <Descripcion
+                  texto={this.state.video.description}
+                  navigation={this.props.navigation}
+                  profesores={this.state.profesores}
+                  focus={this.state.focus}
+                />
+                <View style={{ flex: 1 }}>
+                  <View style={{ maxHeight: 300 }}>
+                    <ListView
+                      ref={ref => {
+                        this.ListView_Ref = ref;
+                      }}
+                      onContentSizeChange={() =>
+                        this.ListView_Ref.scrollToEnd({
+                          animated: true
+                        })
+                      }
+                      enableEmptySections={true}
+                      dataSource={this.state.dataSource}
+                      renderRow={rowData => (
+                        <Comentario
+                          nombreUsuario={rowData.nombreUsuario}
+                          cuerpoComentario={rowData.cuerpoComentario}
+                          tiempo={rowData.tiempo}
+                          largo={this.state.largo}
+                        />
+                      )}
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
             <View style={styles.entradaTexto}>
               <TextInput
                 placeholder="Escribe un Comentario"
@@ -512,7 +492,6 @@ export default class ViendoVideo extends React.Component {
               {this.boton()}
             </View>
           </KeyboardAvoidingView>
-          
         )}
       </View>
     );

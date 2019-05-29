@@ -78,7 +78,7 @@ export default class CuadroValorar extends React.Component {
       this.state.calidad,
       (error, data, response) => {
         if (error) {
-          console.error(error);
+          Alert.alert("No se ha podido registrar el voto");
         } else {
           console.log(data);
         }

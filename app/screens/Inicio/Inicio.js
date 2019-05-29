@@ -43,6 +43,7 @@ export default class Inicio extends React.Component {
     bearerAuth.accessToken = Auth.getUserToken();
     this.navigation = this.props.navigation;
     this.apiInstance = new VideoApi();
+    this._handleOpenURL = this._handleOpenURL.bind(this);
   }
 
   componentWillUnmount() {
@@ -55,14 +56,14 @@ export default class Inicio extends React.Component {
     //photo: "../../assets/icon_unicast.jpg",
     // id: 1
     // });
-    this.setState({ navigation: this.props.navigation });
+
     this.getData();
     UnicastNotifications.fireSingleton();
 
     Linking.addEventListener("url", this._handleOpenURL);
 
     Linking.getInitialURL().then(url => {
-      if (url.length > 7) {
+      if (url.includes("unicast-web.s3-website.eu-west-3.amazonaws.com")) {
         //Descarta si la url es http:// ( si se entra sin pulsar enlace)
         //Alert.alert("Initial url is: " + url);
 
@@ -72,22 +73,32 @@ export default class Inicio extends React.Component {
         id = queryParams.id;
         //Alert.alert(id.toString(10));
         // id = 1;
-
-        // this.props.navigation.navigate("ViendoVideo", {
-        // id: id
-        //});
+        if (id != undefined) {
+          this.props.navigation.navigate("ViendoVideo", {
+            id: id
+          });
+        }
+      } else {
+        if (url.length > 7) {
+          Alert.alert("URL INCORRECTA");
+        }
       }
     });
   }
 
   _handleOpenURL(event) {
-    Alert.alert(event.url);
-    let { path, queryParams } = Expo.Linking.parse(event.url);
-    id = queryParams.id;
-    Alert.alert(id.toString(10));
-    this.state.navigation.navigate("ViendoVideo", {
-      id: id
-    });
+    //this.forceUpdate();
+    ///Alert.alert(event.url);
+    if (event.url.includes("unicast-web.s3-website.eu-west-3.amazonaws.com")) {
+      let { path, queryParams } = Expo.Linking.parse(event.url);
+      id = queryParams.id;
+      //Alert.alert(id.toString(10));
+      this.props.navigation.navigate("ViendoVideo", {
+        id: id
+      });
+    } else {
+      Alert.alert("URL INCORRECTA");
+    }
   }
 
   getData = () => {
