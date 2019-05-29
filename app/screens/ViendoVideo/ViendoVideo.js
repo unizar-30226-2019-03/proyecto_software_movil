@@ -397,6 +397,7 @@ export default class ViendoVideo extends React.Component {
                   goBackDestination={""}
                   navigation={this.props.navigation}
                   source={this.state.video.url}
+                  duracion={this.state.video.seconds}
                   thumbnail={this.state.video.thumbnailUrl}
                   autoplay={true}
                   ref={ref => {
