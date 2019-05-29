@@ -41,6 +41,7 @@ export default class Auth {
         console.log(data);
         PerfilStore.setImagenPerfil(data.photo);
         PerfilStore.setUserName(data.username);
+        UnicastNotifications.fireSingleton();
         navigation.navigate("Logged");
       }
     });
@@ -59,7 +60,6 @@ export default class Auth {
     userToken = token;
     userId = id;
 
-    UnicastNotifications.fireSingleton();
     this.getUserData(navigation, response_callback);
   }
 
@@ -72,7 +72,6 @@ export default class Auth {
     console.log("EL TOKEN: ", userToken);
     console.log("USER ID: ", userId);
 
-    UnicastNotifications.fireSingleton();
     if (userToken) {
       this.getUserData(navigation, null);
     } else {
