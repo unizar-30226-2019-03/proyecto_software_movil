@@ -1,5 +1,23 @@
+/**
+ * @fileoverview Modal que permite crear una nueva lista de reproducción
+ * @author Unicast
+ * @requires ../../constants:Azul
+ * @requires swagger_unicast:ReproductionListApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../config/Auth:Auth
+ * @requires ../../components:RippleTouchable
+ * @requires ../../HaOcurridoUnError:HaOcurridoUnError
+ *
+ */
 import React from "react";
-import { View, TouchableOpacity, Modal, Text, TouchableWithoutFeedback, ActivityIndicator } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Modal,
+  Text,
+  TouchableWithoutFeedback,
+  ActivityIndicator
+} from "react-native";
 
 import { Input } from "react-native-elements";
 
@@ -16,6 +34,12 @@ import HaOcurridoUnError from "../../components/HaOcurridoUnError";
 
 import styles from "./styles";
 
+/**
+ * Renderiza el modal que permite crear una nueva lista de reproducción y añadirle
+ * un video
+ * @module AnyadirLista
+ * @extends React.component
+ */
 export default class AnyadirLista extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +55,11 @@ export default class AnyadirLista extends React.Component {
 
     this.apiInstance = new ReproductionListApi();
   }
-
+  /**
+   * Crea una nueva lista de reproduccion con el nombre
+   * que haya introducido el usuario
+   *
+   */
   crearLista = () => {
     if (!this.state.addingLista) {
       this.setState({ addingLista: true });
@@ -42,7 +70,11 @@ export default class AnyadirLista extends React.Component {
           if (error.status == 403) {
             this.props.hide();
             Auth.signOut(this.props.navigation);
-          } else if (error.status == 500 || error.status == 400 || error.status == 409) {
+          } else if (
+            error.status == 500 ||
+            error.status == 400 ||
+            error.status == 409
+          ) {
             this.setState({ showInputError: true });
           } else {
             this.props.hide();
@@ -68,7 +100,11 @@ export default class AnyadirLista extends React.Component {
           onRequestClose={this.props.hide}
           onBackdropPress={this.props.hide}
         >
-          <TouchableOpacity style={styles.container} onPress={this.props.hide} activeOpacity={1}>
+          <TouchableOpacity
+            style={styles.container}
+            onPress={this.props.hide}
+            activeOpacity={1}
+          >
             <TouchableWithoutFeedback>
               <View style={styles.anyadirListaContainer}>
                 <View style={styles.row}>
@@ -84,15 +120,25 @@ export default class AnyadirLista extends React.Component {
                     placeholder="Nombre"
                     autoFocus
                     onChangeText={nuevaListaInput =>
-                      this.setState({ nuevaListaInput: nuevaListaInput, showInputError: false })
+                      this.setState({
+                        nuevaListaInput: nuevaListaInput,
+                        showInputError: false
+                      })
                     }
                     errorStyle={{ color: "red" }}
-                    errorMessage={this.state.showInputError ? "Ya existe una lista con este nombre" : null}
+                    errorMessage={
+                      this.state.showInputError
+                        ? "Ya existe una lista con este nombre"
+                        : null
+                    }
                   />
                 </View>
                 <View style={styles.crearCancelarContainer}>
                   <RippleTouchable
-                    onPress={() => this.setState({ showInputError: false }) || this.props.hide()}
+                    onPress={() =>
+                      this.setState({ showInputError: false }) ||
+                      this.props.hide()
+                    }
                     style={styles.cancelar}
                     activeOpacity={1}
                   >
@@ -107,7 +153,10 @@ export default class AnyadirLista extends React.Component {
                       style={[
                         styles.nuevaListaTexto,
                         {
-                          color: this.state.nuevaListaInput.length > 0 ? Azul : "gray"
+                          color:
+                            this.state.nuevaListaInput.length > 0
+                              ? Azul
+                              : "gray"
                         }
                       ]}
                     >

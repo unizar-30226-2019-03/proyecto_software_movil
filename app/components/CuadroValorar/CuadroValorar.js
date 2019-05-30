@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Cuadro correspondiente al titulo del video, boton de valorar
+ * valoración y tiempo desde el que se ha subido
+ * @author Unicast
+ * @requires ../../constants:GrisClaro
+ * @requires swagger_unicast:VoteApi
+ * @requires swagger_unicast/dist/ApiClient:ApiClient
+ * @requires ../../config/Auth:Auth
+ * @requires ../AnyadirALista:AnyadirALista
+ */
 import React from "react";
 
 import {
@@ -18,6 +28,10 @@ import Auth from "../../config/Auth";
 import VoteId from "swagger_unicast/dist/model/VoteId";
 import Vote2 from "swagger_unicast/dist/model/Vote2";
 import AnyadirALista from "../AnyadirALista";
+/**
+ * @module CuadroValorar
+ *
+ */
 export default class CuadroValorar extends React.Component {
   constructor() {
     super();
@@ -35,11 +49,18 @@ export default class CuadroValorar extends React.Component {
     let bearerAuth = defaultClient.authentications["bearerAuth"];
     bearerAuth.accessToken = Auth.getUserToken();
   }
+  /**
+   * Oculta el modal de añadir a lista
+   */
   hideAnyadirALista = () => {
     this.setState({
       mostrarGuardar: false
     });
   };
+  /**
+   * Función que es llamada al pulsar el botón de sharing
+   * Genera la URL correspondiente al video que está viendo el usuario
+   */
   onShare = () => {
     try {
       const result = Share.share({
@@ -63,6 +84,10 @@ export default class CuadroValorar extends React.Component {
       alert(error.message);
     }
   };
+  /**
+   * Añade la valoración del usuario al vídeo que está visionando
+   *
+   * */
   puntuar() {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
@@ -85,12 +110,21 @@ export default class CuadroValorar extends React.Component {
       }
     );
   }
+  /**
+   * Oculta el modal para votar el video
+   */
   quitarPopUp() {
     this.setState({ mostrar: false });
   }
+  /**
+   * Muestra el modal para añadir el video a una lista de reproducción
+   */
   mostrarGuardar() {
     this.setState({ mostrarGuardar: true });
   }
+  /**
+   * Muestra la valoración actual del vídeo, si existe
+   */
   valoracion() {
     if (!isNaN(this.props.puntuacion) && this.props.puntuacion > 0) {
       return Math.floor((this.props.puntuacion * 100) / 5).toString() + "%";

@@ -1,11 +1,24 @@
+/**
+ * @fileoverview Un mensaje del chat
+ * @author Unicast
+ *
+ */
 import React from "react";
 import { Text, View } from "react-native";
 
 import styles from "./styles";
-
+/**
+ * @module Mensaje
+ * @param {Object} props props para renderizar el componente
+ *    props.fecha fecha del mensaje en formato AAAA-MM--DDT09:HH.MM.MMMZ
+ *    props.esMio indica si el mensaje fue escrito por el usuario o no
+ *    props.mensaje cuerpo del mensaje
+ */
 export default class Mensaje extends React.Component {
-  //parsea "2019-05-25T09:10:27.904Z"
-
+  /**
+   * Parsea una cadena del tipo "2019-05-25T09:10:27.904Z"
+   * y obtiene la fecha y hora del mensaje (España)
+   */
   parsearFecha() {
     aux = this.props.fecha.split("Z");
     aux = aux[0];
@@ -56,10 +69,20 @@ export default class Mensaje extends React.Component {
     }
     return preludio + " " + horaTotal;
   }
+  /**
+   *
+   * @param {Number} anyo Un año
+   * @return {Boolean} Devuelve si el año es bisiesto
+   */
   esBisiesto(anyo) {
     return (anyo % 4 == 0 && anyo % 100 != 0) || anyo % 400 == 0;
   }
-  //mes del 1 al 12
+  /**
+   *
+   * @param {Number} mes Un mes (del 1 al 12)
+   * @param {Number} anyo Un año
+   * @return {Number} Devuelve los dias del mes en el año
+   */
   diasDelMes(mes, anyo) {
     if (mes == 2) {
       if (this.esBisiesto(anyo)) {
@@ -80,6 +103,17 @@ export default class Mensaje extends React.Component {
     }
   }
 
+  /**
+   *
+   * @param {Number} dia Dia a comprobar
+   * @param {Number} mes Mes a comprobar
+   * @param {Number} anyo Año a comprobar
+   * @param {Number} diaActual Dia actual
+   * @param {Number} mesActual Mes actual
+   * @param {Number} anyoActual Año actual
+   * @return {Boolean} Devuelve true si dia/mes/anyo corresponde al dia anterior a
+   *    diaActual/mesActual/anyoActual
+   */
   esAyer(dia, mes, anyo, diaActual, mesActual, anyoActual) {
     if (mes == mesActual && anyo == anyoActual && dia + 1 == diaActual) {
       return true;

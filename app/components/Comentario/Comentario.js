@@ -1,9 +1,23 @@
+/**
+ * @fileoverview Componente que renderiza los comentarios
+ *
+ */
 import React from "react";
 
 import { View, Text } from "react-native";
 import styles from "./styles";
 
+/**
+ * @module Comentario
+ * @extends React.Component
+ * Renderiza el comentario
+ */
 export default class Comentario extends React.Component {
+  /**
+   * Aplica una función de hash para generar un color en función
+   * del nombre del usuario
+   * @param {String} nombreUsuario Nombre del usuario
+   */
   generarColor(nombreUsuario) {
     var hash = 0;
     if (nombreUsuario.length === 0) return hash;
@@ -18,7 +32,13 @@ export default class Comentario extends React.Component {
     }
     return color;
   }
-
+  /**
+   * Genera la cadena de texto "(HH)?:MM:SS"
+   * Muestra la hora si el video es largo
+   * @param {Number} tiempo Indica el segundo del video
+   * @param {Boolean} largo Indica si el video es largo (Dura al menos una hora)
+   * @return {String} Devuelve La cadena correspondiente
+   */
   generarTextoTiempo(tiempo, largo) {
     var hora = Math.floor(tiempo / 3600);
     var minuto = Math.floor((tiempo - hora * 3600) / 60);

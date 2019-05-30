@@ -44,7 +44,7 @@ import styles from "./styles";
  * Renderiza el modal que permite añadir un video a una
  * lista de reproducción.
  * También permite crear una nueva lista de reproducción
- *
+ * @module AnyadirAlista
  * @extends React.Component
  *
  */

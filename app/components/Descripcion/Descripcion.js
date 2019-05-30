@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Componente encargado de renderizar la descripcion de los videos
+ * @author Unicast
+ * @requires ../../constants/constants:GrisClaro
+ *
+ *
+ */
+
 import React from "react";
 import {
   Text,
@@ -12,6 +20,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Icon } from "react-native-elements";
 import { ScreenWidth, GrisClaro } from "../../constants/constants";
 
+/**
+ * @module Descripcion
+ * Renderiza la descripcion
+ */
 export default class Descripcion extends React.Component {
   constructor() {
     super();
@@ -38,6 +50,10 @@ export default class Descripcion extends React.Component {
   }
   _animatedHeight = new Animated.Value(0);
   _animatedOpacity = new Animated.Value(0);
+  /**
+   * Callback al pulsar el botón de desplegar la descripción o de
+   * ocultarla.
+   */
   alternarDescripcion = () => {
     this._listaProfesores.scrollTo({ x: 0, y: 0, animated: true });
     this._listaDescripcion.scrollTo({ x: 0, y: 0, animated: true });
@@ -52,6 +68,11 @@ export default class Descripcion extends React.Component {
       this.setState({ desplegado: false });
     }
   };
+  /**
+   * @param {Object} profesor profesor a mostrar,profesor.foto contiene su foto de perfil, profesor.nombre su nombre,
+   * profesor.apellidos sus apellidos y profesor.id su id
+   * @return {Object} Devuelve un componente TouchableOpacity listo para ser utilizado en la función render de la clase
+   */
   profesor = profesor => {
     return (
       <TouchableOpacity
@@ -76,6 +97,10 @@ export default class Descripcion extends React.Component {
       </TouchableOpacity>
     );
   };
+  /**
+   * @param {Boolean} desplegado Indica si la descripción está desplegado
+   * @return {Object} Devuelve el icono correspondiente a desplegar u ocultar la descripción
+   */
   icono() {
     if (this.state.desplegado) {
       return (
