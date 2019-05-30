@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Pantalla de subir video
+ * @author Unicast
+ * @requires swagger_unicast:VideoApi
+ * @requires swagger_unicast:UserApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../../components/VideoConSinFlechaAtras:VideoConSinFlechaAtras
+ * @requires ../../../components/InputFixer:InputFixer
+ * @requires ../../../components/LoadingModal:LoadingModal
+ * @requires ../../../components/HaOcurridoUnError:HaOcurridoUnError
+ */
 import React from "react";
 import { Text, View, Picker, ActivityIndicator, Alert } from "react-native";
 
@@ -19,7 +31,10 @@ import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 import styles from "./styles";
 
 // const { State: TextInputState } = TextInput;
-
+/**
+ * Pantalla de subir video
+ * @module SubirVideo
+ */
 export default class SubirVideo extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Subir vídeo"
@@ -56,7 +71,9 @@ export default class SubirVideo extends React.Component {
   componentDidMount = () => {
     this.getAsignaturas();
   };
-
+  /**
+   * Obtiene las asignaturas de las que es profesor el usuario
+   */
   getAsignaturas = () => {
     let id = Auth.getUserId();
     let opts = {
@@ -64,28 +81,34 @@ export default class SubirVideo extends React.Component {
       pragma: "no-cache",
       expires: 0
     };
-    this.userApiInstance.getSubjectsAsProfessor(id, opts, (error, data, response) => {
-      if (error) {
-        if (error.status == 403) {
-          Auth.signOut(this.props.navigation);
+    this.userApiInstance.getSubjectsAsProfessor(
+      id,
+      opts,
+      (error, data, response) => {
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(this.getAsignaturas);
+          }
         } else {
-          HaOcurridoUnError(this.getAsignaturas);
-        }
-      } else {
-        this.setState({
-          pickerData: [...this.state.pickerData, ...data._embedded.subjects],
-          loading: false
-        });
-
-        if (this.state.pickerData && this.state.pickerData.length > 0) {
           this.setState({
-            asignatura: data._embedded.subjects[0].id
+            pickerData: [...this.state.pickerData, ...data._embedded.subjects],
+            loading: false
           });
+
+          if (this.state.pickerData && this.state.pickerData.length > 0) {
+            this.setState({
+              asignatura: data._embedded.subjects[0].id
+            });
+          }
         }
       }
-    });
+    );
   };
-
+  /**
+   * Función para elegir el video en la galeria del usuario
+   */
   pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -97,7 +120,9 @@ export default class SubirVideo extends React.Component {
       this.setState({ video: result.uri, noVideoErr: false });
     }
   };
-
+  /**
+   * Función para elegir el thumbnail del video en la galería del usuario
+   */
   pickThumbnail = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -110,6 +135,10 @@ export default class SubirVideo extends React.Component {
     }
   };
 
+  /**
+   * Intenta de subir un vídeo.
+   * Si hay algun error lo indica en el estado.
+   */
   tryUpload = async () => {
     let someError = false;
     if (!this.state.video) {
@@ -138,42 +167,59 @@ export default class SubirVideo extends React.Component {
 
         const file = {
           uri: this.state.video,
-          name: this.state.video.substring(this.state.video.lastIndexOf("/") + 1, this.state.video.length),
+          name: this.state.video.substring(
+            this.state.video.lastIndexOf("/") + 1,
+            this.state.video.length
+          ),
           type: "video/mp4"
         };
         const thumbnail = {
           uri: this.state.thumbnail,
-          name: this.state.thumbnail.substring(this.state.thumbnail.lastIndexOf("/") + 1, this.state.thumbnail.length),
+          name: this.state.thumbnail.substring(
+            this.state.thumbnail.lastIndexOf("/") + 1,
+            this.state.thumbnail.length
+          ),
           type: "image/png"
         };
         let title = this.state.titulo;
         let description = this.state.descripción;
         let subjectId = this.state.asignatura;
-        this.videoApiInstance.addVideo(file, thumbnail, title, description, subjectId, (error, data, response) => {
-          this.setState({ subiendoVideo: false });
-          if (error) {
-            if (error.status == 403) {
-              Auth.signOut(this.props.navigation);
-            } else if (error.status == 500 || error.status == 400 || error.status == 409) {
-              this.tituloErrText = "Ya existe un vídeo con este título";
-              this.setState({ tituloErr: true });
+        this.videoApiInstance.addVideo(
+          file,
+          thumbnail,
+          title,
+          description,
+          subjectId,
+          (error, data, response) => {
+            this.setState({ subiendoVideo: false });
+            if (error) {
+              if (error.status == 403) {
+                Auth.signOut(this.props.navigation);
+              } else if (
+                error.status == 500 ||
+                error.status == 400 ||
+                error.status == 409
+              ) {
+                this.tituloErrText = "Ya existe un vídeo con este título";
+                this.setState({ tituloErr: true });
+              } else {
+                HaOcurridoUnError(null);
+              }
             } else {
-              HaOcurridoUnError(null);
+              Alert.alert(
+                "¡Bien!",
+                "El vídeo ha sido subido con éxito",
+                [
+                  {
+                    text: "Vale",
+                    onPress: () => this.props.navigation.goBack()
+                  }
+                ],
+                { cancelable: false }
+              );
             }
-          } else {
-            Alert.alert(
-              "¡Bien!",
-              "El vídeo ha sido subido con éxito",
-              [
-                {
-                  text: "Vale",
-                  onPress: () => this.props.navigation.goBack()
-                }
-              ],
-              { cancelable: false }
-            );
           }
-        });
+        );
       }
     }
   };
@@ -184,14 +230,31 @@ export default class SubirVideo extends React.Component {
     });
 
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
-          <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
-            <View style={[styles.viewSelectVideo, { borderColor: this.state.noVideoErr ? "red" : "grey" }]}>
+          <InputFixer
+            navigation={this.props.navigation}
+            ref={InputFixer => (this.InputFixer = InputFixer)}
+          >
+            <View
+              style={[
+                styles.viewSelectVideo,
+                { borderColor: this.state.noVideoErr ? "red" : "grey" }
+              ]}
+            >
               {!this.state.video ? (
-                <Button buttonStyle={styles.selectVideoButton} title="ELEGIR VÍDEO" onPress={this.pickVideo} />
+                <Button
+                  buttonStyle={styles.selectVideoButton}
+                  title="ELEGIR VÍDEO"
+                  onPress={this.pickVideo}
+                />
               ) : (
                 <VideoConSinFlechaAtras
                   flechaSi={false}
@@ -204,7 +267,12 @@ export default class SubirVideo extends React.Component {
             </View>
 
             <View style={styles.viewSelectAsign}>
-              <Text style={[styles.textAsignatura, { color: this.state.noAsignaturaErr ? "red" : "black" }]}>
+              <Text
+                style={[
+                  styles.textAsignatura,
+                  { color: this.state.noAsignaturaErr ? "red" : "black" }
+                ]}
+              >
                 Asignatura:
               </Text>
               <Picker
@@ -227,7 +295,9 @@ export default class SubirVideo extends React.Component {
                 placeholder="Escriba un título..."
                 label="Título"
                 onFocus={() => this.InputFixer.onFocus()}
-                onChangeText={text => this.setState({ titulo: text, tituloErr: false })}
+                onChangeText={text =>
+                  this.setState({ titulo: text, tituloErr: false })
+                }
                 errorStyle={{ color: "red" }}
                 errorMessage={this.state.tituloErr ? this.tituloErrText : null}
               />
@@ -236,7 +306,10 @@ export default class SubirVideo extends React.Component {
             <View style={styles.viewInput}>
               <Input
                 onFocus={() => this.InputFixer.onFocus()}
-                onChangeText={text => this.InputFixer.onFocus() || this.setState({ descripción: text })}
+                onChangeText={text =>
+                  this.InputFixer.onFocus() ||
+                  this.setState({ descripción: text })
+                }
                 placeholder="Escriba una descripción..."
                 multiline={true}
                 label="Descripción"
@@ -247,7 +320,10 @@ export default class SubirVideo extends React.Component {
               {this.state.noThumbnailErr ? (
                 <Text style={styles.imageErrText}>Falta una miniatura</Text>
               ) : (
-                <Image source={{ uri: this.state.thumbnail }} style={styles.imageThumbnail} />
+                <Image
+                  source={{ uri: this.state.thumbnail }}
+                  style={styles.imageThumbnail}
+                />
               )}
               <Button
                 title="Elegir miniatura"
@@ -258,7 +334,11 @@ export default class SubirVideo extends React.Component {
             </View>
 
             <View style={styles.uploadButtonView}>
-              <Button buttonStyle={styles.uploadButton} title="Subir vídeo" onPress={() => this.tryUpload()} />
+              <Button
+                buttonStyle={styles.uploadButton}
+                title="Subir vídeo"
+                onPress={() => this.tryUpload()}
+              />
             </View>
           </InputFixer>
         )}

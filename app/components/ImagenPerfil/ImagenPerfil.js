@@ -1,6 +1,6 @@
 /**
  * @fileoverview Imagen de perfil de un usario
- * @requires
+ * @requires ../../config/PerfilStore:PerfilStore
  */
 import React from "react";
 import { View, TouchableOpacity, ActivityIndicator, Image } from "react-native";

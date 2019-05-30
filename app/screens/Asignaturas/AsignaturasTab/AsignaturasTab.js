@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Pantalla con la lista de asignaturas que sigue el usuario
+ * @author Unicast
+ * @requires swagger_unicast:UserApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../../config/Auth:Auth
+ * @requires ../../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../../components/ThumbnailAsignatura:ThumbnailAsignatura
+ * @requires ../../../components/HaOcurridoUnError:HaOcurridoUnError
+ * @requires ../../../components/NoHayContenidoQueMostrar:NoHayContenidoQueMostrar
+ */
+
 import React from "react";
 
 import { View, FlatList, ActivityIndicator, Text } from "react-native";
@@ -14,7 +26,10 @@ import HaOcurridoUnError from "../../../components/HaOcurridoUnError";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-
+/**
+ * @module AsignaturasTab
+ *
+ */
 export default class AsignaturasTab extends React.Component {
   constructor(props) {
     super(props);
@@ -36,6 +51,9 @@ export default class AsignaturasTab extends React.Component {
     this.getData();
   };
 
+  /**
+   * Obtiene las asignaturas que sigue un usuario
+   */
   getData = () => {
     let id = Auth.getUserId();
     console.log(id);
@@ -62,7 +80,10 @@ export default class AsignaturasTab extends React.Component {
       }
     });
   };
-
+  /**
+   * Callback al refrescar la pantalla
+   * Llama a la función getData
+   */
   onRefresh = () => {
     if (!this.state.refreshing) {
       this.setState({
@@ -75,7 +96,12 @@ export default class AsignaturasTab extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
@@ -87,13 +113,22 @@ export default class AsignaturasTab extends React.Component {
             renderItem={({ item }) => (
               <ThumbnailAsignatura
                 navigation={this.props.navigation}
-                icon={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
+                icon={{
+                  uri:
+                    item.university != undefined
+                      ? item.university.photo
+                      : "uri_nula"
+                }}
                 name={item.name}
                 id={item.id}
               />
             )}
             keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={this.state.refreshing ? null : <NoHayContenidoQueMostrar what="asignaturas" />}
+            ListEmptyComponent={
+              this.state.refreshing ? null : (
+                <NoHayContenidoQueMostrar what="asignaturas" />
+              )
+            }
           />
         )}
       </View>
