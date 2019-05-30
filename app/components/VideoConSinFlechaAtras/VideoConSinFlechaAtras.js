@@ -1,3 +1,6 @@
+/**
+ * @fileoverview Reproductor de video con flecha para volver hacia atras
+ */
 import React from "react";
 
 import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
@@ -13,13 +16,14 @@ import Auth from "../../config/Auth";
 import { DisplayApi } from "swagger_unicast";
 import styles from "./styles";
 
-/*
- * PROPS:
- * source={uri} uri del video
- * thumbnail={uri} uri de la thumbnail
- * autoplay={true / false}
- * flechaSi={true / false} si el video tiene flecha para volver atrás o no
- * width, height: altura y anchura del vídeo.
+/**
+ * @module VideoConSinFlechaAtras
+ * @param {Object} props
+ *    source={uri} uri del video
+ *    thumbnail={uri} uri de la thumbnail
+ *    autoplay={true / false}
+ *    flechaSi={true / false} si el video tiene flecha para volver atrás o no
+ *    width, height: altura y anchura del vídeo.
  */
 export default class VideoConSinFlechaAtras extends React.Component {
   constructor(props) {
@@ -40,37 +44,56 @@ export default class VideoConSinFlechaAtras extends React.Component {
     this.duracion = this.props.duracion;
     this.posicion = 0;
   }
-
+  /**
+   * Muestra los controles del video
+   */
   showControls = () => {
     this.clearTimeout();
     this.setState({ showControls: true });
     this.setControlTimeout();
   };
 
+  /**
+   * Inicia un timeout para ocultar los controles del video
+   */
   setControlTimeout = () => {
     this.controlTimeout = setTimeout(() => {
       this.setState({ showControls: false });
     }, 2200);
   };
-
+  /**
+   * Elimina el timeout para ocultar los controles del video
+   */
   clearTimeout = () => {
     if (this.controlTimeout != null) {
       clearTimeout(this.controlTimeout);
     }
   };
 
+  /**
+   * Llama a la rutina para desactivar el timeout de los controles
+   */
   clearControlTimeout = () => {
     this.clearTimeout();
   };
 
+  /**
+   * @return {Number} Posicion del video en segundos
+   */
   devuelveEstado = () => {
     return this.posicion;
   };
 
+  /**
+   * @return {Number} Duracion del video en segundos
+   */
   devuelveDuracion = () => {
     return this.duracion;
   };
 
+  /**
+   * @return {Number} Posicion del video en segundos
+   */
   devuelvePosicion = () => {
     return this.posicion;
   };
@@ -85,7 +108,9 @@ export default class VideoConSinFlechaAtras extends React.Component {
     }
     this.clearTimeout();
   };
-
+  /**
+   * Gestor de la pantalla completa
+   */
   orientationChange = () => {
     if (this.orientationChangeSecondCall) {
       this.orientationChangeSecondCall = false;
@@ -107,7 +132,10 @@ export default class VideoConSinFlechaAtras extends React.Component {
       this.orientationChangeSecondCall = true;
     }
   };
-
+  /**
+   * Callback invocado cada vez que avanza el video
+   * @param {Object} nuevo Estado del video (Ver Documentacion de Expo AV)
+   */
   cambio = nuevo => {
     let posicion = Math.floor(nuevo.positionMillis / 1000);
 
