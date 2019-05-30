@@ -60,13 +60,18 @@ export default class ViendoVideo extends React.Component {
       dataSource: ds,
       largo: false,
       ultimoAñadido: -1,
+      page: 0,
+      obteniendoMas: false,
+      obtenerMas: false,
       text: "",
       video: aux,
       focus: false,
       asig: {
         id: null,
         abbreviation: "dummy",
-        university: { photo2: require("../../../test/imagenes/perfil_uni.jpg") }
+        university: {
+          photo2: require("../../../test/imagenes/perfil_uni.jpg")
+        }
       },
       photo: require("../../../test/imagenes/perfil_uni.jpg"),
       idUsuario: Auth.getUserId()
@@ -89,7 +94,9 @@ export default class ViendoVideo extends React.Component {
         if (error) {
           console.error(error);
         } else {
-          this.setState({ nombreUsuario: data.username });
+          this.setState({
+            nombreUsuario: data.username
+          });
         }
       }
     );
@@ -190,13 +197,61 @@ export default class ViendoVideo extends React.Component {
               nombreUsuario: user
             };
           });
-          console.log(com);
+          longitud = com.length;
+
           this.setState({ comentarios: com });
+          if (longitud === 20) {
+            this.setState({ obtenerMas: true, page: 1 });
+          }
+
+          console.log(com);
         }
       }
     );
   }
+  componentDidUpdate() {
+    if (this.state.obtenerMas && !this.state.obteniendoMas) {
+      this.setState({ obteniendoMas: true });
+      this.obtenerComentariosPagina(this.state.video, this.state.page);
+    }
+  }
+  obtenerComentariosPagina(video, page) {
+    let opts = {
+      cacheControl: "no-cache, no-store, must-revalidate", // String |
+      pragma: "no-cache", // String |
+      expires: "0", // String |
+      page: page,
+      sort: ["secondsFromBeginning"], // [String] | Parámetros en la forma `($propertyname,)+[asc|desc]?`
+      projection: "commentWithUser"
+    };
+    this.commentApi.getCommentsByVideo(
+      video.id,
+      opts,
+      (error, data, response) => {
+        if (error) {
+        } else {
+          let com = data._embedded.comments.map(c => {
+            t = c.secondsFromBeginning;
 
+            const text = c.text;
+            const user = c.user.username;
+
+            return {
+              tiempo: t,
+              cuerpoComentario: text,
+              nombreUsuario: user
+            };
+          });
+          this.setState({
+            comentarios: [...this.state.comentarios, ...com],
+            page: page + 1,
+            obtenerMas: com.length === 20,
+            obteniendoMas: false
+          });
+        }
+      }
+    );
+  }
   addComment(comment, time, id) {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
@@ -248,7 +303,9 @@ export default class ViendoVideo extends React.Component {
                 return s.id === this.state.asig.id;
               });
               //Si no la ha encontrado -> No sigue la asignatura
-              this.setState({ seguida: found === undefined ? false : true });
+              this.setState({
+                seguida: found === undefined ? false : true
+              });
             }
           }
         );
@@ -273,7 +330,10 @@ export default class ViendoVideo extends React.Component {
                   id: id
                 };
               });
-              this.setState({ profesores: prof, loading: false });
+              this.setState({
+                profesores: prof,
+                loading: false
+              });
               this.interval = setInterval(() => this.pasaSegundo(), 1000);
             }
           }
@@ -439,7 +499,9 @@ export default class ViendoVideo extends React.Component {
                       }}
                       navigation={this.props.navigation}
                       name={this.state.asig.abbreviation}
-                      image={{ uri: this.state.asig.university.photo }}
+                      image={{
+                        uri: this.state.asig.university.photo
+                      }}
                     />
                   </RippleTouchable>
                   <View style={{ marginLeft: 60 }}>
@@ -457,7 +519,7 @@ export default class ViendoVideo extends React.Component {
                   focus={this.state.focus}
                 />
                 <View style={{ flex: 1 }}>
-                  <View style={{ maxHeight: 300 }}>
+                  <View style={{ maxHeight: 260 }}>
                     <ListView
                       ref={ref => {
                         this.ListView_Ref = ref;
