@@ -1,3 +1,9 @@
+/**
+ * @fileoverview Pantalla de inicio de sesión
+ * @author Unicast
+ * @requires ../../../components/InputFixer:InputFixer
+ * @requires ../../../components/LoadingModal:LoadingModal
+ */
 import React from "react";
 
 import { View } from "react-native";
@@ -12,7 +18,10 @@ import InputFixer from "../../../components/InputFixer";
 import LoadingModal from "../../../components/LoadingModal";
 
 import styles from "./styles";
-
+/**
+ * Pantalla de inicio de sesión
+ * @module SignIn
+ */
 export default class SignIn extends React.Component {
   constructor(props) {
     super(props);
@@ -26,42 +35,62 @@ export default class SignIn extends React.Component {
 
     this.apiInstance = new UserApi();
   }
-
+  /**
+   * Intenta logear al usuario, en caso de error se mostrará por pantalla
+   */
   tryLogin = async () => {
     if (!this.state.loginIn) {
       this.setState({
         loginIn: true
       });
-      this.apiInstance.authUser(this.state.username, this.state.password, async (error, data, response) => {
-        if (error) {
-          this.setState({
-            showInputError: true,
-            loginIn: false
-          });
-        } else {
-          await Auth.signIn(data.token, data.id, this.props.navigation, () => this.setState({ loginIn: false }));
-          console.log("EL TOKEN: ", data.token);
+      this.apiInstance.authUser(
+        this.state.username,
+        this.state.password,
+        async (error, data, response) => {
+          if (error) {
+            this.setState({
+              showInputError: true,
+              loginIn: false
+            });
+          } else {
+            await Auth.signIn(data.token, data.id, this.props.navigation, () =>
+              this.setState({ loginIn: false })
+            );
+            console.log("EL TOKEN: ", data.token);
+          }
         }
-      });
+      );
     }
   };
 
   render() {
     return (
-      <InputFixer navigation={this.props.navigation} ref={InputFixer => (this.InputFixer = InputFixer)}>
+      <InputFixer
+        navigation={this.props.navigation}
+        ref={InputFixer => (this.InputFixer = InputFixer)}
+      >
         <View style={styles.logoView}>
-          <Image source={require("../../../assets/icon.png")} style={styles.appLogo} />
+          <Image
+            source={require("../../../assets/icon.png")}
+            style={styles.appLogo}
+          />
         </View>
         <View style={styles.inputBoxSeparation}>
           <Input
             placeholder="Usuario"
             leftIcon={{ type: "font-awesome", name: "user" }}
             leftIconContainerStyle={styles.inputSeparation}
-            onChangeText={text => this.setState({ username: text, showInputError: false })}
+            onChangeText={text =>
+              this.setState({ username: text, showInputError: false })
+            }
             autoCapitalize="none"
             onFocus={() => this.InputFixer.onFocus()}
             errorStyle={{ color: "red" }}
-            errorMessage={this.state.showInputError ? "Nombre de usuario o contraseña incorrectos" : null}
+            errorMessage={
+              this.state.showInputError
+                ? "Nombre de usuario o contraseña incorrectos"
+                : null
+            }
             autoCorrect={false}
           />
         </View>
@@ -71,7 +100,9 @@ export default class SignIn extends React.Component {
             secureTextEntry={true}
             leftIcon={{ type: "font-awesome", name: "lock" }}
             leftIconContainerStyle={styles.inputSeparation}
-            onChangeText={text => this.setState({ password: text, showInputError: false })}
+            onChangeText={text =>
+              this.setState({ password: text, showInputError: false })
+            }
             onFocus={() => this.InputFixer.onFocus()}
             autoCorrect={false}
             onSubmitEditing={() => this.tryLogin()}

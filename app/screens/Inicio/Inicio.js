@@ -1,3 +1,17 @@
+/**
+ * @fileoverview Pantalla de inicio de la aplicación
+ * @author Unicast
+ * @requires swagger_unicast:VideoApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../components/FullScreenThumbnail:FullScreenThumbnail
+ * @requires ../../components/LoadingFooter:LoadingFooter
+ * @requires ../../components/NoHayContenidoQueMostrar:NoHayContenidoQueMostrar
+ * @requires ../../components/Time:timeStampToFormat
+ * @requires ../../components/Time:secToDuration
+ * @requires ../../components/SearchMenu:SearchMenu
+ *
+ */
 import React from "react";
 import {
   Text,
@@ -25,7 +39,10 @@ import { timeStampToFormat, secToDuration } from "../../components/Time";
 import SearchMenu from "../../components/SearchMenu";
 
 import styles from "./styles";
-
+/**
+ * Pantalla de inicio de la aplicación
+ * @module Inicio
+ */
 export default class Inicio extends React.Component {
   constructor(props) {
     super(props);
@@ -45,11 +62,16 @@ export default class Inicio extends React.Component {
     this.apiInstance = new VideoApi();
     this._handleOpenURL = this._handleOpenURL.bind(this);
   }
-
+  /**
+   * Elimina el listener para las URL
+   */
   componentWillUnmount() {
     Linking.removeEventListener("url", this._handleOpenURL);
   }
-
+  /**
+   * Inicia los listener para las URL
+   * además si la aplicación se ha abierto con un enlace redirige a viendo video
+   */
   componentDidMount() {
     //this.props.navigation.navigate("Chat", {
     //title: "PRUEBA",
@@ -85,7 +107,11 @@ export default class Inicio extends React.Component {
       }
     });
   }
-
+  /**
+   * Se llama cada vez que se abre la aplicacion con una URL,
+   * estando la aplicación en segundo plano
+   * @param {Event} event Evento URL
+   */
   _handleOpenURL(event) {
     //this.forceUpdate();
     ///Alert.alert(event.url);
@@ -102,7 +128,9 @@ export default class Inicio extends React.Component {
       }
     }
   }
-
+  /**
+   * Obtiene los videos recomendados para mostrar al usuario
+   */
   getData = () => {
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate",
@@ -130,7 +158,10 @@ export default class Inicio extends React.Component {
       }
     });
   };
-
+  /**
+   * Se ejecuta al refrescar la pantalla
+   * vuelve a llamar a getData
+   */
   onRefresh = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.setState({

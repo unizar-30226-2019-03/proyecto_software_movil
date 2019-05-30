@@ -1,3 +1,17 @@
+/**
+ * @fileoverview Pantalla de chat
+ * @author Unicast
+ * @requires ../../components/Mensaje:Mensaje
+ * @requires ../../components/RippleTouchable:RippleTouchable
+ * @requires ../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../config/Auth:Auth
+ * @requires ../../constants:HeaderHeight
+ * @requires swagger_unicast:UserApi
+ * @requires ../../config/MessageApi:getMessagesToReceiver
+ * @requires ../../config/MessageApi:getMessagesFromSender
+ * @requires ../../config/MessageApi:addMessage
+ *
+ */
 import React from "react";
 import {
   Text,
@@ -28,7 +42,10 @@ import {
   getMessagesFromSender,
   addMessage
 } from "../../config/MessageApi";
-
+/**
+ * Pantalla de chat
+ * @module Chat
+ */
 export default class Chat extends React.Component {
   constructor() {
     super();
@@ -58,6 +75,9 @@ export default class Chat extends React.Component {
   componentWillUnmount = () => {
     this.pararReloj();
   };
+  /**
+   * Comprueba si los usuarios pueden hablar entre si
+   */
   componentWillMount = () => {
     let SwaggerUnicast = require("swagger_unicast");
     this.userApi = new SwaggerUnicast.UserApi();
@@ -106,7 +126,10 @@ export default class Chat extends React.Component {
                   this.getAllSent(0, []);
                   this.iniciarReloj();
                 }
-                this.setState({ loading: false, puedeHablar: encontrado });
+                this.setState({
+                  loading: false,
+                  puedeHablar: encontrado
+                });
               }
             }
           );
@@ -114,6 +137,12 @@ export default class Chat extends React.Component {
       }
     );
   };
+  /**
+   *
+   * @param {Object} obj Un objeto
+   * @param {Object} list lista de objectos
+   * @return {Boolean} Devuelve si en list hay un objeto con el mismo id de obj
+   */
   containsObject(obj, list) {
     var x;
     for (x in list) {
@@ -133,7 +162,11 @@ export default class Chat extends React.Component {
   componentDidMount = () => {
     //lamar aqui a get data NUNCA EN EL CONSTRUCTOR
   };
-
+  /**
+   * Obtiene todos los mensajes del emisor
+   * @param {Number} page Se han obtenido tods los mensajes hasta la pagina page
+   * @param {Object} messages  Lista de mensajes
+   */
   getAllFromSender(page, messages) {
     if (messages.length < 20 * page) {
       if (this._isMounted) {
@@ -156,7 +189,11 @@ export default class Chat extends React.Component {
       );
     }
   }
-
+  /**
+   * Obtiene todos los mensajes enviados por el usuario
+   * @param {Number} page Se han obtenido tods los mensajes hasta la pagina page
+   * @param {Object} messages  Lista de mensajes
+   */
   getAllSent(page, messages) {
     if (messages.length < 20 * page) {
       if (this._isMounted) {
@@ -180,7 +217,9 @@ export default class Chat extends React.Component {
       );
     }
   }
-
+  /**
+   * Combina las listas de mensajes recibidos y enviados por orden de timestamp
+   */
   mergeMessages() {
     const sent = this.state.sentMessages.slice();
     const received = this.state.receivedMessages.slice();
@@ -224,6 +263,9 @@ export default class Chat extends React.Component {
       });
     }
   }
+  /**
+   * Carga 10 mensajes mas para que el usuario los vea
+   */
   carga10() {
     aux = [];
 
@@ -235,8 +277,14 @@ export default class Chat extends React.Component {
     }
     aux = aux.reverse();
     aux = aux.concat(this.state.mostrar);
-    this.setState({ mostrar: aux, indice: indice - 10 });
+    this.setState({
+      mostrar: aux,
+      indice: indice - 10
+    });
   }
+  /**
+   * Obtiene nuevos mensajes enviados por el usuario y por el otro usuario
+   */
   getNewMessages() {
     getMessagesFromSender(
       parseInt(this.props.navigation.getParam("id")),
@@ -288,12 +336,18 @@ export default class Chat extends React.Component {
       }
     );
   }
-
+  /**
+   * Rutina de llamada al pulsar enviar
+   * Vacia el campo de texto y envia el mensaje
+   */
   sendHandler() {
     this.addMessage(this.state.text);
     this.setState({ text: "" });
   }
-
+  /**
+   * Envia un mensaje
+   * @param {Object} message Mensaje a enviar
+   */
   addMessage(message) {
     // Append the message to the component state
     const receiver = parseInt(this.props.navigation.getParam("id"));
@@ -306,11 +360,15 @@ export default class Chat extends React.Component {
       }
     });
   }
-
+  /**
+   * Inicia un reloj para que se pidan nuevos mensajes cada segundo
+   */
   iniciarReloj() {
     this.timerID = setInterval(() => this.getNewMessages(), 1000);
   }
-
+  /**
+   * Se elimina el reloj
+   */
   pararReloj() {
     clearInterval(this.timerID);
   }
@@ -386,7 +444,9 @@ export default class Chat extends React.Component {
       </RippleTouchable>
     )
   });
-
+  /**
+   * Renderiza el botón enviar cuando el usuario ha introducido texto
+   */
   boton = () => {
     if (this.state.text.length > 0) {
       return (
@@ -396,7 +456,9 @@ export default class Chat extends React.Component {
       );
     }
   };
-
+  /**
+   * Renderiza el componente de entrada de texto si el usuario puede hablar
+   */
   entradaTexto = () => {
     if (this.state.puedeHablar) {
       return (
@@ -413,6 +475,9 @@ export default class Chat extends React.Component {
       );
     }
   };
+  /**
+   * Renderiza el mensaje de aviso
+   */
   aviso = () => {
     if (!this.state.puedeHablar) {
       return (
@@ -423,30 +488,6 @@ export default class Chat extends React.Component {
         </View>
       );
     }
-  };
-  enviarMensaje = () => {
-    if (this.state.text.length % 2 == 0) {
-      tipo = "entrante";
-    } else {
-      tipo = "saliente";
-    }
-
-    var hours = new Date().getHours();
-    var mins = new Date().getMinutes();
-    var date = "" + hours + ":" + mins;
-
-    nuevoDatos = [
-      ...this.state.datos,
-      {
-        texto: this.state.text,
-        tipo: tipo,
-        fecha: date
-      }
-    ];
-    this.setState({ datos: nuevoDatos });
-
-    this.setState({ mensajes: nuevoDatos });
-    this.setState({ text: "" });
   };
 
   render() {
