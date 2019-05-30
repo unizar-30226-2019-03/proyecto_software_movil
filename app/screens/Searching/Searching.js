@@ -60,18 +60,18 @@ export default class Searching extends React.Component {
       projection: "videoWithSubjectAndUniversity"
     };
     this.videoApiInstance.findVideosContainingTitle(opts, (error, data, response) => {
-      if (!error) {
-        this.currentDate = ApiClient.parseDate(response.headers.date);
-        this.setState({
-          vidData: data._embedded.videos,
-          loadingVid: false
-        });
-      } else {
+      if (error) {
         if (error.status == 403) {
           Auth.signOut(this.props.navigation);
         } else {
           HaOcurridoUnError(null);
         }
+      } else {
+        this.currentDate = ApiClient.parseDate(response.headers.date);
+        this.setState({
+          vidData: data._embedded.videos,
+          loadingVid: false
+        });
       }
     });
   };
@@ -82,41 +82,31 @@ export default class Searching extends React.Component {
       projection: "subjectWithUniversity"
     };
     this.subjectApiInstance.findSubjectsContainingName(opts, (error, data, response) => {
-      if (!error) {
-        this.setState({
-          subData: data._embedded.subjects,
-          loadingSub: false
-        });
-      } else {
+      if (error) {
         if (error.status == 403) {
           Auth.signOut(this.props.navigation);
         } else {
           HaOcurridoUnError(null);
         }
+      } else {
+        this.setState({
+          subData: data._embedded.subjects,
+          loadingSub: false
+        });
       }
     });
   };
 
-  changeTabThenGetData = viewingVideo => {
-    if (viewingVideo) {
-      this.setState({
-        viewingVideos: viewingVideo
-      });
-    } else {
-      this.setState({
-        viewingVideos: viewingVideo
-      });
-    }
+  changeTab = () => {
+    this.setState({
+      viewingVideos: !this.state.viewingVideos
+    });
   };
 
   getData = () => {
-    if (this.state.viewingVideos) {
-      this.setState({ loadingVid: true });
-      if (this.state.searchText != "") this.getVideoData();
-    } else {
-      this.setState({ loadingSub: true });
-      if (this.state.searchText != "") this.getSubjectData();
-    }
+    this.setState({ loadingVid: true, loadingSub: true });
+    this.getVideoData();
+    this.getSubjectData();
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -181,14 +171,14 @@ export default class Searching extends React.Component {
           <TouchableOpacity
             activeOpacity={1}
             style={this.state.viewingVideos ? styles.inactiveSwap : styles.activeSwap}
-            onPress={() => this.changeTabThenGetData(false)}
+            onPress={() => this.changeTab()}
           >
             <Text style={this.state.viewingVideos ? styles.inactiveTab : styles.activeTab}>ASIGNATURAS</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
             style={this.state.viewingVideos ? styles.activeSwap : styles.inactiveSwap}
-            onPress={() => this.changeTabThenGetData(true)}
+            onPress={() => this.changeTab()}
           >
             <Text style={this.state.viewingVideos ? styles.activeTab : styles.inactiveTab}>VÍDEOS</Text>
           </TouchableOpacity>
