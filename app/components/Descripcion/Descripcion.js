@@ -58,7 +58,7 @@ export default class Descripcion extends React.Component {
     this._listaProfesores.scrollTo({ x: 0, y: 0, animated: true });
     this._listaDescripcion.scrollTo({ x: 0, y: 0, animated: true });
 
-    if (this.state.desplegado == false) {
+    if (this.state.desplegado === false) {
       Animated.timing(this._animatedHeight, { toValue: 150 }).start();
       Animated.timing(this._animatedOpacity, { toValue: 1 }).start();
       this.setState({ desplegado: true });
@@ -85,11 +85,16 @@ export default class Descripcion extends React.Component {
         }
       >
         <View style={styles.iconAndNameView}>
-          <Image
-            source={{ uri: profesor.foto }}
-            style={styles.userIcon}
-            margin={20}
-          />
+          <View
+            style={{ borderRadius: 50, alignContent: "center", borderWidth: 1 }}
+          >
+            <Image
+              source={{ uri: profesor.foto }}
+              style={styles.userIcon}
+              margin={5}
+            />
+          </View>
+
           <Text style={styles.userName}>
             {profesor.nombre + " " + profesor.apellidos}
           </Text>

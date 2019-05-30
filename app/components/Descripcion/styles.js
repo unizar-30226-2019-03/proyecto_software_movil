@@ -30,7 +30,7 @@ export default StyleSheet.create({
   iconAndNameView: {
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     marginVertical: 20,
     marginHorizontal: 20
   },
@@ -38,13 +38,15 @@ export default StyleSheet.create({
     width: 80,
     height: 80,
     //alignSelf: "flex-start",
-    borderRadius: 50
+    borderRadius: 50,
+    borderWidth: 1
   },
   userName: {
     color: "black",
     //fontWeight: "bold",
     fontSize: 20,
-    width: 100
+    width: 100,
+    alignSelf: "center"
   },
   profesores: {
     marginVertical: 2
