@@ -97,8 +97,8 @@ export default class Inicio extends React.Component {
         id: id
       });
     } else {
-      if (event.url != undefined && event.url.length > 7) {
-        Alert.alert("URL INCORRECTA");
+      if (event.url != undefined && !event.url.includes("expo")) {
+        Alert.alert("URL INCORRECTA " + event.url);
       }
     }
   }
