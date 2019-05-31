@@ -1,5 +1,25 @@
+/**
+ * @fileoverview Pantalla que muestra los ultimos mensajes recibidos
+ * @author Unicast
+ * @requires swagger_unicast:MessageApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../../config/Auth:Auth
+ * @requires ../../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../../components/Time:timeStampToChatDate
+ * @requires ../../../components/HaOcurridoUnError:HaOcurridoUnError
+ * @requires ../../../components/RippleTouchable:RippleTouchable
+ * @requires ../../../components/LoadingFooter:LoadingFooter
+ * @requires ../../../components/NoHayContenidoQueMostrar:NoHayContenidoQueMostrar
+ *
+ */
 import React from "react";
-import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  View
+} from "react-native";
 
 import { Image } from "react-native-elements";
 
@@ -18,7 +38,10 @@ import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-
+/**
+ * Pantalla que muestra los ultimos mensajes recibidos
+ * @module MensajesTab
+ */
 export default class MensajesTab extends React.Component {
   constructor(props) {
     super(props);
@@ -39,15 +62,22 @@ export default class MensajesTab extends React.Component {
     this.apiInstance = new MessageApi();
   }
 
+  /**
+   *Llama a getData y define el callback para las notificaciones
+   */
   componentDidMount = () => {
     this.getData();
     UnicastNotifications.setNewMessageCallback(this.getData);
   };
-
+  /**
+   * Elimina el callback para las notificaciones
+   */
   componentWillUnmount = () => {
     UnicastNotifications.cleanNewMessageCallback();
   };
-
+  /**
+   * Obtiene los ultimos mensajes recibidos por el usuario
+   */
   getData = () => {
     if (!this.updating) {
       this.updating = true;
@@ -106,7 +136,10 @@ export default class MensajesTab extends React.Component {
           <FlatList
             data={this.state.data}
             renderItem={({ item }) => {
-              let usuario = item.sender.id == Auth.getUserId() ? item.receiver : item.sender;
+              let usuario =
+                item.sender.id == Auth.getUserId()
+                  ? item.receiver
+                  : item.sender;
               return (
                 <RippleTouchable
                   onPress={() =>
@@ -132,7 +165,9 @@ export default class MensajesTab extends React.Component {
                         {item.text}
                       </Text>
                     </View>
-                    <Text style={styles.hourText}>{timeStampToChatDate(item.timestamp, this.currentDate)}</Text>
+                    <Text style={styles.hourText}>
+                      {timeStampToChatDate(item.timestamp, this.currentDate)}
+                    </Text>
                   </View>
                 </RippleTouchable>
               );

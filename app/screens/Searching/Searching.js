@@ -1,5 +1,15 @@
+/**
+ * Pantalla de bus
+ */
 import React from "react";
-import { View, ScrollView, FlatList, ActivityIndicator, TouchableOpacity, Platform } from "react-native";
+import {
+  View,
+  ScrollView,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+  Platform
+} from "react-native";
 
 import { SearchBar, Button, Text } from "react-native-elements";
 
@@ -59,21 +69,24 @@ export default class Searching extends React.Component {
       title: this.state.searchText,
       projection: "videoWithSubjectAndUniversity"
     };
-    this.videoApiInstance.findVideosContainingTitle(opts, (error, data, response) => {
-      if (error) {
-        if (error.status == 403) {
-          Auth.signOut(this.props.navigation);
+    this.videoApiInstance.findVideosContainingTitle(
+      opts,
+      (error, data, response) => {
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(null);
+          }
         } else {
-          HaOcurridoUnError(null);
+          this.currentDate = ApiClient.parseDate(response.headers.date);
+          this.setState({
+            vidData: data._embedded.videos,
+            loadingVid: false
+          });
         }
-      } else {
-        this.currentDate = ApiClient.parseDate(response.headers.date);
-        this.setState({
-          vidData: data._embedded.videos,
-          loadingVid: false
-        });
       }
-    });
+    );
   };
 
   getSubjectData = () => {
@@ -81,20 +94,23 @@ export default class Searching extends React.Component {
       name: this.state.searchText,
       projection: "subjectWithUniversity"
     };
-    this.subjectApiInstance.findSubjectsContainingName(opts, (error, data, response) => {
-      if (error) {
-        if (error.status == 403) {
-          Auth.signOut(this.props.navigation);
+    this.subjectApiInstance.findSubjectsContainingName(
+      opts,
+      (error, data, response) => {
+        if (error) {
+          if (error.status == 403) {
+            Auth.signOut(this.props.navigation);
+          } else {
+            HaOcurridoUnError(null);
+          }
         } else {
-          HaOcurridoUnError(null);
+          this.setState({
+            subData: data._embedded.subjects,
+            loadingSub: false
+          });
         }
-      } else {
-        this.setState({
-          subData: data._embedded.subjects,
-          loadingSub: false
-        });
       }
-    });
+    );
   };
 
   changeTab = () => {
@@ -170,17 +186,33 @@ export default class Searching extends React.Component {
         <View style={styles.buttonRow}>
           <TouchableOpacity
             activeOpacity={1}
-            style={this.state.viewingVideos ? styles.inactiveSwap : styles.activeSwap}
+            style={
+              this.state.viewingVideos ? styles.inactiveSwap : styles.activeSwap
+            }
             onPress={() => this.changeTab()}
           >
-            <Text style={this.state.viewingVideos ? styles.inactiveTab : styles.activeTab}>ASIGNATURAS</Text>
+            <Text
+              style={
+                this.state.viewingVideos ? styles.inactiveTab : styles.activeTab
+              }
+            >
+              ASIGNATURAS
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
-            style={this.state.viewingVideos ? styles.activeSwap : styles.inactiveSwap}
+            style={
+              this.state.viewingVideos ? styles.activeSwap : styles.inactiveSwap
+            }
             onPress={() => this.changeTab()}
           >
-            <Text style={this.state.viewingVideos ? styles.activeTab : styles.inactiveTab}>VÍDEOS</Text>
+            <Text
+              style={
+                this.state.viewingVideos ? styles.activeTab : styles.inactiveTab
+              }
+            >
+              VÍDEOS
+            </Text>
           </TouchableOpacity>
         </View>
         {this.state.viewingVideos ? (
@@ -202,7 +234,10 @@ export default class Searching extends React.Component {
                     title={item.title}
                     info={timeStampToFormat(item.timestamp, this.currentDate)}
                     asignaturaIcon={{
-                      uri: item.university != null ? item.university.photo : "uri_nula"
+                      uri:
+                        item.university != null
+                          ? item.university.photo
+                          : "uri_nula"
                     }}
                     asignaturaName={item.subject.abbreviation}
                     asignaturaFullName={item.subject.name}
@@ -227,7 +262,8 @@ export default class Searching extends React.Component {
               <ThumbnailAsignatura
                 navigation={this.props.navigation}
                 icon={{
-                  uri: item.university != null ? item.university.photo : "uri_nula"
+                  uri:
+                    item.university != null ? item.university.photo : "uri_nula"
                 }}
                 name={item.name}
                 id={item.id}

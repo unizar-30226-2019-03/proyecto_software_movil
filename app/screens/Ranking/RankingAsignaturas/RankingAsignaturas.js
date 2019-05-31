@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Ranking de las asignaturas mas populares
+ * @author Unicast
+ * @requires ../../../config/Auth:Auth
+ * @requires ../../../components/RippleTouchable:RippleTouchable
+ * @requires ../../../config/UnicastNotifications:UnicastNotifications
+ * @requires swagger_unicast:SubjectApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../../components/HaOcurridoUnError:HaOcurridoUnError
+ * @requires ../../../components/IconoAsignaturaUniversidad:IconoAsignaturaUniversidad
+ * @requires ../../../components/LoadingFooter:LoadingFooter
+ * @requires ../../../components/NoHayContenidoQueMostrar:NoHayContenidoQueMostrar
+ */
 import React from "react";
 import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 import { Icon } from "react-native-elements";
@@ -18,7 +31,10 @@ import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-
+/**
+ * Pantalla de ranking de asignaturas populares
+ * @module RankingAsignaturas
+ */
 export default class RankingAsignaturas extends React.Component {
   constructor(props) {
     super(props);
@@ -43,7 +59,9 @@ export default class RankingAsignaturas extends React.Component {
   componentDidMount = () => {
     this.getData();
   };
-
+  /**
+   * Obtiene el ranking de asignaturas populares
+   */
   getData = () => {
     if (this.totalPages == undefined || this.offset < this.totalPages) {
       let opts = {
@@ -73,17 +91,27 @@ export default class RankingAsignaturas extends React.Component {
         }
       });
     } else {
-      this.setState({ fetchingNewData: false, refreshing: false, loading: false });
+      this.setState({
+        fetchingNewData: false,
+        refreshing: false,
+        loading: false
+      });
     }
   };
-
+  /**
+   * Callback llamado al llegar al final del ranking,
+   * llama otra vez a getData
+   */
   onEndReached = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.setState({ fetchingNewData: true });
       this.getData();
     }
   };
-
+  /**
+   * Callback llamado al refrescar la pantalla,
+   * vuelve a llamar a getData
+   */
   onRefresh = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.offset = 0;
@@ -95,7 +123,10 @@ export default class RankingAsignaturas extends React.Component {
       this.getData();
     }
   };
-
+  /**
+   * muestra el icono de trofeo correspondiente a cada asignatura
+   * @param {Number} index Puesto de la asignatura (empezando por 0)
+   */
   icon = index => {
     let color = "white";
 
@@ -120,7 +151,12 @@ export default class RankingAsignaturas extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
@@ -146,12 +182,19 @@ export default class RankingAsignaturas extends React.Component {
                 <View style={styles.iconoAsignaturaUniversidad}>
                   <IconoAsignaturaUniversidad
                     name={item.abbreviation}
-                    image={{ uri: item.university != undefined ? item.university.photo : "uri_nula" }}
+                    image={{
+                      uri:
+                        item.university != undefined
+                          ? item.university.photo
+                          : "uri_nula"
+                    }}
                   />
                 </View>
                 {this.icon(index)}
                 <View style={styles.rankScoreView}>
-                  <Text style={styles.rankScore}>{Math.floor(item.avgScore * 20) + "%"}</Text>
+                  <Text style={styles.rankScore}>
+                    {Math.floor(item.avgScore * 20) + "%"}
+                  </Text>
                 </View>
               </RippleTouchable>
             )}

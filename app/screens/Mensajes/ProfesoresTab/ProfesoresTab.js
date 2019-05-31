@@ -1,5 +1,23 @@
+/**
+ * @fileoverview Lista de profesores a los que puede hablar el usuario
+ * @requires swagger_unicast:UserApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../../components/RippleTouchable:RippleTouchable
+ * @requires ../../../config/Auth:Auth
+ * @requires ../../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../../config/Auth:Auth
+ * @requires ../../../components/HaOcurridoUnError:HaOcurridoUnError
+ * @requires ../../../components/LoadingFooter:LoadingFooter
+ * @requires ../../../components/NoHayContenidoQueMostrar:NoHayContenidoQueMostrar
+ */
 import React from "react";
-import { Text, TouchableOpacity, ActivityIndicator, FlatList, View } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+  View
+} from "react-native";
 
 import { Image } from "react-native-elements";
 
@@ -17,7 +35,10 @@ import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-
+/**
+ * Lista de profesores a los que puede hablar el usuario
+ * @module ProfesorTab
+ */
 export default class ProfesorTab extends React.Component {
   constructor(props) {
     super(props);
@@ -42,7 +63,9 @@ export default class ProfesorTab extends React.Component {
   componentDidMount = () => {
     this.getData();
   };
-
+  /**
+   * Obtiene los profesores a los que puede hablar el usuario
+   */
   getData = () => {
     if (this.totalPages == undefined || this.offset < this.totalPages) {
       let opts = {
@@ -72,17 +95,27 @@ export default class ProfesorTab extends React.Component {
         }
       });
     } else {
-      this.setState({ fetchingNewData: false, refreshing: false, loading: false });
+      this.setState({
+        fetchingNewData: false,
+        refreshing: false,
+        loading: false
+      });
     }
   };
-
+  /**
+   * Callback lalmado al lelgar al final de la lista
+   * vuelve a llamar a getData
+   */
   onEndReached = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.setState({ fetchingNewData: true });
       this.getData();
     }
   };
-
+  /**
+   * Callback invocado al refrescar la pagina,
+   * vuelve a llamar a getData
+   */
   onRefresh = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.offset = 0;
@@ -99,7 +132,12 @@ export default class ProfesorTab extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
@@ -120,7 +158,10 @@ export default class ProfesorTab extends React.Component {
                   }
                 >
                   <View style={styles.chatContainer}>
-                    <Image source={{ uri: item.photo }} style={styles.profilePic} />
+                    <Image
+                      source={{ uri: item.photo }}
+                      style={styles.profilePic}
+                    />
                     <View style={styles.nameAndMsgContainer}>
                       <Text numberOfLines={1} style={styles.nameText}>
                         {item.name + ", " + item.surnames}

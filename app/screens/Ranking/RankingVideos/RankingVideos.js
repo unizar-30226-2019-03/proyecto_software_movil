@@ -1,3 +1,18 @@
+/**
+ * @fileoverview Ranking de videos mas vistos la ultima semana
+ * @author Unicast
+ * @requires ../../../config/Auth:Auth
+ * @requires ../../../config/UnicastNotifications:UnicastNotifications
+ * @requires swagger_unicast:VideoApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../../components/HaOcurridoUnError:HaOcurridoUnError
+ * @requires ../../../components/Time:timeStampToFormat
+ * @requires ../../../components/Time:secToDuration
+ * @requires ../../../components/FullScreenThumbnail:FullScreenThumbnail
+ * @requires ../../../components/LoadingFooter:LoadingFooter
+ * @requires ../../../components/NoHayContenidoQueMostrar:NoHayContenidoQueMostrar
+ *
+ */
 import React from "react";
 import { Text, View, Button, FlatList, ActivityIndicator } from "react-native";
 import { Icon } from "react-native-elements";
@@ -18,7 +33,10 @@ import LoadingFooter from "../../../components/LoadingFooter";
 import NoHayContenidoQueMostrar from "../../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-
+/**
+ * Pantalla de videos mas visitados la ultima semana
+ * @module RankingVideos
+ */
 export default class RankingVideos extends React.Component {
   constructor(props) {
     super(props);
@@ -45,7 +63,9 @@ export default class RankingVideos extends React.Component {
   componentDidMount = () => {
     this.getData();
   };
-
+  /**
+   * Obtiene los videos mas populares esta semana
+   */
   getData = () => {
     if (this.totalPages == undefined || this.offset < this.totalPages) {
       let opts = {
@@ -55,38 +75,51 @@ export default class RankingVideos extends React.Component {
         page: this.offset,
         projection: "videoWithSubjectAndUniversity"
       };
-      this.apiInstance.findMostPopularLastWeekVideos(opts, (error, data, response) => {
-        console.log(data);
-        if (error) {
-          if (error.status == 403) {
-            Auth.signOut(this.props.navigation);
+      this.apiInstance.findMostPopularLastWeekVideos(
+        opts,
+        (error, data, response) => {
+          console.log(data);
+          if (error) {
+            if (error.status == 403) {
+              Auth.signOut(this.props.navigation);
+            } else {
+              HaOcurridoUnError(this.getData);
+            }
           } else {
-            HaOcurridoUnError(this.getData);
+            this.currentDate = ApiClient.parseDate(response.headers.date);
+            this.offset = this.offset + 1;
+            this.totalPages = data.page.totalPages;
+            this.setState({
+              data: [...this.state.data, ...data._embedded.videos],
+              loading: false,
+              refreshing: false,
+              fetchingNewData: false
+            });
           }
-        } else {
-          this.currentDate = ApiClient.parseDate(response.headers.date);
-          this.offset = this.offset + 1;
-          this.totalPages = data.page.totalPages;
-          this.setState({
-            data: [...this.state.data, ...data._embedded.videos],
-            loading: false,
-            refreshing: false,
-            fetchingNewData: false
-          });
         }
-      });
+      );
     } else {
-      this.setState({ fetchingNewData: false, refreshing: false, loading: false });
+      this.setState({
+        fetchingNewData: false,
+        refreshing: false,
+        loading: false
+      });
     }
   };
-
+  /**
+   * Callback llamado al llegar al final de la lista,
+   * vuelve a llamar a getData
+   */
   onEndReached = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.setState({ fetchingNewData: true });
       this.getData();
     }
   };
-
+  /**
+   * Callback llamado al refrescar la pagina,
+   * vuelve a llamar a getData
+   */
   onRefresh = () => {
     if (!this.state.fetchingNewData && !this.state.refreshing) {
       this.offset = 0;
@@ -101,7 +134,12 @@ export default class RankingVideos extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, { justifyContent: this.state.loading ? "center" : "flex-start" }]}>
+      <View
+        style={[
+          styles.container,
+          { justifyContent: this.state.loading ? "center" : "flex-start" }
+        ]}
+      >
         {this.state.loading ? (
           <ActivityIndicator size="large" />
         ) : (
@@ -121,7 +159,10 @@ export default class RankingVideos extends React.Component {
                   title={item.title}
                   info={timeStampToFormat(item.timestamp, this.currentDate)}
                   asignaturaIcon={{
-                    uri: item.university != undefined ? item.university.photo : "uri_nula"
+                    uri:
+                      item.university != undefined
+                        ? item.university.photo
+                        : "uri_nula"
                   }}
                   asignaturaName={item.subject.abbreviation}
                   asignaturaFullName={item.subject.name}
@@ -134,7 +175,9 @@ export default class RankingVideos extends React.Component {
               show: this.state.fetchingNewData
             })}
             ListEmptyComponent={
-              this.state.fetchingNewData || this.state.refreshing ? null : <NoHayContenidoQueMostrar what="vídeos" />
+              this.state.fetchingNewData || this.state.refreshing ? null : (
+                <NoHayContenidoQueMostrar what="vídeos" />
+              )
             }
             keyExtractor={(item, index) => index.toString()}
           />
