@@ -1,3 +1,10 @@
+/**
+ * Este modulo gestiona toda la navegacion de la aplicacion
+ * @fileoverview Gestiona la nevegacion de la aplicación
+ * @author Unicast
+ *
+ * @module Routes
+ */
 import React from "react";
 
 import { Dimensions } from "react-native";
@@ -5,11 +12,11 @@ import { Dimensions } from "react-native";
 import { TouchableNativeFeedback, View } from "react-native";
 
 import {
-	createStackNavigator,
-	createMaterialTopTabNavigator,
-	createBottomTabNavigator,
-	createAppContainer,
-	createSwitchNavigator
+  createStackNavigator,
+  createMaterialTopTabNavigator,
+  createBottomTabNavigator,
+  createAppContainer,
+  createSwitchNavigator
 } from "react-navigation";
 
 import SearchingScreen from "../../screens/Searching";
@@ -54,216 +61,237 @@ import { Azul } from "../../constants";
 import { TopTabBarOptions } from "./styles";
 import styles from "./styles";
 
-// Inicio
+/**
+ * Navegacion Inicio
+ */
 
 const Inicio = createStackNavigator({
-	Inicio: {
-		screen: InicioScreen,
-		navigationOptions: SearchMenu
-	},
-	Searching: SearchingScreen,
-	Asignatura: AsignaturaScreen
+  Inicio: {
+    screen: InicioScreen,
+    navigationOptions: SearchMenu
+  },
+  Searching: SearchingScreen,
+  Asignatura: AsignaturaScreen
 });
 
-// Asignaturas
+/**
+ * Navegacion Asignaturas
+ */
+
 const AsignaturasTopNav = createMaterialTopTabNavigator(
-	{
-		AsignaturasTab: {
-			screen: AsignaturasTabScreen,
-			navigationOptions: {
-				tabBarLabel: "ASIGNATURAS"
-			}
-		},
-		VideosTab: {
-			screen: VideosTabScreen,
-			navigationOptions: {
-				tabBarLabel: "VÍDEOS"
-			}
-		}
-	},
-	TopTabBarOptions
+  {
+    AsignaturasTab: {
+      screen: AsignaturasTabScreen,
+      navigationOptions: {
+        tabBarLabel: "ASIGNATURAS"
+      }
+    },
+    VideosTab: {
+      screen: VideosTabScreen,
+      navigationOptions: {
+        tabBarLabel: "VÍDEOS"
+      }
+    }
+  },
+  TopTabBarOptions
 );
 
 AsignaturasTopNav.navigationOptions = SearchMenu;
 
 const Asignaturas = createStackNavigator({
-	Asignaturas: AsignaturasTopNav,
-	Searching: SearchingScreen,
-	Asignatura: AsignaturaScreen
+  Asignaturas: AsignaturasTopNav,
+  Searching: SearchingScreen,
+  Asignatura: AsignaturaScreen
 });
 
-// Biblioteca
+/**
+ * Navegacion Biblioteca
+ */
 
 const Biblioteca = createStackNavigator({
-	Biblioteca: {
-		screen: BibliotecaScreen,
-		navigationOptions: SearchMenu
-	},
-	ListaVideos: ListaVideosScreen,
-	MisListas: MisListasScreen,
-	Searching: SearchingScreen,
-	Asignatura: AsignaturaScreen
+  Biblioteca: {
+    screen: BibliotecaScreen,
+    navigationOptions: SearchMenu
+  },
+  ListaVideos: ListaVideosScreen,
+  MisListas: MisListasScreen,
+  Searching: SearchingScreen,
+  Asignatura: AsignaturaScreen
 });
 
-// Ranking
+/**
+ * Navegacion Ranking
+ */
 
 const RankingTopNav = createMaterialTopTabNavigator(
-	{
-		AsignaturasTab: {
-			screen: RankingAsignaturasScreen,
-			navigationOptions: {
-				tabBarLabel: "ASIGNATURAS"
-			}
-		},
-		VideosTab: {
-			screen: RankingVideosScreen,
-			navigationOptions: {
-				tabBarLabel: "VÍDEOS"
-			}
-		}
-	},
-	TopTabBarOptions
+  {
+    AsignaturasTab: {
+      screen: RankingAsignaturasScreen,
+      navigationOptions: {
+        tabBarLabel: "ASIGNATURAS"
+      }
+    },
+    VideosTab: {
+      screen: RankingVideosScreen,
+      navigationOptions: {
+        tabBarLabel: "VÍDEOS"
+      }
+    }
+  },
+  TopTabBarOptions
 );
 
 RankingTopNav.navigationOptions = SearchMenu;
 
 const Ranking = createStackNavigator({
-	Ranking: RankingTopNav,
-	Searching: SearchingScreen,
-	Asignatura: AsignaturaScreen
+  Ranking: RankingTopNav,
+  Searching: SearchingScreen,
+  Asignatura: AsignaturaScreen
 });
 
-// Mensajes
+/**
+ * Navegacion Mensajes
+ */
 
 const MensajesTopNav = createMaterialTopTabNavigator(
-	{
-		MensajesTab: {
-			screen: MensajesTabScreen,
-			navigationOptions: {
-				tabBarLabel: "MENSAJES"
-			}
-		},
-		ProfesoresTab: {
-			screen: ProfesoresTabScreen,
-			navigationOptions: {
-				tabBarLabel: "PROFESORES"
-			}
-		}
-	},
-	TopTabBarOptions
+  {
+    MensajesTab: {
+      screen: MensajesTabScreen,
+      navigationOptions: {
+        tabBarLabel: "MENSAJES"
+      }
+    },
+    ProfesoresTab: {
+      screen: ProfesoresTabScreen,
+      navigationOptions: {
+        tabBarLabel: "PROFESORES"
+      }
+    }
+  },
+  TopTabBarOptions
 );
 
 MensajesTopNav.navigationOptions = SearchMenu;
 
 const Mensajes = createStackNavigator({
-	Mensajes: MensajesTopNav,
-	Searching: SearchingScreen
+  Mensajes: MensajesTopNav,
+  Searching: SearchingScreen
 });
 
-// DownMenu
+/**
+ * Navegacion Downmenu
+ */
 
 const DownMenu = createBottomTabNavigator(
-	{
-		Inicio: Inicio,
-		Ranking: Ranking,
-		Asignaturas: Asignaturas,
-		Mensajes: Mensajes,
-		Biblioteca: Biblioteca
-	},
-	{
-		defaultNavigationOptions: ({ navigation }) => ({
-			tabBarIcon: ({ focused, horizontal, tintColor }) => {
-				const { routeName } = navigation.state;
-				let IconComponent;
-				let iconName;
-				if (routeName === "Inicio") {
-					IconComponent = MaterialCommunityIcons;
-					iconName = "home";
-				} else if (routeName === "Ranking") {
-					IconComponent = MaterialCommunityIcons;
-					iconName = "trophy";
-				} else if (routeName === "Asignaturas") {
-					IconComponent = EntypoIcons;
-					iconName = "graduation-cap";
-				} else if (routeName === "Mensajes") {
-					IconComponent = SimpleLineIcons;
-					iconName = "envelope-letter";
-				} else if (routeName === "Biblioteca") {
-					IconComponent = MaterialCommunityIcons;
-					iconName = "folder";
-				}
-				return <IconComponent name={iconName} style={styles.downMenuIcon} color={tintColor} />;
-			},
-			tabBarButtonComponent: props => {
-				return <RippleTouchable {...props} round={true} />;
-			}
-		}),
-		navigationOptions: {
-			header: null
-		},
-		tabBarOptions: {
-			activeTintColor: Azul,
-			inactiveTintColor: "gray",
-			tabStyle: {
-				width: Dimensions.get("window").width / 5
-			}
-		}
-	}
+  {
+    Inicio: Inicio,
+    Ranking: Ranking,
+    Asignaturas: Asignaturas,
+    Mensajes: Mensajes,
+    Biblioteca: Biblioteca
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        let IconComponent;
+        let iconName;
+        if (routeName === "Inicio") {
+          IconComponent = MaterialCommunityIcons;
+          iconName = "home";
+        } else if (routeName === "Ranking") {
+          IconComponent = MaterialCommunityIcons;
+          iconName = "trophy";
+        } else if (routeName === "Asignaturas") {
+          IconComponent = EntypoIcons;
+          iconName = "graduation-cap";
+        } else if (routeName === "Mensajes") {
+          IconComponent = SimpleLineIcons;
+          iconName = "envelope-letter";
+        } else if (routeName === "Biblioteca") {
+          IconComponent = MaterialCommunityIcons;
+          iconName = "folder";
+        }
+        return (
+          <IconComponent
+            name={iconName}
+            style={styles.downMenuIcon}
+            color={tintColor}
+          />
+        );
+      },
+      tabBarButtonComponent: props => {
+        return <RippleTouchable {...props} round={true} />;
+      }
+    }),
+    navigationOptions: {
+      header: null
+    },
+    tabBarOptions: {
+      activeTintColor: Azul,
+      inactiveTintColor: "gray",
+      tabStyle: {
+        width: Dimensions.get("window").width / 5
+      }
+    }
+  }
 );
 
-// App
+/**
+ * Navegacion App
+ */
 
 const Logged = createStackNavigator({
-	TopBarScreens: {
-		screen: DownMenu,
-		headerMode: "none"
-	},
-	Chat: ChatScreen,
-	SubirVideo: SubirVideoScreen,
-	VerPerfil: VerPerfilScreen,
-	ViendoVideo: {
-		screen: ViendoVideoScreen,
-		navigationOptions: {
-			header: null
-		}
-	},
-	Cuenta: CuentaScreen
+  TopBarScreens: {
+    screen: DownMenu,
+    headerMode: "none"
+  },
+  Chat: ChatScreen,
+  SubirVideo: SubirVideoScreen,
+  VerPerfil: VerPerfilScreen,
+  ViendoVideo: {
+    screen: ViendoVideoScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+  Cuenta: CuentaScreen
 });
 
 const NotLogged = createStackNavigator({
-	SignIn: {
-		screen: SignInScreen,
-		navigationOptions: {
-			header: null
-		}
-	},
-	SignUp: SignUpScreen
+  SignIn: {
+    screen: SignInScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+  SignUp: SignUpScreen
 });
 
 export default createAppContainer(
-	createSwitchNavigator(
-		{
-			NotLogged: {
-				screen: NotLogged,
-				navigationOptions: {
-					header: null
-				}
-			},
-			Logged: {
-				screen: Logged,
-				navigationOptions: {
-					header: null
-				}
-			},
-			Carga: {
-				screen: CargaScreen,
-				navigationOptions: {
-					header: null
-				}
-			}
-		},
-		{
-			initialRouteName: "Carga"
-		}
-	)
+  createSwitchNavigator(
+    {
+      NotLogged: {
+        screen: NotLogged,
+        navigationOptions: {
+          header: null
+        }
+      },
+      Logged: {
+        screen: Logged,
+        navigationOptions: {
+          header: null
+        }
+      },
+      Carga: {
+        screen: CargaScreen,
+        navigationOptions: {
+          header: null
+        }
+      }
+    },
+    {
+      initialRouteName: "Carga"
+    }
+  )
 );

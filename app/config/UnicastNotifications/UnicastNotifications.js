@@ -1,3 +1,12 @@
+/**
+ * @fileoverview Gestor de notificaciones de la aplicacion
+ * @author Unicast
+ * @requires ../../constants:PeriodoNotificaciones
+ * @requires ../../components/Time:timeStampToFormat
+ * @requires swagger_unicast:UserApi
+ * @requires swagger_unicast:ApiClient
+ * @requires swagger_unicast:NotificationApi
+ */
 import React from "react";
 
 import { Notifications } from "expo";
@@ -10,6 +19,10 @@ import { timeStampToFormat } from "../../components/Time";
 
 import { UserApi, ApiClient, NotificationApi } from "swagger_unicast";
 
+/**
+ * Gestion de notificaciones de la aplicacion
+ * @module UnicastNotifications
+ */
 export default class UnicastNotifications extends React.Component {
   static userToken = undefined;
   static userId = undefined;
@@ -41,7 +54,9 @@ export default class UnicastNotifications extends React.Component {
     //icon: "../../assets/icon.png", //TO_DO, ICONO DE JASEN
     color: "#0000"
   };
-
+  /**
+   * Inicia los canales para mensajes y videos
+   */
   static setUpChannels() {
     msgChannel = {
       name: "Mensajes en UniCast",
@@ -51,7 +66,8 @@ export default class UnicastNotifications extends React.Component {
     };
     vidChannel = {
       name: "Nuevos vídeos en UniCast",
-      description: "Notificaciones de UniCast de vídeos nuevos de asignaturas a las que sigues",
+      description:
+        "Notificaciones de UniCast de vídeos nuevos de asignaturas a las que sigues",
       vibrate: [0, 250, 250],
       badge: true
     };
@@ -59,6 +75,9 @@ export default class UnicastNotifications extends React.Component {
     Notifications.createChannelAndroidAsync("vid", vidChannel);
   }
 
+  /**
+   * Inicia el singleTon para obtener nuevas notificaciones
+   */
   static fireSingleton() {
     console.log("intento empezar timer");
     if (this.timer == null) {
@@ -75,39 +94,43 @@ export default class UnicastNotifications extends React.Component {
       console.log("no lo logre wacho");
     }
   }
-
+  /**
+   * Elimina el singleton para obtener nuevas notificaciones
+   */
   static killSingleton() {
     clearInterval(this.timer);
     this.timer = null;
   }
-
+  /**
+   * Obtiene nuevas notificaciones
+   */
   static fetchNewNotifications() {
     let opts = {
       page: 0
     };
-    this.apiInstance.getUserUncheckedNotifications(opts, (error, data, response) => {
-      if (!error) {
-        this.currentDate = ApiClient.parseDate(response.headers.date);
-        this.uncheckedNotifications = data._embedded.usersAreNotified;
-        this.renderNotifications();
+    this.apiInstance.getUserUncheckedNotifications(
+      opts,
+      (error, data, response) => {
+        if (!error) {
+          this.currentDate = ApiClient.parseDate(response.headers.date);
+          this.uncheckedNotifications = data._embedded.usersAreNotified;
+          this.renderNotifications();
+        }
       }
-    });
+    );
     this.fetchingNotifications = false;
   }
 
   static managePage0() {
     // PARA CADA NOTI, CHEQUEAR
     // console.log("las notif ", this.uncheckedNotifications);
-
     // for (let count = 0; count < this.uncheckedNotifications.length; ++count) {
     //   let thisNoti = this.uncheckedNotifications[count].notification;
-
     //   if (/*this.msgTimePending &&*/ thisNoti.notificationCategory == "messages") {
     //     //this.msgTimePending = false;
     //     if (thisNoti.timestamp > this.lastMsgDate) {
     //       this.lastMsgDate = thisNoti.timestamp;
     //       this.mustRenderMsg = true;
-
     //       this.lastRemitenteId = this.curRemitenteId;
     //       this.curRemitenteId = thisNoti.creatorId;
     //     }
@@ -123,15 +146,24 @@ export default class UnicastNotifications extends React.Component {
     //   }
     // }
   }
-
+  /**
+   * Inicia el callback al recibir notificacion de nuevo mensaje
+   * @param {Function} callback callback al recibir un nuevo mensaje
+   */
   static setNewMessageCallback(callback) {
     newMessageCallback = callback;
   }
 
+  /**
+   * Elimina el callback al recibir un nuevo mensaje
+   */
   static cleanNewMessageCallback() {
     newMessageCallback = null;
   }
 
+  /**
+   * Muestra las notificaciones en pantalla
+   */
   static renderNotifications() {
     this.callbackCalled = false;
     console.log("empiezo render notifications");
@@ -144,30 +176,35 @@ export default class UnicastNotifications extends React.Component {
           pragma: "no-cache",
           expires: 0
         };
-        this.userApiInstance.getUser(thisNoti.creatorId, opts, (error, data, response) => {
-          if (!error) {
-             Notifications.presentLocalNotificationAsync({
-               title: "Unicast",
-               body:
-                 "Nuevo mensaje de " +
-                 data.name +
-                 ": " +
-                 timeStampToFormat(thisNoti.timestamp, this.currentDate)
-             });
+        this.userApiInstance.getUser(
+          thisNoti.creatorId,
+          opts,
+          (error, data, response) => {
+            if (!error) {
+              Notifications.presentLocalNotificationAsync({
+                title: "Unicast",
+                body:
+                  "Nuevo mensaje de " +
+                  data.name +
+                  ": " +
+                  timeStampToFormat(thisNoti.timestamp, this.currentDate)
+              });
 
-             if (!this.callbackCalled && this.newMessageCallback) {
-               this.callbackCalled = true;
-               this.newMessageCallback();
-             }
-          } else {
-            console.log("ERROR OBTENIENDO EL USER!");
+              if (!this.callbackCalled && this.newMessageCallback) {
+                this.callbackCalled = true;
+                this.newMessageCallback();
+              }
+            } else {
+              console.log("ERROR OBTENIENDO EL USER!");
+            }
           }
-        });
-
+        );
       } else {
         Notifications.presentLocalNotificationAsync({
           title: "Unicast",
-          body: "Nuevo vídeo subido: " + timeStampToFormat(thisNoti.timestamp, this.currentDate)
+          body:
+            "Nuevo vídeo subido: " +
+            timeStampToFormat(thisNoti.timestamp, this.currentDate)
         });
       }
 
