@@ -9,9 +9,10 @@ import PerfilStore from "../../config/PerfilStore";
 import { observer } from "mobx-react/native";
 
 /**
- * @module ImagenPerfil
  * @param {Object} props props para renderizar el componente
  * 		props.style Estilo
+ * @module ImagenPerfil
+ *
  *
  */
 @observer

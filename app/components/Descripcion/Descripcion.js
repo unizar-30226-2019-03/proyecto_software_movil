@@ -21,8 +21,9 @@ import { Icon } from "react-native-elements";
 import { ScreenWidth, GrisClaro } from "../../constants/constants";
 
 /**
- * @module Descripcion
  * Renderiza la descripcion
+ * @module Descripcion
+ *
  */
 export default class Descripcion extends React.Component {
   constructor() {

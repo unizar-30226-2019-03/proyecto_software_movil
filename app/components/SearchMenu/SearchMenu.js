@@ -17,8 +17,9 @@ import EvilIcons from "react-native-vector-icons/EvilIcons";
 
 import styles from "./styles";
 /**
- * @module SearchMenu
  * @param {Object} navigation Datos referentes a la navegación
+ * @module SearchMenu
+ *
  */
 const SearchMenuBar = ({ navigation }) => {
   const { routeName } = navigation.state;

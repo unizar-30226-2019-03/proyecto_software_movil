@@ -16,11 +16,12 @@ import { Icon, Image } from "react-native-elements";
 import styles from "./styles";
 
 /**
- * @module ImagenDePerfilConIcono
  * @param {Object} props props para renderizar el componente
  *    props.source URL de la imagen
  *    props.style Estilo de la imagen
  *    props.onPressIcono callback a ejecutar al pulsar en el icono
+ * @module ImagenDePerfilConIcono
+ *
  *
  */
 const ImagenDePerfilConIcono = props => {

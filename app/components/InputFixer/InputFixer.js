@@ -17,10 +17,11 @@ import { ScreenhHeight, HeaderHeight } from "../../constants";
 
 const { State: TextInputState } = TextInput;
 /**
- * @module InputFixer
  * @param {Object} props props para renderizar el componente
  * 		props.children Contenido a mostrar dentro de la ScrolLView
  * 		props.style Estilo
+ * @module InputFixer
+ *
  */
 export default class InputFixer extends React.Component {
   state = {

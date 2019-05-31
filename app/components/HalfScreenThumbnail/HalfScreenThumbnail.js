@@ -33,7 +33,6 @@ import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 
 import styles from "./styles";
 /**
- * @module HalfScreenThumbnail
  * @param {Object} props Props que se le pasa al componente.
  * 		props.type="historial"|"Eliminar video"|"lista"|"mis_listas"
  * 		indica que tipo de mensaje "Eliminar de" debe mostrar
@@ -43,6 +42,8 @@ import styles from "./styles";
  * 		props.info informacion del video
  * 		props.duracion duracion del video
  * 		props.likes valoracion del video
+ * @module HalfScreenThumbnail
+ *
  *
  */
 export default class HalfScreenThumbnail extends React.Component {

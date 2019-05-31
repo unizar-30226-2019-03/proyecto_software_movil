@@ -8,9 +8,11 @@ import { View, Text } from "react-native";
 import styles from "./styles";
 
 /**
- * @module Comentario
- * @extends React.Component
  * Renderiza el comentario
+ * @extends React.Component
+ * @module Comentario
+ *
+ *
  */
 export default class Comentario extends React.Component {
   /**

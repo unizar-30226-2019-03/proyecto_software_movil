@@ -9,11 +9,12 @@ import RippleTouchable from "../../components/RippleTouchable";
 
 import styles from "./styles";
 /**
- * @module ThumbnailAsignatura
  * @param {Object} props props para renderizar el componente
  *    props.navigation  navegación
  *    props.name Nombre de la asignatura
  *    props.icon Icono de la Asignatura (El de la universidad)
+ * @module ThumbnailAsignatura
+ *
  */
 const ThumbnailAsignatura = props => {
   return (

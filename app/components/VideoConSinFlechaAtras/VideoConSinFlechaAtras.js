@@ -17,13 +17,14 @@ import { DisplayApi } from "swagger_unicast";
 import styles from "./styles";
 
 /**
- * @module VideoConSinFlechaAtras
  * @param {Object} props
  *    source={uri} uri del video
  *    thumbnail={uri} uri de la thumbnail
  *    autoplay={true / false}
  *    flechaSi={true / false} si el video tiene flecha para volver atrás o no
  *    width, height: altura y anchura del vídeo.
+ * @module VideoConSinFlechaAtras
+ *
  */
 export default class VideoConSinFlechaAtras extends React.Component {
   constructor(props) {

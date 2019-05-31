@@ -23,11 +23,12 @@ import styles from "./styles";
 // TODO: Parametrizar ir a otras pantallas (a la asignatura y video que toque).
 
 /**
- * @module FullScreenThumbnail
  * @param {Object} props props.videoId es el id del Video , props.image es la imagen del thumbnail,
  * 		props.asignaturaId es el id de la asignatura del video, props.asignaturaFullname es el
  * 		nombre de la asignatura del video, props.asignaturaName es el nombre anreviado de la asignatura
  * 		y props.asignaturaIcon el icono de la asignatura del video
+ * @module FullScreenThumbnail
+ *
  */
 const FullScreenThumbnail = props => {
   const likes = Math.floor(props.likes * 20);

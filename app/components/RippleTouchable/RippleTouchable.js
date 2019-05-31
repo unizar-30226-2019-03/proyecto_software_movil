@@ -10,9 +10,10 @@ import { Platform, TouchableHighlight } from "react-native";
 import { View, TouchableNativeFeedback } from "react-native";
 
 /**
- * @module RippleTouchable
  * @param {Object} props props parar renderizar el componente
  * 		props.children contenido que va  a ser pulsado
+ * @module RippleTouchable
+ *
  */
 export default class RippleTouchable extends React.Component {
   render() {

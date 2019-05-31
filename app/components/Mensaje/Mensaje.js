@@ -8,11 +8,12 @@ import { Text, View } from "react-native";
 
 import styles from "./styles";
 /**
- * @module Mensaje
  * @param {Object} props props para renderizar el componente
  *    props.fecha fecha del mensaje en formato AAAA-MM--DDT09:HH.MM.MMMZ
  *    props.esMio indica si el mensaje fue escrito por el usuario o no
  *    props.mensaje cuerpo del mensaje
+ * @module Mensaje
+ *
  */
 export default class Mensaje extends React.Component {
   /**
