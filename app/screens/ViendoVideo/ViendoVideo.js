@@ -1,3 +1,24 @@
+/**
+ * @fileoverview Pantalla viendo video
+ * @author Unicast
+ * @requires ../../components/VideoConSinFlechaAtras:VideoConSinFlechaAtras
+ * @requires ../../components/CuadroValorar:CuadroValorar
+ * @requires ../../components/Descripcion:Descripcion
+ * @requires ../../components/IconoAsignaturaUniversidad:IconoAsignaturaUniversidad
+ * @requires ../../components/Comentario:Comentario
+ * @requires swagger_unicast:ApiClient
+ * @requires swagger_unicast:VideoApi
+ * @requires swagger_unicast:VoteApi
+ * @requires swagger_unicast:CommentApi
+ * @requires swagger_unicast:UserApi
+ * @requires swagger_unicast:DisplayApi
+ * @requires swagger_unicast:SubjectApi
+ * @requires ../../config/Auth:Auth
+ * @requires ../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../components/BotonSeguirAsignatura:BotonSeguirAsignatura
+ * @requires ../../components/RippleTouchable:RippleTouchable
+ *
+ */
 import React from "react";
 import {
   Text,
@@ -38,7 +59,10 @@ import UnicastNotifications from "../../config/UnicastNotifications";
 
 import BotonSeguirAsignatura from "../../components/BotonSeguirAsignatura/BotonSeguirAsignatura";
 import RippleTouchable from "../../components/RippleTouchable";
-
+/**
+ * Pantalla de ver video de la aplicacion
+ * @module ViendoVideo
+ */
 export default class ViendoVideo extends React.Component {
   constructor(props) {
     super(props);
@@ -77,6 +101,10 @@ export default class ViendoVideo extends React.Component {
       idUsuario: Auth.getUserId()
     };
   }
+  /**
+   * Obtiene el video a ver, la asignatura y universidad a la que pertenece
+   * y todos sus comentarios
+   */
   componentDidMount() {
     let SwaggerUnicast = require("swagger_unicast");
     this.videoApi = new SwaggerUnicast.VideoApi();
@@ -136,6 +164,9 @@ export default class ViendoVideo extends React.Component {
       }
     });
   }
+  /**
+   * Sigue/Deja de seguir una asignatura
+   */
   seguir() {
     if (this.state.seguida == true) {
       this.setState({ seguida: false });
@@ -163,6 +194,10 @@ export default class ViendoVideo extends React.Component {
       );
     }
   }
+  /**
+   * Obtiene todos los comentarios del video
+   * @param {Object} video Video
+   */
   obtenerComentarios(video) {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
@@ -209,12 +244,20 @@ export default class ViendoVideo extends React.Component {
       }
     );
   }
+  /**
+   * Si se requiere pide a la API mas comentarios
+   */
   componentDidUpdate() {
     if (this.state.obtenerMas && !this.state.obteniendoMas) {
       this.setState({ obteniendoMas: true });
       this.obtenerComentariosPagina(this.state.video, this.state.page);
     }
   }
+  /**
+   * Pide la pagina page de comentarios del video
+   * @param {Object} video
+   * @param {Number} page pagina de comentarios a pedir
+   */
   obtenerComentariosPagina(video, page) {
     let opts = {
       cacheControl: "no-cache, no-store, must-revalidate", // String |
@@ -252,6 +295,12 @@ export default class ViendoVideo extends React.Component {
       }
     );
   }
+  /**
+   * Añade un comentario
+   * @param {String} comment comentario
+   * @param {Number} time momento de tiempo en el que se ha producido
+   * @param {Number} id id del video
+   */
   addComment(comment, time, id) {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
@@ -270,7 +319,10 @@ export default class ViendoVideo extends React.Component {
       }
     );
   }
-
+  /**
+   * Obtiene la asignatura y universidad de un video
+   * @param {Number} id id del video
+   */
   obtenerAsignaturaUni(id) {
     let defaultClient = ApiClient.instance;
     // Configure Bearer (JWT) access token for authorization: bearerAuth
@@ -346,6 +398,12 @@ export default class ViendoVideo extends React.Component {
     clearInterval(this.interval);
   }
 
+  /**
+   *
+   * @param {Number} date1 instante anterior
+   * @param {Number} now instante actual
+   * @return {String} Devuelve el tiempo pasado
+   */
   getTimePassed(date1, now) {
     const diffMs = now - date1;
     const diffMins = Math.round(diffMs / 60000);
@@ -376,6 +434,10 @@ export default class ViendoVideo extends React.Component {
       return `${diffMins} minutos`;
     }
   }
+  /**
+   * Callback invocado cada vez que pasa un segundo del video
+   * Busca los comentarios con una marca de tiempo igual o inferior a ese instante para mostrarlos por pantalla
+   */
   pasaSegundo() {
     this.setState({
       largo: Math.floor(this.VideoFlechaRef.devuelveDuracion() / 3600) > 0
@@ -406,7 +468,10 @@ export default class ViendoVideo extends React.Component {
       dataSource: ds.cloneWithRows(añadir)
     });
   }
-
+  /**
+   * Funcion llamada al presionar el boton de comentar
+   * añade el comentario al video
+   */
   comentar = () => {
     let añadidos = this.state.comentariosMostrar;
     let ds = this.state.dataSource;
@@ -425,6 +490,9 @@ export default class ViendoVideo extends React.Component {
       comentariosMostrar: añadidos
     });
   };
+  /**
+   * Renderiza el boton de comentar si el usuario ha introducido texto
+   */
   boton = () => {
     if (this.state.text.length > 0) {
       return (

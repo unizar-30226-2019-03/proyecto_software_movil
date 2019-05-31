@@ -1,5 +1,18 @@
 /**
- * Pantalla de bus
+ * @fileoverview Pantalla de busqueda
+ * @author Unicast
+ * @requires swagger_unicast:VideoApi
+ * @requires swagger_unicast:SubjectApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../config/UnicastNotifications:UnicastNotifications
+ * @requires ../../components/FullScreenThumbnail:FullScreenThumbnail
+ * @requires ../../components/ThumbnailAsignatura:ThumbnailAsignatura
+ * @requires ../../components/Time:timeStampToFormat
+ * @requires ../../components/Time:secToDuration
+ * @requires ../../components/HaOcurridoUnError:HaOcurridoUnError
+ * @requires ../../components/RippleTouchable:RippleTouchable
+ * @requires ../../components/NoHayContenidoQueMostrar:NoHayContenidoQueMostrar
+ *
  */
 import React from "react";
 import {
@@ -31,7 +44,10 @@ import RippleTouchable from "../../components/RippleTouchable";
 import NoHayContenidoQueMostrar from "../../components/NoHayContenidoQueMostrar";
 
 import styles from "./styles";
-
+/**
+ * Pantalla de busqueda
+ * @module Searching
+ */
 export default class Searching extends React.Component {
   constructor(props) {
     super(props);
@@ -63,7 +79,10 @@ export default class Searching extends React.Component {
       searchText: this.state.searchText
     });
   }
-
+  /**
+   * Obtiene los titulos con el titulo que ha introducido el usuario
+   * (o parte de el )
+   */
   getVideoData = () => {
     let opts = {
       title: this.state.searchText,
@@ -88,7 +107,10 @@ export default class Searching extends React.Component {
       }
     );
   };
-
+  /**
+   * Obtiene las asignaturas con el nombre que ha introducido el usuario
+   * (o parte de el )
+   */
   getSubjectData = () => {
     let opts = {
       name: this.state.searchText,
@@ -112,13 +134,18 @@ export default class Searching extends React.Component {
       }
     );
   };
-
+  /**
+   * Cambia entre buscar asignaturas o videos
+   */
   changeTab = () => {
     this.setState({
       viewingVideos: !this.state.viewingVideos
     });
   };
-
+  /**
+   * Obtiene los videos y asignaturas cuyo titulo o nombre
+   * contenga la cadena introducida por el usuario
+   */
   getData = () => {
     this.setState({ loadingVid: true, loadingSub: true });
     this.getVideoData();
@@ -170,7 +197,9 @@ export default class Searching extends React.Component {
       };
     }
   };
-
+  /**
+   * Cambia el texto de busqueda que ha introducido el usuario
+   */
   changeSearchText = value => {
     this.setState({
       searchText: value

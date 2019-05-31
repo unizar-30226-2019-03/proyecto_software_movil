@@ -1,3 +1,16 @@
+/**
+ * @fileoverview Pantalla de ver perfil de un usuario
+ * @requires ../../constants:Azul
+ * @requires swagger_unicast:UserApi
+ * @requires swagger_unicast:ApiClient
+ * @requires ../../components/InputFixer:InputFixer
+ * @requires ../../components/ImagenDePerfilConIcono:ImagenDePerfilConIcono
+ * @requires ../../components/HaOcurridoUnError:HaOcurridoUnError
+ * @requires ../../components/LoadingModal:LoadingModal
+ * @requires ../../config/PerfilStore:PerfilStore
+ * @requires ../../config/Auth:Auth
+ * @requires ../../config/UnicastNotifications:UnicastNotifications
+ */
 import React from "react";
 
 import { View, ActivityIndicator, Alert } from "react-native";
@@ -26,6 +39,10 @@ import UnicastNotifications from "../../config/UnicastNotifications";
 import { observer } from "mobx-react/native";
 
 @observer
+/**
+ * Pantalla ver perfil de un usuario
+ * @module VerPerfil
+ */
 export default class VerPerfil extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title:
@@ -60,7 +77,9 @@ export default class VerPerfil extends React.Component {
   componentDidMount = () => {
     this.getData();
   };
-
+  /**
+   * Obtiene los datos del usuario
+   */
   getData = () => {
     let id = this.userId;
     let opts = {
@@ -94,7 +113,9 @@ export default class VerPerfil extends React.Component {
       }
     });
   };
-
+  /**
+   * Permite al usuario elegir una foto de su galeria
+   */
   pickImage = async () => {
     if (!this.state.actualizandoDatos) {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -108,7 +129,9 @@ export default class VerPerfil extends React.Component {
       }
     }
   };
-
+  /**
+   * Cancela cambiar los datos si no se ha enviado la peticion a la API
+   */
   cancelar = () => {
     if (!this.state.actualizandoDatos) {
       this.setState({
@@ -119,7 +142,9 @@ export default class VerPerfil extends React.Component {
       });
     }
   };
-
+  /**
+   * Actualiza los datos
+   */
   actualizar = () => {
     if (!this.state.actualizandoDatos) {
       this.setState({
